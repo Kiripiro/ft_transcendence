@@ -1,14 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
-import Home from './Module/Navbar/home';
-import Navbar from './Module/Navbar/Navbar';
+import Connect from './Connect';
+import HomePage from './Vue/HomePage/HomePage';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Navbar>
-    </Navbar>
-    <App />
+    <HomePage></HomePage>
   </React.StrictMode>,
   document.getElementById('root'),
 );
