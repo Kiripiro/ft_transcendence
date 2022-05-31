@@ -25,10 +25,15 @@
 }
 
 .bi{
-    font-size: 7vw;
-    color: red;
+    font-size: 3vw;
+    color: white;
 }
 
-.bi-bell {
-    font-size: 5vw;
+.bi-play {
+    font-size: 3vw;
+}
+
+nav .bi:hover{
+	transition: all 0.5s;
+	color: #901644;
 }

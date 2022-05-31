@@ -1,11 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Connect from './Connect';
-import HomePage from './Vue/HomePage/HomePage';
+import HomePage from './Page/HomePage';
+import { BrowserRouter } from 'react-router-dom'
+import App from './App';
+import { createRoot } from 'react-dom/client';
 
-ReactDOM.render(
+
+const container = document.getElementById('app');
+const root = createRoot(container!); // createRoot(container!) if you use TypeScript
+root.render(
   <React.StrictMode>
-    <HomePage></HomePage>
+    <App />
   </React.StrictMode>,
-  document.getElementById('root'),
 );
