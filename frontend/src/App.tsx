@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import HomePage from './Page/HomePage';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import HomePage from './Page/HomePage/HomePage';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Connect from './Module/Connect/Connect';
 import NotFound from './Page/NotFound/NotFound';
+import PongPage from './Page/PongPage/PongPage';
 
 const App=() => {
 
@@ -12,15 +13,17 @@ const App=() => {
         
              <Routes>
 
-                 <Route path='/' element={<HomePage/>}/>
-                 <Route path='/connect' element={<Connect/>}/>
-                 <Route path='/*' element={<NotFound/>}/>
+                 <Route path='/' element={<Navigate to="/HomePage" replace />}/>
+
+                 <Route path='/HomePage' element={<HomePage/>}/>
+                 <Route path='/pong' element={<PongPage/>}/>
+                 <Route path='/Connect' element={<Connect/>}/>
+                 <Route path='/NotFound' element={<NotFound/>}/>
+                 <Route path='/*' element={<Navigate to="/NotFound" replace />}/>
                   
               </Routes>
 
          </BrowserRouter>
-
-        // <HomePage></HomePage>
 
     );
   };

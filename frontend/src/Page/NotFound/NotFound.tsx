@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Navbar from '../../Module/Navbar/HomeNavbar';
-import './../Font.css';
+import Navbar from '../../Module/Navbar/Navbar';
+import './../assets/Font.css';
 import './NotFound.css';
 
 

@@ -5,7 +5,7 @@ const Play=() => {
 
     let location = useLocation();
 
-    if (location.pathname !== "/pong")
+    if (location.pathname == "/HomePage")
       return (<a href="pong"><i className="bi bi-play"></i></a>);
     return <></>;
   };

@@ -1,7 +1,7 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import Bell from './Buttons/Bell';
 import Play from './Buttons/Play';
-import './HomeNavbar.css';
+import './Navbar.css';
 
 const Navbar=() => {
     return (
@@ -13,7 +13,7 @@ const Navbar=() => {
             <Play/>
         </div>
         <div className="littleDiv">
-          <a href="notif"><i className="bi bi-bell"></i></a>
+          <Bell/>
         </div>
       </nav>
     );

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import io from 'socket.io-client';
-import Navbar from '../Navbar/HomeNavbar';
-import '../../Page/Font.css'
+import Navbar from '../Navbar/Navbar';
+import '../../Page/assets/Font.css'
 const socket = io('http://localhost:3000');
 
 interface msgToSend {
@@ -51,7 +51,7 @@ const Connect: React.FC = () => {
   }
 
   return (
-    <div className="font">
+    <div className="Font">
       <Navbar/>
       <input
           value={text}

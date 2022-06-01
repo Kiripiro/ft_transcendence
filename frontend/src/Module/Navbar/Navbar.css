@@ -33,7 +33,7 @@
     font-size: 3vw;
 }
 
-nav .bi:hover{
+.bi:hover{
 	transition: all 0.5s;
 	color: #901644;
 }
