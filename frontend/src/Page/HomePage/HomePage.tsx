@@ -1,43 +1,43 @@
+import { rmSync } from 'fs';
 import React, { useState, Component } from 'react';
 import Navbar from '../../Module/Navbar/Navbar';
 import './../assets/Font.css';
 import './HomePage.css'
 
-class HomePage extends Component<{}, {clubs: any[]}> {
-
+class HomePage extends Component<{}, {friends: any[]}> {
     constructor(props: any){
         super(props);
         this.state = {
-            clubs: []
+            friends: []
         };
     }
-    
-    componentDidMount(){
-        // fetch('http://localhost:3000/profile')
-        // .then(response => response.json())
-        // .then(profile => console.log(profile));
+
+    componentDidMount() {
         fetch('http://localhost:3000/friends')
-        .then(response => response.json())
-        .then(teams => this.setState({clubs: teams}))
+          .then(res => res.json())
+          .then(ret => this.setState({friends: ret}))
+        console.log('=== componentDidMount ===');
     }
 
+    // componentDidUpdate(prevProps: any, prevState: any){
+    //     if (prevState.friends !== this.state.friends)
+    //     {
+    //         for (let i = 0; i < this.state.friends.length; i++) {
+    //             if (this.state.friends[i].status)
+    //             {
+    //                 var tag = document.createElement("div");
+    //                 tag.className = "online-friends"
+    //                 var element = document.getElementById("friendsInfo");
+    //                 if (element)
+    //                     element.appendChild(tag);
+    //             }
+    //         }
+    //     }
+    // }
+
     render(){
-        // var text = document.createTextNode("Tutorix is the best e-learning platform");
-        // tag.appendChild(text);
-        for (let i = 0; i < this.state.clubs.length; i++) {
-            if (this.state.clubs[i].status)
-            {
-                var tag = document.createElement("div");
-                tag.className = "online-friend"
-                var element = document.getElementById("friendsInfo");
-                if (element)
-                    element.appendChild(tag);
-            }
-        }
         return (
             <div className='Font'>
-                {/* {this.state.clubs.map(club => (<div className='friends'> {club.user} </div>))}
-                <h1>{this.state.clubs}</h1> */}
                 <div className="horizontal">
                     <Navbar/>
                     <div className="vertical">
@@ -58,6 +58,11 @@ class HomePage extends Component<{}, {clubs: any[]}> {
                             </div>
                             <div className="friends-info" id='friendsInfo'>
                                 <h3>Friends</h3>
+                                <div className='friends'>
+                                    {this.state.friends.map(friend => (<div key={friend.id} className='friend-card'>
+                                        {friend.user}
+                                    </div>))}
+                                </div>
                             </div>
                             <div className="chat"></div>
                         </div>

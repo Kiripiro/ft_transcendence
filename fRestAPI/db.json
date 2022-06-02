@@ -6,8 +6,8 @@
 	  { "id": 1, "body": "some comment", "postId": 1 }
 	],
 	"friends": [
-		{ "user": "Wazack", "lvl": 110, "status": false },
-		{ "user": "antho_smn", "lvl": 10, "status": true },
-		{ "user": "Kiripro", "lvl": 101, "status": true }
+		{ "id": 1, "user": "Wazack", "lvl": 110, "status": false },
+		{ "id": 2, "user": "antho_smn", "lvl": 10, "status": true },
+		{ "id": 3, "user": "Kiripro", "lvl": 101, "status": true }
 	]
 }

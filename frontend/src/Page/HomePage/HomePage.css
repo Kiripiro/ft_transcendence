@@ -134,10 +134,15 @@ main{
 	text-transform: uppercase;
 }
 
-.online-friends {
-	background: green;
-	width: 100px;
-	height: 100px;
+.friends {
+	display: flex;
+	flex-direction: column;
+}
+
+.friends .friend-card {
+	background: rgba(144, 22, 68, 0.6);
+	margin: 1%;
+	height: 4vw;
 }
 
 .chat {
