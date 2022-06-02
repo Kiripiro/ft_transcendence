@@ -4,7 +4,8 @@ import io from 'socket.io-client';
 const socket = io('http://localhost:3000');
 
 interface msgToSend {
-  id: string;
+  sender: string;
+  recipient: string;
   text: string;
 }
 
@@ -12,6 +13,7 @@ const Connect: React.FC = () => {
 
   const [id, setId] = useState('');
   const [text, setText] = useState('Wsh la team');
+  const [recipient, setRecipient] = useState('');
 
   socket.removeAllListeners();
   socket.on('connect', function() {
@@ -33,24 +35,34 @@ const Connect: React.FC = () => {
     setId(data);
   });
 
+  socket.on('msgInputToOtherClient', function(msgToSend) {
+    console.log(msgToSend.sender, 'said: ', msgToSend.text);
+  })
+
   function validateInput() {
-    return id.length > 0 && text.length > 0;
+    return id.length > 0 && text.length > 0 && recipient.length > 0;
   }
 
   function sendMessage() {
     if (validateInput()) {
       const message: msgToSend = {
-        id,
-        text,
+        sender: id,
+        recipient: recipient,
+        text: text,
       };
 
-      socket.emit('msgToServer', message);
+      socket.emit('msgToOtherClient', message);
       setText('');
     }
   }
 
   return (
     <>
+      {/* <input
+          value={recipient}
+          onChange={e => setRecipient(e.target.value)}
+          placeholder="Recipient..."
+      />
       <input
           value={text}
           onChange={e => setText(e.target.value)}
@@ -58,7 +70,8 @@ const Connect: React.FC = () => {
       />
       <button type="button" onClick={() => sendMessage()}>
         Send
-      </button>
+      </button> */}
+
     </>
   );
 };
