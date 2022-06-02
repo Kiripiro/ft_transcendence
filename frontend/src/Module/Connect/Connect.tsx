@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import io from 'socket.io-client';
-
-const socket = io('http://localhost:3000');
+import Navbar from '../Navbar/Navbar';
+import '../../Page/assets/Font.css'
+const socket = io('http://localhost:5000');
 
 interface msgToSend {
   sender: string;
@@ -67,7 +68,7 @@ const Connect: React.FC = () => {
           value={text}
           onChange={e => setText(e.target.value)}
           placeholder="Enter message..."
-      />
+          />
       <button type="button" onClick={() => sendMessage()}>
         Send
       </button> */}
