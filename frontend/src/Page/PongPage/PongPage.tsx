@@ -1,147 +1,93 @@
+import { wait } from '@testing-library/user-event/dist/utils';
+import { start } from 'node:repl';
 import { text } from 'node:stream/consumers';
+import { threadId } from 'node:worker_threads';
 import React from 'react';
 import Navbar from '../../Module/Navbar/Navbar';
 import './../assets/Font.css';
 import './PongPage.css';
-
-
-// const Players=() => {
-
-//     function movePlayers() {
-//         if (movePlayer1.down)
-//             moveDown(0);
-//         if (movePlayer1.up)
-//            moveUp(0);
-//         if (movePlayer2.down)
-//            moveDown(1);
-//        if (movePlayer2.up)
-//           moveUp(1);
-//     }
-
-//     function moveUp(player: number) {
-//         if (pos[player] > 8)
-//             pos[player]--;
-//         }
-
-//     function moveDown(player: number) {
-//         if (pos[player] < 92)
-//             pos[player]++;
-//     }
-
-//     function refreshPlayers() {
-//         movePlayers();
-
-//         var player :any = document.getElementById("player1");
-//         if (player !== null)
-//             player.style.top= "calc(" + pos[0].toString() + "% - 8%)";
-//         player = document.getElementById("player2");
-//         if (player !== null)
-//             player.style.top= "calc(" + po1.toString() + "% - 8%)";
-//     }
-
-    
-
-//     function onKeyDown(e: any) {
-//         console.log(pos);
-//         if (e.key === 'ArrowUp')
-//             movePlayer1.up = true;
-//         if (e.key === 'ArrowDown')
-//             movePlayer1.down = true;
-//         if (e.key === 'w')
-//             movePlayer2.up = true;
-//         if (e.key === 's')
-//             movePlayer2.down = true;
-//     }
-
-//     function onKeyUp(e: any) {
-//         if (e.key === 'ArrowUp')
-//             movePlayer1.up = false;
-//         if (e.key === 'ArrowDown')
-//             movePlayer1.down = false;
-//         if (e.key === 'w')
-//             movePlayer2.up = false;
-//         if (e.key === 's')
-//             movePlayer2.down = false;
-//     }
-    
-//     document.addEventListener("keydown", onKeyDown);
-//     document.addEventListener("keyup", onKeyUp);
-    
-//     const intervalPlayer = setInterval(refreshPlayers, 10);
-    
-//     return (
-//         <>
-//             <div className="player1" id="player1"></div>
-//             <div className="player2" id="player2"></div>
-//         </>
-//     )
-// }
-
-// const Ball=() => {
-    
-//     function refreshBall() {
-        
-//         var ball = document.getElementById("ball");
-//         var pongBoard = document.getElementById("pongBoard");
-
-//         if (ball !== null && pongBoard !== null) {
-//             var ballRadius = ball.clientHeight;
-            
-//             if (ballPos.y + ballSpeed.y < 0 || ballPos.y + ballSpeed.y + ballRadius > pongBoard.clientWidth)
-//                 ballSpeed.y = 0 - ballSpeed.y;
-
-//             if (ballPos.x + ballSpeed.x < 0 || ballPos.x + ballSpeed.x + ballRadius > pongBoard.clientHeight)
-//                 ballSpeed.x = 0 - ballSpeed.x;
-            
-//             ballPos.x += ballSpeed.x;
-//             ballPos.y += ballSpeed.y;
-
-//             ball.style.top= "calc(" + ballPos.x.toString() + "px)";
-//             ball.style.left= "calc(" + ballPos.y.toString() + "px)";
-//         }
-//     }
-
-//     const intervalBall = setInterval(refreshBall, 10);
-//     return (
-//         <div className="ball" id="ball"></div>
-//     )
-// }
-
-
-var Player1 = {
-    "pos" : 50,
-    "up" : false,
-    "down" : false,
-    "score" : 0
-}
-
-var Player2 = {
-    "pos" : 50,
-    "up" : false,
-    "down" : false,
-    "score" : 0
-}
 
 var canvas = {
     "width" : 800,
     "height" : 600
 }
 
+var Player1 = {
+    "x" : 0,
+    "y" : canvas.height / 2,
+    "up" : false,
+    "down" : false,
+    "score" : 0,
+    "width" : canvas.width / 40,
+    "height" : canvas.height / 5,
+    "speed" : 3,
+}
+
+var Player2 = {
+    "x" : 0,
+    "y" : canvas.height / 2,
+    "up" : false,
+    "down" : false,
+    "score" : 0,
+    "width" : canvas.width / 40,
+    "height" : canvas.height / 5,
+    "speed" : 3,
+}
+
+
 var Ball = {
     "x" : canvas.width / 2,
     "y" : canvas.height / 2,
-    "dx" : 2,
-    "dy" : -2,
+    "dx" : 3,
+    "dy" : 0,
+    "speed" : 3,
     "radius" : 10
 }
 
 var inPlay: boolean = false;
 
+var inWait: boolean = false;
+
 const PongPage=() => {
+
+    function checkCollisionPlayer1(): boolean {
+        var ptop = Player1.y;
+        var pbottom = Player1.y + Player1.height;
+        var pleft = Player1.x;
+        var pright = Player1.x + Player1.width;
+        
+        var btop = Ball.y - Ball.radius;
+        var bbottom = Ball.y + Ball.radius;
+        var bleft = Ball.x - Ball.radius;
+        var bright = Ball.x + Ball.radius;
+        
+        return pleft < bright && ptop < bbottom && pright > bleft && pbottom > btop;
+    }
+
+    function checkCollisionPlayer2(): boolean {
+        var ptop = Player2.y;
+        var pbottom = Player2.y + Player2.height;
+        var pleft = Player2.x;
+        var pright = Player2.x + Player2.width;
+        
+        var btop = Ball.y - Ball.radius;
+        var bbottom = Ball.y + Ball.radius;
+        var bleft = Ball.x - Ball.radius;
+        var bright = Ball.x + Ball.radius;
+        
+        return pleft < bright && ptop < bbottom && pright > bleft && pbottom > btop;
+    }
 
     function resetBallPos() {
         Ball.x = canvas.width / 2;
         Ball.y = canvas.height / 2;
+    }
+
+    function resetPlayersPos() {
+        Player1.x = canvas.width / 8 - Player1.width / 2;
+        Player1.y = canvas.height / 2 - Player1.height / 2;
+        Player2.x = canvas.width / 8 * 7 - Player2.width / 2;
+        Player2.y = canvas.height / 2 - Player2.height / 2;
     }
 
     function onKeyDown(e: any) {
@@ -190,25 +136,53 @@ const PongPage=() => {
             Ball.dy = 0 - Ball.dy;
         }
 
+        if (checkCollisionPlayer1()) {
+
+            let collidePoint = (Ball.y - (Player1.y + Player1.height / 2));
+
+            collidePoint = collidePoint / (Player1.height/2);
+
+            let angleRad = (Math.PI/4) * collidePoint;
+            let direction = (Ball.x + Ball.radius < canvas.width/2) ? 1 : -1;
+            Ball.dx = direction * Ball.speed * Math.cos(angleRad);
+            Ball.dy = Ball.speed * Math.sin(angleRad);
+
+            Ball.speed += 0.1;
+        }
+
+        if (checkCollisionPlayer2()) {
+            let collidePoint = (Ball.y - (Player2.y + Player2.height / 2));
+
+            collidePoint = collidePoint / (Player2.height/2);
+            let angleRad = (Math.PI/4) * collidePoint;
+            let direction = (Ball.x + Ball.radius < canvas.width/2) ? 1 : -1;
+            Ball.dx = direction * Ball.speed * Math.cos(angleRad);
+            Ball.dy = Ball.speed * Math.sin(angleRad);
+         
+            Ball.speed += 0.1;
+        }
+
         Ball.x += Ball.dx;
         Ball.y += Ball.dy;
     }
 
-    setInterval(moveBall, 10);
+    setInterval(moveBall, 20);
 
     function movePlayers() {
+        if (!inPlay)
+            return ;
         if (Player1.up)
-            if (Player1.pos > 5)
-                Player1.pos--;
+            if (Player1.y > 0)
+                Player1.y -= Player1.speed;
         if (Player1.down)
-            if (Player1.pos < 95)
-                    Player1.pos++;
+            if (Player1.y + Player1.height < canvas.height)
+                    Player1.y+= Player1.speed;
         if (Player2.up)
-            if (Player2.pos > 5)
-                Player2.pos--;
+            if (Player2.y > 0)
+                Player2.y-= Player2.speed;
         if (Player2.down)
-            if (Player2.pos < 95)
-                    Player2.pos++;
+            if (Player2.y + Player2.height < canvas.height)
+                    Player2.y+= Player2.speed;
     }
 
     setInterval(movePlayers, 15);
@@ -222,17 +196,14 @@ const PongPage=() => {
 
     }}
 
-
     function drawBall(ctx: CanvasRenderingContext2D | null) {
         if (ctx !== null) {
 
             ctx.beginPath();
 
-            var color = "rgb(" + (Math.random() * 255).toString() + "," + (Math.random() * 255).toString() + "," + (Math.random() * 255).toString() + ")";
-
-            ctx.fillStyle = color;
+            ctx.fillStyle = 'green';
             ctx.shadowBlur = 20;
-            ctx.shadowColor = color;
+            ctx.shadowColor = 'green';
 
             ctx.arc(Ball.x, Ball.y, Ball.radius, 0, Math.PI * 2);
 
@@ -248,12 +219,12 @@ const PongPage=() => {
             ctx.shadowBlur = 20;
             ctx.shadowColor = 'red';
 
-            ctx.fillRect(canvas.width / 8 - 5, (Player1.pos * canvas.height / 100) - (canvas.height / 20), 10, canvas.height / 10);
+            ctx.fillRect(Player1.x, Player1.y, Player1.width, Player1.height);
 
             ctx.fillStyle = 'blue';
             ctx.shadowColor = 'blue';
 
-            ctx.fillRect((canvas.width / 8  * 7) - 5, (Player2.pos * canvas.height / 100) - (canvas.height / 20), 10, canvas.height / 10);
+            ctx.fillRect(Player2.x, Player2.y, Player2.width, Player2.height);
 
             ctx.shadowBlur = 0;
     }}
@@ -309,7 +280,6 @@ function drawLimitsMove(ctx: CanvasRenderingContext2D | null) {
     }}
 
     function drawText(ctx:CanvasRenderingContext2D | null) {
-        resetBallPos();
         if (ctx !== null) {
 
             ctx.font = '50px Arial';
@@ -319,6 +289,35 @@ function drawLimitsMove(ctx: CanvasRenderingContext2D | null) {
 
     }}
 
+    function refreshGame(ctx: CanvasRenderingContext2D | null) {
+        if (ctx !== null) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            drawFont(ctx, "black");
+
+            drawLimitsMove(ctx);
+
+            drawLimitCamps(ctx);
+
+            drawScore(ctx);
+
+            drawPlayers(ctx);
+
+            if (!inPlay || !inWait)
+                drawBall(ctx);
+    }}
+
+    async function startGame(ctx: CanvasRenderingContext2D | null) {
+        if (ctx !== null) {
+
+            resetBallPos();
+
+            resetPlayersPos();
+
+            if (!inPlay)
+                drawText(ctx);
+    }}
+
     function draw() {
 
         var canvas = document.getElementById('pongBoard') as HTMLCanvasElement;
@@ -326,22 +325,11 @@ function drawLimitsMove(ctx: CanvasRenderingContext2D | null) {
             var ctx = canvas.getContext('2d');
             if (ctx !== null) {
 
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                drawFont(ctx, "black");
-
-                if (!inPlay)
-                    return drawText(ctx);
-
-                drawLimitsMove(ctx);
-
-                drawLimitCamps(ctx);
+                refreshGame(ctx);
                 
-                drawScore(ctx);
+                if (!inPlay)
+                    return startGame(ctx);
 
-                drawPlayers(ctx);
-
-                drawBall(ctx);
 
     }}}
 
