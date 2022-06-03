@@ -36,9 +36,9 @@ const Connect: React.FC = () => {
     setId(data);
   });
 
-  socket.on('msgInputToOtherClient', function(msgToSend) {
-    console.log(msgToSend.sender, 'said: ', msgToSend.text);
-  })
+  // socket.on('msgInputToOtherClient', function(msgToSend) {
+  //   console.log(msgToSend.sender, 'said: ', msgToSend.text);
+  // })
 
   function validateInput() {
     return id.length > 0 && text.length > 0 && recipient.length > 0;
@@ -59,7 +59,7 @@ const Connect: React.FC = () => {
 
   return (
     <>
-      {/* <input
+      <input
           value={recipient}
           onChange={e => setRecipient(e.target.value)}
           placeholder="Recipient..."
@@ -71,7 +71,7 @@ const Connect: React.FC = () => {
           />
       <button type="button" onClick={() => sendMessage()}>
         Send
-      </button> */}
+      </button>
 
     </>
   );

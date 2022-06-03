@@ -1,10 +1,16 @@
-import React from "react";
-import { Component } from "react";
+import React from 'react';
+import "./ConnectedFriends.css"
 
-class ConnectedFriends extends Component<{}, {}> {
+class ConnectedFriends extends React.Component {
+
     render() {
-        <></>
+      return (
+        <div className='container'>
+          <p className='title'>ConnectedFriends</p>
+        </div>
+      )
     }
 }
+  
 
 export default ConnectedFriends;

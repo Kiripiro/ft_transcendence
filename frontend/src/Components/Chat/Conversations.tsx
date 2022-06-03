@@ -1,13 +1,15 @@
-import React from "react";
+import React from 'react';
 
-const Conversations: React.FC = () => {
-    return (
-        <>
-        <p>
-            Conversations
-        </p>
-        </>
-    );
-};
+class Conversations extends React.Component {
+
+    render() {
+      return (
+        <div className='container'>
+          <p className='title'>Conversations</p>
+        </div>
+      )
+    }
+}
+  
 
 export default Conversations;

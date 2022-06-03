@@ -1,0 +1,4 @@
+interface IMessage {
+    sender: string;
+    
+}

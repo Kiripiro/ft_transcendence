@@ -4,6 +4,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Connect from './Module/Connect/Connect';
 import NotFound from './Page/NotFound/NotFound';
 import PongPage from './Page/PongPage/PongPage';
+import Chat from './Components/Chat/Chat';
+import NoteReduxTests from './NoteReduxTests/NoteReduxTests';
 
 const App=() => {
 
@@ -18,6 +20,8 @@ const App=() => {
                  <Route path='/HomePage' element={<HomePage/>}/>
                  <Route path='/pong' element={<PongPage/>}/>
                  <Route path='/Connect' element={<Connect/>}/>
+                 <Route path='/Chat' element={<Chat/>}/>
+                 <Route path='/ReduxTests' element={<NoteReduxTests/>}/>
                  <Route path='/NotFound' element={<NotFound/>}/>
                  <Route path='/*' element={<Navigate to="/NotFound" replace />}/>
                   
@@ -29,4 +33,3 @@ const App=() => {
   };
   
 export default App;
-  
