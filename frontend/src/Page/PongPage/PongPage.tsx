@@ -1,7 +1,3 @@
-import { wait } from '@testing-library/user-event/dist/utils';
-import { start } from 'node:repl';
-import { text } from 'node:stream/consumers';
-import { threadId } from 'node:worker_threads';
 import React from 'react';
 import Navbar from '../../Module/Navbar/Navbar';
 import './../assets/Font.css';
@@ -46,10 +42,13 @@ var Ball = {
 
 var inPlay: boolean = false;
 
-var inWait: boolean = false;
-
 const PongPage=() => {
 
+
+    /*
+        checkCollisionPlayer1 : retourne 1 si la balle rentre en collision avec le joueur 1
+                               retourne 0 si la balle ne rentre pas en collision avec le joueur 1
+    */
     function checkCollisionPlayer1(): boolean {
         var ptop = Player1.y;
         var pbottom = Player1.y + Player1.height;
@@ -64,6 +63,11 @@ const PongPage=() => {
         return pleft < bright && ptop < bbottom && pright > bleft && pbottom > btop;
     }
 
+
+    /*
+        checkCollisionPlayer1 : retourne 1 si la balle rentre en collision avec le joueur 2
+                               retourne 0 si la balle ne rentre pas en collision avec le joueur 2
+    */
     function checkCollisionPlayer2(): boolean {
         var ptop = Player2.y;
         var pbottom = Player2.y + Player2.height;
@@ -78,11 +82,33 @@ const PongPage=() => {
         return pleft < bright && ptop < bbottom && pright > bleft && pbottom > btop;
     }
 
+
+    /*
+        resetBallPos : reset la position de la balle au centre du plateau
+                       reset la speed de la balle
+                       reset la direction y a 0
+                       reset la drection x suivant le gagnant acctuel
+                            la balle partiras vers le perdant
+                            si les deux joueurs on le même scrore, la direction est aléatoire
+    */
     function resetBallPos() {
         Ball.x = canvas.width / 2;
         Ball.y = canvas.height / 2;
+
+        Ball.speed = 3;
+        Ball.dy = 0;
+        
+        if (Player1.score > Player2.score)
+            Ball.dx = 2;
+        else if (Player1.score < Player2.score)
+           Ball.dx = -2;
+        else
+            Ball.dx = [-2,2][Math.random()*2|0];
     }
 
+    /*
+        resetPlayerPos : reset de la position des deux joueurs au centre du plateau
+    */
     function resetPlayersPos() {
         Player1.x = canvas.width / 8 - Player1.width / 2;
         Player1.y = canvas.height / 2 - Player1.height / 2;
@@ -90,6 +116,9 @@ const PongPage=() => {
         Player2.y = canvas.height / 2 - Player2.height / 2;
     }
 
+    /*
+        onKeyDown : vraiment besoin d'expliquer celui là ?
+    */
     function onKeyDown(e: any) {
         if (e.key === 'ArrowUp')
             Player1.up = true;
@@ -104,8 +133,12 @@ const PongPage=() => {
                 inPlay = true;
     }
 
+    // Lance la fonction onKeyDown chaque fois qu'une touche est appuyée
     document.addEventListener("keydown", onKeyDown);
 
+    /*
+        onKeyUp : vraiment besoin d'expliquer celui là ?
+    */
     function onKeyUp(e: any) {
         if (e.key === 'ArrowUp')
             Player1.up = false;
@@ -117,39 +150,55 @@ const PongPage=() => {
             Player2.down = false;
     }
     
+    // Lance la fonction onKeyUp chaque fois qu'une touche est relachée
     document.addEventListener("keyup", onKeyUp);
 
+    /*
+        moveBall : permet de calculer les mouvements de la balle
+    */
     function moveBall() {
+
+        // si la balle touche le camps du joueur 1 : augmente le score du joueur 2 et redémare le jeu
         if (Ball.x + Ball.dx > canvas.width - Ball.radius ) {
             Player1.score++;
-            Ball.dx = 0 - Ball.dx;
             inPlay = false;
         }
 
+        // si la balle touche le camps du joueur 2 : augmente le score du joueur 1 et redémare le jeu
         if (Ball.x + Ball.dx < Ball.radius) {
             Player2.score++;
-            Ball.dx = 0 - Ball.dx;
             inPlay = false;
         }
 
+        // si la balle touche le mur du haut ou le mur du bas : rebondis
         if (Ball.y + Ball.dy > canvas.height - Ball.radius || Ball.y + Ball.dy < Ball.radius) {
             Ball.dy = 0 - Ball.dy;
         }
 
+        // check des collisions avec le joueur 1
         if (checkCollisionPlayer1()) {
 
+            // ou la balle touche le player 1
             let collidePoint = (Ball.y - (Player1.y + Player1.height / 2));
 
+            // changement du point de collision pour un chiffre en -1 et 1
             collidePoint = collidePoint / (Player1.height/2);
 
+            // nouvel angle de la balle suivant le point de collision
             let angleRad = (Math.PI/4) * collidePoint;
+
+            // nouvelle direction de la balle suivant le nouvel angle
             let direction = (Ball.x + Ball.radius < canvas.width/2) ? 1 : -1;
+
+            // donne les nouvelles direction à la balle
             Ball.dx = direction * Ball.speed * Math.cos(angleRad);
             Ball.dy = Ball.speed * Math.sin(angleRad);
 
+            // augmente la vitesse de la balle à chaque contact avec un joueur
             Ball.speed += 0.1;
         }
 
+        // Voir au dessus
         if (checkCollisionPlayer2()) {
             let collidePoint = (Ball.y - (Player2.y + Player2.height / 2));
 
@@ -162,12 +211,16 @@ const PongPage=() => {
             Ball.speed += 0.1;
         }
 
+        // bouge la balle
         Ball.x += Ball.dx;
         Ball.y += Ball.dy;
     }
 
+    // lance moveBall toute les 20ms
     setInterval(moveBall, 20);
 
+
+    // movePlayers : change la positions des joueurs
     function movePlayers() {
         if (!inPlay)
             return ;
@@ -185,8 +238,11 @@ const PongPage=() => {
                     Player2.y+= Player2.speed;
     }
 
+    // lance movePlayers toute les 20ms
     setInterval(movePlayers, 15);
 
+
+    // drawFont : desine le fond du jeu
     function drawFont(ctx: CanvasRenderingContext2D | null, color: string) {
         if (ctx !== null) {
 
@@ -196,6 +252,7 @@ const PongPage=() => {
 
     }}
 
+    // drawBall : dessine la balle en fonction de sa position
     function drawBall(ctx: CanvasRenderingContext2D | null) {
         if (ctx !== null) {
 
@@ -213,6 +270,7 @@ const PongPage=() => {
 
     }}
 
+    // drawPlayers : dessine les joueurs suivant leurs positions
     function drawPlayers(ctx: CanvasRenderingContext2D | null) {
         if (ctx !== null) {
             ctx.fillStyle = 'red';
@@ -229,6 +287,7 @@ const PongPage=() => {
             ctx.shadowBlur = 0;
     }}
         
+    // drawScore : dessine les scores des deux joueurs
     function drawScore(ctx: CanvasRenderingContext2D | null) {
         if (ctx !== null) {
 
@@ -243,8 +302,9 @@ const PongPage=() => {
 
     }}
 
-function drawLimitsMove(ctx: CanvasRenderingContext2D | null) {
-    if (ctx !== null) {
+    // drawLimitsMove : dessine les limitations de mouveùent des deux joueurs (les deux lignes sous les joueurs)
+    function drawLimitsMove(ctx: CanvasRenderingContext2D | null) {
+        if (ctx !== null) {
 
             ctx.beginPath();
 
@@ -262,6 +322,7 @@ function drawLimitsMove(ctx: CanvasRenderingContext2D | null) {
 
     }}
 
+    // drawLimitCamps : dessine la limitation des deux camps (la grande ligne en pointillé au centre du plateau)
     function drawLimitCamps(ctx: CanvasRenderingContext2D | null) {
         if (ctx !== null) {
 
@@ -279,6 +340,7 @@ function drawLimitsMove(ctx: CanvasRenderingContext2D | null) {
             ctx.setLineDash([]);
     }}
 
+    // drawText : dessine "Press ENTER to play" au centre de l'écran
     function drawText(ctx:CanvasRenderingContext2D | null) {
         if (ctx !== null) {
 
@@ -289,10 +351,9 @@ function drawLimitsMove(ctx: CanvasRenderingContext2D | null) {
 
     }}
 
+    // refreshGame : redessine le nouvel affichage du jeu (nouvelles positions, nouveaux scores, etc...)
     function refreshGame(ctx: CanvasRenderingContext2D | null) {
         if (ctx !== null) {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
             drawFont(ctx, "black");
 
             drawLimitsMove(ctx);
@@ -303,7 +364,7 @@ function drawLimitsMove(ctx: CanvasRenderingContext2D | null) {
 
             drawPlayers(ctx);
 
-            if (!inPlay || !inWait)
+            if (inPlay)
                 drawBall(ctx);
     }}
 
