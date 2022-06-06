@@ -1,18 +1,13 @@
-import { platform } from 'os';
-import React, { useState } from 'react';
 import Navbar from '../../Module/Navbar/Navbar';
 import './../assets/Font.css';
 import './PongPage.css';
-
-var check: boolean = true;
-
 
 // position des joueurs en %
 var posPlayer1 : number = 50;
 
 const Players=() => {
 
-    
+
     function onKeyDown(e: any) {
         if (e.key === 'ArrowUp')
             if (posPlayer1 > 8)
@@ -25,10 +20,10 @@ const Players=() => {
         if (player1 !== null)
             player1.style.top= "calc(" + posPlayer1.toString() + "% - 8%)";
     }
-    
-    
+
+
     document.addEventListener("keydown", onKeyDown);
-    
+
 
 
     return (
@@ -54,6 +49,5 @@ const PongPage=() => {
         </div>
     );
   };
-  
+
   export default PongPage;
-  

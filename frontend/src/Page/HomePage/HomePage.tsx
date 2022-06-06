@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import Navbar from '../../Module/Navbar/Navbar';
 import './../assets/Font.css';
 
@@ -12,6 +11,5 @@ const HomePage=() => {
         </div>
     );
   };
-  
+
   export default HomePage;
-  
