@@ -54,7 +54,7 @@ services:
       - webapp
 
   adminer:
-    image: adminer
+    image: adminer:4.8.1
     container_name: adminer
     restart: always
     depends_on:
