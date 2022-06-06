@@ -1,4 +1,3 @@
-import React from 'react';
 import Navbar from '../../Module/Navbar/Navbar';
 import './../assets/Font.css';
 import './PongPage.css';
@@ -152,6 +151,8 @@ const PongPage=() => {
     
     // Lance la fonction onKeyUp chaque fois qu'une touche est relachée
     document.addEventListener("keyup", onKeyUp);
+
+
 
     /*
         moveBall : permet de calculer les mouvements de la balle
@@ -417,6 +418,5 @@ const PongPage=() => {
         </div>
     );
   };
-  
+
   export default PongPage;
-  

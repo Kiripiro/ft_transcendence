@@ -14,6 +14,8 @@ services:
     volumes:
     - db_data:/var/lib/postgres
     restart: always
+    env_file:
+      - ./.env
     environment:
       POSTGRES_HOST: ${POSTGRES_HOST}
       POSTGRES_PORT: ${POSTGRES_PORT}
@@ -31,7 +33,7 @@ services:
       - backend
     build: ./frontend
     environment:
-      - DB_SERVER=${POSTGRES_DB}
+      DB_SERVER: ${POSTGRES_DB}
     restart: always
     ports:
       - 3000:3000
@@ -44,7 +46,7 @@ services:
       - db
     build: ./backend
     environment:
-      - POSTGRES_USER=backend
+      POSTGRES_USER: backend
     restart: always
     ports:
       - 5000:5000

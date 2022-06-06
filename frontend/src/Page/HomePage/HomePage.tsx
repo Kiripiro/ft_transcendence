@@ -1,5 +1,3 @@
-import { rmSync } from 'fs';
-import React, { useState, Component } from 'react';
 import Navbar from '../../Module/Navbar/Navbar';
 import './../assets/Font.css';
 import './HomePage.css'
@@ -72,6 +70,5 @@ class HomePage extends Component<{}, {friends: any[]}> {
         );
     }
   };
-  
+
   export default HomePage;
-  

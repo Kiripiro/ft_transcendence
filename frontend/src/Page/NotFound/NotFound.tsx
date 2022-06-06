@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import Navbar from '../../Module/Navbar/Navbar';
 import './../assets/Font.css';
 import './NotFound.css';
@@ -14,6 +13,5 @@ const NotFound=() => {
         </div>
     );
   };
-  
+
   export default NotFound;
-  
