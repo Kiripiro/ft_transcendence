@@ -2,6 +2,8 @@
 
 body{
 	background: #302E2D;
+	overflow-y: hidden;
+	overflow-x: hidden;
 	font-family: 'Roboto';
 	color: #FFFF;
 }
@@ -9,21 +11,19 @@ body{
 .horizontal {
 	display: flex;
 	flex-direction: column;
-	height: 100%;
 }
 
 .vertical {
-	height: 100%;
+	height: 93vh;
+	margin: 1vh 1vw 1vh 1vw;
 	display: flex;
-	margin: 1%;
 }
 
 main{
 	background: #3A3935;
 	display: flex;
 	width: 70%;
-	height: inherit;
-	animation: apparition 0.8s ease-out;
+	animation: apparition .8s ease-out;
 	box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
 
@@ -43,8 +43,36 @@ main{
 	box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
 	margin: 1%;
 	width: 50%;
-	max-height: inherit;
+	display: flex;
+	flex-direction: column;
 	transition: all 0.5s;
+	overflow: hidden;
+}
+
+.match-history:hover {
+	overflow-y: auto;
+}
+
+.match-history::-webkit-scrollbar {
+	display: none;
+}
+
+.game, .match-history h3 {
+	animation: apparition .8s ease-out;
+}
+
+.game-win {
+	margin: .5vw;
+	height: 8vh;
+	min-height: 8vh;
+	background: rgba(182, 230, 189, 1);
+}
+
+.game-lose {
+	margin: .5vw;
+	height: 8vh;
+	min-height: 8vh;
+	background: rgba(245, 154, 142, 1);
 }
 
 .match-history:hover {
@@ -97,8 +125,19 @@ main{
 	width: 30%;
 	margin-left: 1%;
 	height: inherit;
-	animation: apparition 0.8s ease-out;
+	animation: apparition2 .8s ease-out;
 	box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+
+@keyframes apparition2 {
+	from {
+		opacity: 0;
+		transform: translateY(400px);
+	}	
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
 
 .user-info {
