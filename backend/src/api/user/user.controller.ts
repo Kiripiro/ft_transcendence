@@ -8,6 +8,11 @@ export class UserController {
   @Inject(UserService)
   private readonly service: UserService;
 
+  @Get()
+  public getAllUsers(): Promise<UserEntity[]> {
+    return this.service.getAllUsers();
+  }
+
   @Get(':id')
   public getUser(@Param('id', ParseIntPipe) id: number): Promise<UserEntity> {
 	console.log('test get');
