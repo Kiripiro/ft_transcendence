@@ -8,7 +8,7 @@ import {
   } from '@nestjs/websockets';
   import { Server, Socket } from 'socket.io';
   import { Logger } from '@nestjs/common';
-  
+
   @WebSocketGateway({
     cors: {
       origin: '*',
@@ -19,7 +19,7 @@ import {
     server: Server;
 
     private logger: Logger = new Logger('AppGateway');
-  
+
     handleDisconnect(client: any) {
         this.logger.log( `Client disconnected: ${client.id}`);
     }

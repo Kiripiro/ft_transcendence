@@ -7,7 +7,7 @@ CREATE EXTENSION pgcrypto;
 
 -- CREATING TABLES
 -- USERS
-CREATE TABLE users
+/*CREATE TABLE users
 (
     id          SERIAL,
     login       VARCHAR(10)  NOT NULL,
@@ -127,3 +127,4 @@ CREATE TABLE rooms_admins
 
 ALTER TABLE rooms_admins
 	OWNER TO backend;
+*/
