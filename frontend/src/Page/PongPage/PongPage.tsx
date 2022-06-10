@@ -395,7 +395,6 @@ const PongPage=() => {
     }}}
 
     setInterval(draw);
-
     
     return (
         <div className='Font'>
@@ -405,15 +404,7 @@ const PongPage=() => {
                 className='pongBoard'
                 height={canvas.height}
                 width={canvas.width}
-            />
-            {/* <Navbar/>
-            <div className="pongBoard" id="pongBoard">
-                <div className="limitPlayer1"></div>
-                <div className="limitCamps"></div>
-                <div className="limitPlayer2"></div>
-                <Players/>
-                <Ball/>
-            </div> */}
+                />
         </div>
     );
   };
