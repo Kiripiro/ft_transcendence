@@ -16,7 +16,7 @@ export class UserController {
   @Get(':id')
   public getUser(@Param('id', ParseIntPipe) id: number): Promise<UserEntity> {
 	console.log('test get');
-	return this.service.getUser(id);
+	return this.service.getUserById(id);
   }
 
   @Post()

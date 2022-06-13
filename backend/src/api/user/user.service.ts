@@ -15,7 +15,7 @@ export class UserService {
 		return this.userRepository.find();
 	}
 
-	async getUser(id: number): Promise<UserEntity> {
+	async getUserById(id: number): Promise<UserEntity> {
 		const user = await this.userRepository.findOneBy( {id: id} );
 		if (!user) {
 			console.log('Didn\'t find user !');
@@ -26,7 +26,11 @@ export class UserService {
 	}
 
 	async createUser(body: CreateUserDto): Promise<UserEntity> {
-		console.log('oui');
+		const response = await this.userRepository.findOneBy( {login: body.login} );
+		if (response)
+			return null;
+		console.log(response);
+
 		const user: UserEntity = new UserEntity();
 
 		user.nickname = body.nickname;
