@@ -4,10 +4,17 @@ import { NestFactory } from '@nestjs/core';
 //	import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 
+declare const module: any;
+
 async function bootstrap() {
 	const app /*: NestExpressApplication*/ = await NestFactory.create(AppModule);
 	const config: ConfigService = app.get(ConfigService);
 	const port: number = config.get<number>('PORT');
+
+	if (module.hot) {
+		module.hot.accept();
+		module.hot.dispose(() => app.close());
+	}
 
 	app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 

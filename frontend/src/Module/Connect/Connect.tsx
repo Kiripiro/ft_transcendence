@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import io from 'socket.io-client';
 import Navbar from '../Navbar/Navbar';
 import '../../Page/assets/Font.css'
-const socket = io('http://localhost:5001');
+const socket = io('http://localhost:5000');
 
 interface msgToSend {
   id: string;

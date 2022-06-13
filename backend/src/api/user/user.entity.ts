@@ -3,25 +3,29 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 @Entity('user')
 export class UserEntity {
   @PrimaryGeneratedColumn()
-  public id!: number;
+  public id: number;
 
-  @Column({ type: 'varchar', length: 120 })
-  public name: string;
+  @Column({ type: 'varchar', length: 10 })
+  public login: string;
 
-  @Column({ type: 'varchar', length: 120 })
-  public email: string;
+  @Column({ type: 'varchar', length: 30 })
+  public nickname: string;
 
-  @Column({ type: 'boolean', default: false })
-  public isDeleted: boolean;
+  @Column({ default: 0})
+  public wins: number;
 
-  /*
-   * Create and Update Date Columns
-   */
+  @Column({ default: 0})
+  public losses: number;
 
-  @CreateDateColumn({ type: 'timestamp' })
-  public createdAt!: Date;
+  @Column({ type: 'int', default: 0})
+  public rank: number;
 
-  @UpdateDateColumn({ type: 'timestamp' })
-  public updatedAt!: Date;
+  @Column({ type: 'varchar', nullable: true})
+  public profile_pic: string;
 
+  @Column({ type: 'varchar', nullable: true})
+  public totpsecret: string;
+
+  @Column({ type: 'int', nullable: true })
+  public uid: number;
 }

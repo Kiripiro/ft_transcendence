@@ -25,12 +25,13 @@ export class UserService {
 		return user;
 	}
 
-	public createUser(body: CreateUserDto): Promise<UserEntity> {
-	  const user: UserEntity = new UserEntity();
+	async createUser(body: CreateUserDto): Promise<UserEntity> {
+		console.log('oui');
+		const user: UserEntity = new UserEntity();
 
-	  user.name = body.name;
-	  user.email = body.email;
+		user.nickname = body.nickname;
+		user.login = body.login;
 
-	  return this.userRepository.save(user);
+		return this.userRepository.save(user);
 	}
 }
