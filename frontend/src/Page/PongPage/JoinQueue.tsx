@@ -5,24 +5,18 @@ import { useSelector } from "react-redux";
 import { RootState } from '../../State';
 
 const JoinRoom=(props: any) => {
-    var tmp = 0;
-    const [roomId, setRoomId] = useState('h');
-
+    const [inQueue, setInQueue] = useState(false);
     
     const utilsData = useSelector((state: RootState) => state.utils);
     
     utilsData.socket.removeAllListeners();
     
-    function joinRoom(roomId: string) {
-        
-        console.log('roomId', roomId);
-
-        if (!props.inRoom)
-            utilsData.socket.emit('JOIN_ROOM', roomId);
+    function joinQueue() {
+        utilsData.socket.emit('JOIN_QUEUE');
     }
     
     utilsData.socket.on('joined', function() {
-        props.setInRoom(true);
+        setInQueue(true);
     });
 
     utilsData.socket.on('start', function() {
@@ -32,9 +26,8 @@ const JoinRoom=(props: any) => {
     return (
         <div className='Font'>
             <Navbar/>
-            <div className='joinRoom'>
-                <input value={roomId} onChange={e => setRoomId(e.target.value)} placeholder="Enter a Room ID here..."/>
-                <button type="button" onClick={() => joinRoom(roomId)}> {(!props.inRoom ? <>Join room</> : <>Find another player</>)} </button>
+            <div className='joinQueue'>
+                <button type="button" onClick={() => joinQueue()}> {inQueue ? <>Loading...</> : <>Search Game...</>} </button>
             </div>
         </div>
     );

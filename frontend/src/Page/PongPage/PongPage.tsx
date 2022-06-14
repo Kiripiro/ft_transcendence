@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Navbar from '../../Module/Navbar/Navbar';
 import './../assets/Font.css';
 import './PongPage.css';
-import JoinRoom from './JoinRoom'
+import JoinRoom from './JoinQueue'
 
 var canvas = {
     "width" : 800,

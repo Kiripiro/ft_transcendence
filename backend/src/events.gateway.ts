@@ -20,6 +20,8 @@ import { IoAdapter } from '@nestjs/platform-socket.io';
     server: Server;
 
     private logger: Logger = new Logger('AppGateway');
+
+    // private logger: Map<string, >
   
     handleDisconnect(client: any) {
         this.logger.log( `Client disconnected: ${client.id}`);
@@ -43,17 +45,32 @@ import { IoAdapter } from '@nestjs/platform-socket.io';
       this.logger.log(`${client.id} said: ${data.text}`);
       this.server.to(client.id).emit('msgToClient', 505);
     }
-    
+
     @SubscribeMessage('JOIN_ROOM')
-    async joinRoom(client: Socket, data: any) {
-      if (!data)
-      return ;
-      this.logger.log(`${client.id} join: ${data}`);
-      client.join(data);
-      var roomSockets = this.server.in(data).fetchSockets();
-      if (client.rooms.has(data))
-        this.server.to(client.id).emit('joined');
+    async joinRoom(client: Socket, roomId: string) {
+      
+      client.join(roomId);
+      this.logger.log(`${client.id} join: ${roomId}`)
+      
+      var roomSockets = this.server.in(roomId).fetchSockets();
+      
       if ((await roomSockets).length == 2)
-        this.server.to(data).emit('start')
+      this.server.to(roomId).emit('start')
+    }
+
+    @SubscribeMessage('JOIN_QUEUE')
+    async joinQueue(client:Socket) {
+      
+      this.server.to(client.id).emit('joined')
+
+      this.logger.log(this.server.sockets.sockets.size)
+      this.logger.log(this.server.sockets.adapter.rooms.size)
+      this.logger.log(this.server.sockets.adapter.rooms.size - this.server.sockets.sockets.size)
+
+      for (let roomId = this.server.sockets.adapter.rooms.size - this.server.sockets.sockets.size; ; roomId++)
+        if (!this.server.sockets.adapter.rooms.has(roomId.toString()) || (await this.server.sockets.in(roomId.toString()).fetchSockets()).length < 2) {
+          this.joinRoom(client, roomId.toString())
+          break ;
+        }
     }
   }
