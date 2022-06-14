@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import HomePage from './Page/HomePage/HomePage';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import NotFound from './Page/NotFound/NotFound';
-import PongPage from './Page/PongPage/PongPage';
-import JoinRoom from './Page/PongPage/JoinRoom';
+import GameSwitch from './Page/PongPage/GameSwitch';
 
 const App=() => {
 
@@ -16,8 +15,7 @@ const App=() => {
                  <Route path='/' element={<Navigate to="/HomePage" replace />}/>
 
                  <Route path='/HomePage' element={<HomePage/>}/>
-                 <Route path='/joinRoom' element={<JoinRoom/>}/>
-                 <Route path='/pong' element={<PongPage/>}/>
+                 <Route path='/pong' element={<GameSwitch/>}/>
                  <Route path='/NotFound' element={<NotFound/>}/>
                  <Route path='/*' element={<Navigate to="/NotFound" replace />}/>
                   

@@ -8,8 +8,7 @@ import {
   } from '@nestjs/websockets';
   import { Server, Socket } from 'socket.io';
   import { Logger } from '@nestjs/common';
-
-  const rooms = Array<string>();
+import { IoAdapter } from '@nestjs/platform-socket.io';
 
   @WebSocketGateway({
     cors: {
@@ -48,10 +47,13 @@ import {
     @SubscribeMessage('JOIN_ROOM')
     async joinRoom(client: Socket, data: any) {
       if (!data)
-        return ;
+      return ;
       this.logger.log(`${client.id} join: ${data}`);
       client.join(data);
-      this.logger.log(`${client.id}'s rooms: ${client.rooms.values}`);
-      
+      var roomSockets = this.server.in(data).fetchSockets();
+      if (client.rooms.has(data))
+        this.server.to(client.id).emit('joined');
+      if ((await roomSockets).length == 2)
+        this.server.to(data).emit('start')
     }
   }

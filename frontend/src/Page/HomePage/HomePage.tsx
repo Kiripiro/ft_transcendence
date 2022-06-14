@@ -1,23 +1,25 @@
 import { rmSync } from 'fs';
 import React, { useState, Component } from 'react';
+import { useSelector } from 'react-redux';
 import Navbar from '../../Module/Navbar/Navbar';
+import { RootState } from '../../State';
 import './../assets/Font.css';
 import './HomePage.css'
 
-class HomePage extends Component<{}, {friends: any[]}> {
-    constructor(props: any){
-        super(props);
-        this.state = {
-            friends: []
-        };
-    }
+// class HomePage extends Component<{}, {friends: any[]}> {
+function HomePage() {
 
-    componentDidMount() {
-        fetch('http://localhost:3000/friends')
-          .then(res => res.json())
-          .then(ret => this.setState({friends: ret}))
-        console.log('=== componentDidMount ===');
-    }
+    // constructor(props: any){
+    //     super(props);
+    //     this.state = {
+    //         friends: []
+    //     };
+    // }
+    
+
+    // componentDidMount() {
+
+    // }
 
     // componentDidUpdate(prevProps: any, prevState: any){
     //     if (prevState.friends !== this.state.friends)
@@ -34,8 +36,6 @@ class HomePage extends Component<{}, {friends: any[]}> {
     //         }
     //     }
     // }
-
-    render(){
         return (
             <div className='Font'>
                 <div className="horizontal">
@@ -58,11 +58,11 @@ class HomePage extends Component<{}, {friends: any[]}> {
                             </div>
                             <div className="friends-info" id='friendsInfo'>
                                 <h3>Friends</h3>
-                                <div className='friends'>
+                                {/* <div className='friends'>
                                     {this.state.friends.map(friend => (<div key={friend.id} className='friend-card'>
                                         {friend.user}
                                     </div>))}
-                                </div>
+                                </div> */}
                             </div>
                             <div className="chat"></div>
                         </div>
@@ -70,7 +70,6 @@ class HomePage extends Component<{}, {friends: any[]}> {
                 </div>
             </div>
         );
-    }
   };
   
   export default HomePage;

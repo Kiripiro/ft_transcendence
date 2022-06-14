@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from '../../Module/Navbar/Navbar';
 import './../assets/Font.css';
 import './PongPage.css';
+import JoinRoom from './JoinRoom'
 
 var canvas = {
     "width" : 800,
@@ -42,8 +43,7 @@ var Ball = {
 
 var inPlay: boolean = false;
 
-const PongPage=() => {
-
+const PongPage=(props: any) => {
 
     /*
         checkCollisionPlayer1 : retourne 1 si la balle rentre en collision avec le joueur 1
@@ -399,6 +399,7 @@ const PongPage=() => {
     return (
         <div className='Font'>
             <Navbar/>
+            <button type="button" className="btn btn-primary" onClick={() => props.setGameStart(false)}>set inRoom false</button>
             <canvas
                 id='pongBoard'
                 className='pongBoard'
