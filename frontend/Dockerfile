@@ -12,10 +12,5 @@ COPY package-lock.json ./
 RUN set -ux \
 	npm install --silent \
 	&& npm install react-scripts@5.0.1 -g --silent
-# RUN npm install http-parser-js
-
-# add app
-COPY . ./
-
 # start app
 CMD ["npm", "run", "start"]
