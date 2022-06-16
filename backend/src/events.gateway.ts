@@ -20,8 +20,6 @@ import { IoAdapter } from '@nestjs/platform-socket.io';
     server: Server;
 
     private logger: Logger = new Logger('AppGateway');
-
-    // private logger: Map<string, >
   
     handleDisconnect(client: any) {
         this.logger.log( `Client disconnected: ${client.id}`);
@@ -58,19 +56,47 @@ import { IoAdapter } from '@nestjs/platform-socket.io';
       this.server.to(roomId).emit('start')
     }
 
+    ///////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////
+    /*                      POUR PONG                        */
+    ///////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////
+
+    private pongInfo: Array<gameRoomClass>
+
+
+
     @SubscribeMessage('JOIN_QUEUE')
     async joinQueue(client:Socket) {
       
       this.server.to(client.id).emit('joined')
 
-      this.logger.log(this.server.sockets.sockets.size)
-      this.logger.log(this.server.sockets.adapter.rooms.size)
-      this.logger.log(this.server.sockets.adapter.rooms.size - this.server.sockets.sockets.size)
-
-      for (let roomId = this.server.sockets.adapter.rooms.size - this.server.sockets.sockets.size; ; roomId++)
+      for (let roomId = 0; ; roomId++)
         if (!this.server.sockets.adapter.rooms.has(roomId.toString()) || (await this.server.sockets.in(roomId.toString()).fetchSockets()).length < 2) {
           this.joinRoom(client, roomId.toString())
-          break ;
+
+          if (!this.pongInfo.length)
+
+          this.logger.log('test', this.pongInfo)
+
+          // this.setPlayer(client, this.pongInfo[roomId].nbPlayer, roomId)
+
+          break
         }
     }
+
+    ///////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////
+    /*                      POUR PONG                        */
+    ///////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////
+
+
+
+
+
   }
+
+
+
+
