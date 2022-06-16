@@ -10,7 +10,8 @@ ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json ./
 COPY package-lock.json ./
 RUN set -ux \
-	npm install --silent \
-	&& npm install react-scripts@5.0.1 -g --silent
+	npm install \
+	&& npm install react-scripts@5.0.1 --location=global
+COPY . .
 # start app
 CMD ["npm", "run", "start"]
