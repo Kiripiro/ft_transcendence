@@ -19,7 +19,8 @@ const JoinRoom=(props: any) => {
         setInQueue(true);
     });
 
-    utilsData.socket.on('start', function() {
+    utilsData.socket.on('start', function(roomID: string) {
+        props.setRoomID(roomID);
         props.setGameStart(true);
     });
 

@@ -47,19 +47,6 @@ class Player {
 		this.ready = false
 	}
 
-	resetPos(canvas: Canvas) {
-		this.width = canvas.width / 40
-		this.height = canvas.height / 5
-
-		this.down = false
-		this.up = false
-
-		this.x = canvas.width / 8 - this.width / 2
-		this.y = canvas.height / 2 - this.height / 2
-
-		this.speed = 1
-	}
-
   }
 
   class Ball {
@@ -74,18 +61,6 @@ class Player {
 	radius : number
 
 	constructor(canvas: Canvas) {
-		this.x = canvas.width / 2
-		this.y = canvas.height / 2
-
-		this.dx = 1
-		this.dy = 0
-
-		this.speed = 1
-
-		this.radius = 10
-	}
-
-	reset(canvas: Canvas) {
 		this.x = canvas.width / 2
 		this.y = canvas.height / 2
 
@@ -159,19 +134,11 @@ class Player {
 		    // si la balle touche le camps du joueur 1 : augmente le score du joueur 2 et redémare le jeu
 		    if (this.ball.x + this.ball.dx > this.canvas.width - this.ball.radius ) {
 		        this.players[0].score++;
-				this.resetAllPos()
-				this.players[0].ready = false
-				this.players[1].ready = false
-				return
 		    }
 	
 		    // si la balle touche le camps du joueur 2 : augmente le score du joueur 1 et redémare le jeu
 		    if (this.ball.x + this.ball.dx < this.ball.radius) {
 				this.players[1].score++;
-				this.resetAllPos()
-				this.players[0].ready = false
-				this.players[1].ready = false
-				return
 		    }
 	
 		    // si la balle touche le mur du haut ou le mur du bas : rebondis
@@ -210,12 +177,5 @@ class Player {
 
 		ready(): boolean {
 			return this.players[0].ready && this.players[1].ready
-		}
-
-		resetAllPos() {
-			this.ball.reset(this.canvas)
-			for (let i = 0; i < 2; i++)
-				this.players[i].resetPos(this.canvas);
-			this.players[1].x = this.canvas.width / 8 * 7 - this.players[1].width / 2
 		}
   }

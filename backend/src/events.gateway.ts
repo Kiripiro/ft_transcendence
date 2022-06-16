@@ -8,7 +8,8 @@ import {
   } from '@nestjs/websockets';
   import { Server, Socket } from 'socket.io';
   import { Logger } from '@nestjs/common';
-import { IoAdapter } from '@nestjs/platform-socket.io';
+import { gameRoomClass } from './gameRoomClass';
+
 
   @WebSocketGateway({
     cors: {
@@ -52,8 +53,6 @@ import { IoAdapter } from '@nestjs/platform-socket.io';
       
       var roomSockets = this.server.in(roomId).fetchSockets();
       
-      if ((await roomSockets).length == 2)
-      this.server.to(roomId).emit('start')
     }
 
     ///////////////////////////////////////////////////////////
@@ -62,41 +61,95 @@ import { IoAdapter } from '@nestjs/platform-socket.io';
     ///////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////
 
-    private pongInfo: Array<gameRoomClass>
+    private pongInfo: Array<gameRoomClass> = new Array()
 
-
+    getRoomByID(roomID: string): [number, gameRoomClass] | null {
+        for (let i = 0; i < this.pongInfo.length; i++)
+        if (this.pongInfo[i].roomID == roomID)
+          return [i, this.pongInfo[i]]
+        return null
+    }
 
     @SubscribeMessage('JOIN_QUEUE')
     async joinQueue(client:Socket) {
       
       this.server.to(client.id).emit('joined')
 
-      for (let roomId = 0; ; roomId++)
-        if (!this.server.sockets.adapter.rooms.has(roomId.toString()) || (await this.server.sockets.in(roomId.toString()).fetchSockets()).length < 2) {
+      for (let roomId = 0; ; roomId++) {
+        var room: [number, gameRoomClass] | null = this.getRoomByID(roomId.toString())
+        if (room == null || !room[1].players[1].id) {
+          if (room == null) {
+            this.pongInfo.push(new gameRoomClass(roomId.toString(), client.id))
+            room = this.getRoomByID(roomId.toString());
+          }
+          else
+            this.pongInfo[room[0]].setOponnent(client.id)
           this.joinRoom(client, roomId.toString())
 
-          if (!this.pongInfo.length)
-
-          this.logger.log('test', this.pongInfo)
-
-          // this.setPlayer(client, this.pongInfo[roomId].nbPlayer, roomId)
-
+          if (this.pongInfo[room[0]].players[1].id)
+            this.server.to(room[1].roomID).emit('start', room[1].roomID);
           break
         }
+      }
     }
+
+    @SubscribeMessage('RENDER')
+    async render(client:Socket, roomID: string) {
+      
+      var room = this.getRoomByID(roomID);
+      
+      if (room != null) {
+        
+        if (this.pongInfo[room[0]].ready()) {
+
+          this.pongInfo[room[0]].movePlayer()
+          
+          this.pongInfo[room[0]].moveBall()
+          
+        }
+
+        this.server.to(client.id).emit('render', this.pongInfo[room[0]])
+      }
+    }
+
+
+    @SubscribeMessage('ARROW_UP')
+    async arrowUp(client: Socket, info: [string, boolean]) {
+      var room = this.getRoomByID(info[0])
+      if (room != null) {
+
+        for (let index = 0; index < 2; index++)
+          if (this.pongInfo[room[0]].players[index].id == client.id)
+              this.pongInfo[room[0]].players[index].up = info[1]
+
+    }}
+
+    @SubscribeMessage('ENTER')
+    async enter(client: Socket, info: [string, boolean]) {
+      var room = this.getRoomByID(info[0])
+      if (room != null) {
+
+        for (let index = 0; index < 2; index++)
+          if (this.pongInfo[room[0]].players[index].id == client.id)
+              this.pongInfo[room[0]].players[index].ready = true
+
+    }}
+
+    // info type: string -> roomID | boolean -> value of key (press or release)
+    @SubscribeMessage('ARROW_DOWN')
+    async arrowDown(client: Socket, info: [string, boolean]) {
+      var room = this.getRoomByID(info[0])
+      if (room != null) {
+        
+        for (let index = 0; index < 2; index++)
+          if (this.pongInfo[room[0]].players[index].id == client.id)
+              this.pongInfo[room[0]].players[index].down = info[1]
+
+    }}
 
     ///////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////
     /*                      POUR PONG                        */
     ///////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////
-
-
-
-
-
-  }
-
-
-
-
+}
