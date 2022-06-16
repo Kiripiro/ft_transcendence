@@ -4,5 +4,5 @@ export class Auth42DTO {
 	@IsString()
 	code: string;
 
-	nickanme?: string
+	nickname?: string
 }

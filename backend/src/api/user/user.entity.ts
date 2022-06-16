@@ -6,6 +6,7 @@ export class UserEntity {
   public id: number;
 
   @Column({ type: 'varchar', length: 10 })
+  @Index()
   public login: string;
 
   @Column({ type: 'varchar', length: 30 })
