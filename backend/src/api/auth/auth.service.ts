@@ -6,6 +6,7 @@ import { UserService } from '../user/user.service';
 @Injectable()
 export class AuthService {
 	constructor(
+		private userServices: UserService,
 		private http: HttpService,
 	  ) {}
 
@@ -22,7 +23,7 @@ export class AuthService {
 		`grant_type=authorization_code&client_id=${this.clientId}&client_secret=${this.clientSecret}&code=${query.code}&redirect_uri=${this.redirectURI}`);
 
 		this.accessToken = (await lastValueFrom(token)).data.access_token;
-		console.log(this.accessToken);
+		console.log("access_token: ", this.accessToken);
 		this.headers = { Authorization: `Bearer ${this.accessToken}` };
 
 		const { data } = await lastValueFrom(
@@ -30,10 +31,12 @@ export class AuthService {
 			  headers: { Authorization: `Bearer ${this.accessToken}` },
 			}),
 		  );
-		console.log(data.login);
-	}
-
-	async getCode(code: string): Promise<string> {
-		return code;
+		console.log("login: ", data.login);
+		//if (!data) throw new UnauthorizedException();
+		let user = await this.userServices.getUserByLogin(data.login);
+		if (!user) {
+			user = await this.userServices.createUser(data);
+			console.log('User', data.login, 'created.');
+		}
 	}
 }

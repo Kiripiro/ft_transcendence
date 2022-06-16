@@ -23,6 +23,14 @@ export class UserService {
 		return user;
 	}
 
+	async getUserByLogin(login: string): Promise<UserEntity> {
+		const user = await this.userRepository.findOneBy( {login: login} );
+		if (!user) {
+			return null;
+		}
+		return user;
+	}
+
 	async createUser(body: CreateUserDto): Promise<UserEntity> {
 
 		const response = await this.userRepository.findOneBy( {login: body.login} );
@@ -31,7 +39,7 @@ export class UserService {
 
 		const user: UserEntity = new UserEntity();
 
-		user.nickname = body.nickname;
+		user.nickname = body.login;
 		user.login = body.login;
 
 		return this.userRepository.save(user);
