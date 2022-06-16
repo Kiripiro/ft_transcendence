@@ -1,8 +1,8 @@
 import HomePage from './Page/HomePage/HomePage';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Connect from './Module/Connect/Connect';
 import NotFound from './Page/NotFound/NotFound';
 import PongPage from './Page/PongPage/PongPage';
+import ChatPage from './Page/Chat/ChatPage';
 
 const App=() => {
 
@@ -16,8 +16,8 @@ const App=() => {
 
                  <Route path='/HomePage' element={<HomePage/>}/>
                  <Route path='/pong' element={<PongPage/>}/>
-                 <Route path='/Connect' element={<Connect/>}/>
                  <Route path='/NotFound' element={<NotFound/>}/>
+                 <Route path='/Chat' element={<ChatPage/>}/>
                  <Route path='/*' element={<Navigate to="/NotFound" replace />}/>
                   
               </Routes>
