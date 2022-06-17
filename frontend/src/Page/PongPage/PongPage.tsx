@@ -161,14 +161,18 @@ const PongPage=(props: any) => {
 
                 if (!room.players[0].ready || !room.players[1].ready) {
                     drawText(ctx, room)
-                    return 
+                    return
                 }
 
                 drawPlayers(ctx, room)
-                    
+
                 drawBall(ctx, room)
                     
     }}});
+
+    utilsData.socket.on('finish', function(room: gameRoomClass) {
+        props.setGameFinish(true);
+    });
 
         function onKeyDown(e: any) {
             if (e.key === 'ArrowUp')
@@ -184,9 +188,9 @@ const PongPage=(props: any) => {
     
         function onKeyUp(e: any) {
             if (e.key === 'ArrowUp')
-                utilsData.socket.emit('ARROW_UP', [props.roomID, false]);
+            utilsData.socket.emit('ARROW_UP', [props.roomID, false]);
             if (e.key === 'ArrowDown')
-                utilsData.socket.emit('ARROW_DOWN', [props.roomID, false]);
+            utilsData.socket.emit('ARROW_DOWN', [props.roomID, false]);
         }
     
         // Lance la fonction onKeyDown chaque fois qu'une touche est relachée

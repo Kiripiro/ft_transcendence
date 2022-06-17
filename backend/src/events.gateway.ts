@@ -106,12 +106,25 @@ import { gameRoomClass } from './gameRoomClass';
           
           this.pongInfo[room[0]].moveBall()
           
-        }
+          if (this.pongInfo[room[0]].win())
+           this.server.to(client.id).emit('finish', this.pongInfo[room[0]])
+      }
 
         this.server.to(client.id).emit('render', this.pongInfo[room[0]])
       }
     }
 
+    
+    @SubscribeMessage('ENTER')
+    async enter(client: Socket, info: [string, boolean]) {
+      var room = this.getRoomByID(info[0])
+      if (room != null) {
+
+        for (let index = 0; index < 2; index++)
+          if (this.pongInfo[room[0]].players[index].id == client.id)
+              this.pongInfo[room[0]].players[index].ready = true
+
+    }}
 
     @SubscribeMessage('ARROW_UP')
     async arrowUp(client: Socket, info: [string, boolean]) {
@@ -121,17 +134,6 @@ import { gameRoomClass } from './gameRoomClass';
         for (let index = 0; index < 2; index++)
           if (this.pongInfo[room[0]].players[index].id == client.id)
               this.pongInfo[room[0]].players[index].up = info[1]
-
-    }}
-
-    @SubscribeMessage('ENTER')
-    async enter(client: Socket, info: [string, boolean]) {
-      var room = this.getRoomByID(info[0])
-      if (room != null) {
-
-        for (let index = 0; index < 2; index++)
-          if (this.pongInfo[room[0]].players[index].id == client.id)
-              this.pongInfo[room[0]].players[index].ready = true
 
     }}
 

@@ -4,11 +4,16 @@ import PongPage from './PongPage'
 
 const GameSwitch=() => {
     const [gameStart, setGameStart] = useState(false);
+    const [gameFinish, setGameFinish] = useState(false);
     const [roomID, setRoomID] = useState("");
 
+    if (gameFinish)
+        return (
+            <></>
+        )
     if (gameStart)
         return (
-            <PongPage gameStart={gameStart} setGameStart={setGameStart} roomID={roomID}/>
+            <PongPage gameStart={gameStart} setGameStart={setGameStart} roomID={roomID} setGameFinish={setGameFinish}/>
         )
     else
         return (

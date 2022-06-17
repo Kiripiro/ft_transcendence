@@ -1,3 +1,5 @@
+import { randomInt } from "crypto"
+
 export {Canvas, Player, gameRoomClass}
 
 class Canvas {
@@ -18,6 +20,9 @@ class Player {
 	
 	down: boolean
 	up: boolean
+
+	expansion: boolean
+	reduce: boolean
 	
 	x: number
 	y: number
@@ -36,6 +41,9 @@ class Player {
 
 		this.down = false
 		this.up = false
+
+		this.expansion = false
+		this.reduce = false
 
 		this.x = canvas.width / 8 - this.width / 2
 		this.y = canvas.height / 2 - this.height / 2
@@ -77,10 +85,10 @@ class Player {
 		this.x = canvas.width / 2
 		this.y = canvas.height / 2
 
-		this.dx = 1
+		this.dx = -5
 		this.dy = 0
 
-		this.speed = 1
+		this.speed = 5
 
 		this.radius = 10
 	}
@@ -89,10 +97,10 @@ class Player {
 		this.x = canvas.width / 2
 		this.y = canvas.height / 2
 
-		this.dx = 1
+		this.dx = -5
 		this.dy = 0
 
-		this.speed = 1
+		this.speed = 5
 
 		this.radius = 10
 	}
@@ -132,6 +140,12 @@ class Player {
 			if (this.players[i].down)
 			  if (this.players[i].y + this.players[i].height < this.canvas.height)
 				this.players[i].y += this.players[i].speed;
+			if (this.players[i].expansion)
+				if (this.players[i].height < this.canvas.height)
+					this.players[i].height++
+			if (this.players[i].reduce)
+				if (this.players[i].height > this.canvas.height / 6)
+					this.players[i].height--
 		  }
 	  }
 
@@ -217,5 +231,9 @@ class Player {
 			for (let i = 0; i < 2; i++)
 				this.players[i].resetPos(this.canvas);
 			this.players[1].x = this.canvas.width / 8 * 7 - this.players[1].width / 2
+		}
+
+		win(): boolean {
+			return (this.players[0].score == 5 || this.players[1].score == 5)
 		}
   }
