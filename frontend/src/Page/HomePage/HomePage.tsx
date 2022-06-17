@@ -6,35 +6,10 @@ import './../assets/Font.css';
 import './HomePage.css'
 
 class HomePage extends Component<{}, {friends: any[]}> {
-    constructor(props: any){
-        super(props);
-        this.state = {
-            friends: []
-        };
-    }
 
-    componentDidMount() {
-        fetch('http://localhost:3000/friends')
-          .then(res => res.json())
-          .then(ret => this.setState({friends: ret}))
-        console.log('=== componentDidMount ===');
+    updateContent = () => {
+        console.log('test');
     }
-
-    // componentDidUpdate(prevProps: any, prevState: any){
-    //     if (prevState.friends !== this.state.friends)
-    //     {
-    //         for (let i = 0; i < this.state.friends.length; i++) {
-    //             if (this.state.friends[i].status)
-    //             {
-    //                 var tag = document.createElement("div");
-    //                 tag.className = "online-friends"
-    //                 var element = document.getElementById("friendsInfo");
-    //                 if (element)
-    //                     element.appendChild(tag);
-    //             }
-    //         }
-    //     }
-    // }
 
     render(){
         return (
@@ -70,11 +45,9 @@ class HomePage extends Component<{}, {friends: any[]}> {
                                 <p className="level">lvl</p>
                             </div>
                             <div className="friends-info" id='friendsInfo'>
-                                <h3>Friends</h3>
-                                <div className='friends'>
-                                    {this.state.friends.map(friend => (<div key={friend.id} className='friend-card'>
-                                        {friend.user}
-                                    </div>))}
+                                <div className="friend-top">
+                                    <h3>Friends</h3>
+                                    <a onClick={this.updateContent}><i className="bi bi-search"></i></a>
                                 </div>
                             </div>
                             <div className="chat"></div>
