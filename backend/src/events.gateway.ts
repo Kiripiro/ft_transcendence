@@ -23,7 +23,18 @@ import { gameRoomClass } from './gameRoomClass';
     private logger: Logger = new Logger('AppGateway');
   
     handleDisconnect(client: any) {
-        this.logger.log( `Client disconnected: ${client.id}`);
+
+      this.logger.log( `Client disconnected: ${client.id}`)
+    
+      var room: [number, gameRoomClass] | null = this.getRoomByClientID(client.id)
+      if (room != null) {
+        for (let i = 0; i < 2; i++)
+          if (this.pongInfo[room[0]].players[i].id == client.id)
+            this.pongInfo[room[0]].players[i].connected = false
+        if (!this.pongInfo[room[0]].players[0].connected && !this.pongInfo[room[0]].players[1].connected)
+          this.pongInfo.splice(room[0], 1)
+      }
+
     }
     handleConnection(client: any, ...args: any[]) {
         this.logger.log( `Client connected: ${client.id}`);
@@ -70,6 +81,14 @@ import { gameRoomClass } from './gameRoomClass';
         return null
     }
 
+    getRoomByClientID(ClientID: string): [number, gameRoomClass] | null {
+      for (let i = 0; i < this.pongInfo.length; i++)
+        for (let j = 0; j < 2; j++)
+          if (this.pongInfo[i].players[j].id == ClientID)
+            return [i, this.pongInfo[i]]
+      return null
+  }
+
     @SubscribeMessage('JOIN_QUEUE')
     async joinQueue(client:Socket) {
       
@@ -81,6 +100,7 @@ import { gameRoomClass } from './gameRoomClass';
           if (room == null) {
             this.pongInfo.push(new gameRoomClass(roomId.toString(), client.id))
             room = this.getRoomByID(roomId.toString());
+            this.pongInfo[room[0]].players[0].connected = true
           }
           else
             this.pongInfo[room[0]].setOponnent(client.id)
@@ -93,6 +113,25 @@ import { gameRoomClass } from './gameRoomClass';
       }
     }
 
+    @SubscribeMessage('SPECTATE_CLIENT')
+    async spectateClient(client:Socket, specID: string) {
+      
+      var room = this.getRoomByID(specID)
+      if (room == null) {
+        this.server.to(client.id).emit('clientNotFound')
+        return
+      }
+      this.joinRoom(client, room[1].roomID)
+      // for (let i = 0; i < 100; i++)
+      this.pongInfo[room[0]].addSpectator(client.id)
+
+      for (let i = 0; i < this.pongInfo[room[0]].spectate.length; i++) {
+        this.logger.log(`pannel: ${this.pongInfo[room[0]].spectate[i].pannel} x: ${this.pongInfo[room[0]].spectate[i].x} | y: ${this.pongInfo[room[0]].spectate[i].y}`)
+      }
+
+      this.server.to(client.id).emit('start', room[1].roomID);
+    }
+
     @SubscribeMessage('RENDER')
     async render(client:Socket, roomID: string) {
       
@@ -102,12 +141,16 @@ import { gameRoomClass } from './gameRoomClass';
         
         if (this.pongInfo[room[0]].ready()) {
 
-          this.pongInfo[room[0]].movePlayer()
+          if (this.pongInfo[room[0]].win()) {
+            this.server.to(client.id).emit('finish', this.pongInfo[room[0]])
+            return
+          }
+          for (let i = 0; i < 2; i++)
+            if (this.pongInfo[room[0]].players[i].id == client.id) {
+              this.pongInfo[room[0]].movePlayer()
+              this.pongInfo[room[0]].moveBall()
+            }
           
-          this.pongInfo[room[0]].moveBall()
-          
-          if (this.pongInfo[room[0]].win())
-           this.server.to(client.id).emit('finish', this.pongInfo[room[0]])
       }
 
         this.server.to(client.id).emit('render', this.pongInfo[room[0]])
@@ -122,7 +165,22 @@ import { gameRoomClass } from './gameRoomClass';
 
         for (let index = 0; index < 2; index++)
           if (this.pongInfo[room[0]].players[index].id == client.id)
-              this.pongInfo[room[0]].players[index].ready = true
+            this.pongInfo[room[0]].players[index].ready = true
+
+    }}
+
+    @SubscribeMessage('SPACE')
+    async space(client: Socket, info: [string, boolean]) {
+      var room = this.getRoomByID(info[0])
+      if (room != null) {
+
+        for (let index = 0; index < 2; index++)
+          if (this.pongInfo[room[0]].players[index].id == client.id) {
+            if (info[1])
+              this.pongInfo[room[0]].players[index].speed = 2
+            else
+              this.pongInfo[room[0]].players[index].speed = 1
+          }
 
     }}
 

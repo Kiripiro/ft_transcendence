@@ -6,15 +6,19 @@ import JoinRoom from './JoinQueue'
 import { useSelector } from 'react-redux';
 import { RootState } from '../../State';
 import { gameRoomClass } from './gameRoomClass';
+import { tmpdir } from 'os';
+import Home from '../../Module/Navbar/Buttons/Home';
+import { Navigate } from 'react-router-dom';
 
 var canvas = {
     "width" : 800,
     "height" : 600
 }
 
-var inPlay: boolean = false;
 
 const PongPage=(props: any) => {
+
+    const [finishGame, setFinishGame] = useState(false);
 
     // // drawFont : desine le fond du jeu
     function drawFont(ctx: CanvasRenderingContext2D | null) {
@@ -134,22 +138,80 @@ const PongPage=(props: any) => {
 
     }}
 
+    function drawFinish(room: gameRoomClass) {
+        var canvas = document.getElementById('finishCanvas') as HTMLCanvasElement
+        if (canvas !== null) {
+            var ctx = canvas.getContext('2d')
+            if (ctx !== null) {
+
+            ctx.font = '20px Arial';
+            ctx.fillStyle = 'white';
+            ctx.textAlign = "center";
+            ctx.fillText((room.players[0].score > room.players[1].score ? room.players[0].id : room.players[1].id ) + " as won the game !", canvas.width / 2, canvas.height / 2);
+
+            
+}}}
+    
+    function drawSpectator(room: gameRoomClass) {
+
+        for (let i = 0; i < room.spectate.length; i++) {
+            var canvas: HTMLCanvasElement | null
+            if (room.spectate[i].pannel)
+                canvas = document.getElementById('spectate1') as HTMLCanvasElement
+            else
+                canvas = document.getElementById('spectate2') as HTMLCanvasElement
+            if (canvas !== null) {
+                var ctx = canvas.getContext('2d')
+                if (ctx !== null) {
+                        
+                    ctx.beginPath();
+
+                    ctx.fillStyle = 'white';
+                    ctx.shadowBlur = 20;
+                    ctx.shadowColor = 'lime';
+
+                    ctx.arc(room.spectate[i].x, room.spectate[i].y, 20, 0, Math.PI * 2);
+
+                    ctx.fill();
+
+                    ctx.shadowBlur = 0;
+}}}}
+
+    function resetCanvas() {
+        var canvas = document.getElementById('pongBoard') as HTMLCanvasElement
+        if (canvas !== null) {
+            var ctx = canvas.getContext('2d')
+            if (ctx !== null) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height)
+        }}
+        var canvas = document.getElementById('spectate1') as HTMLCanvasElement
+        if (canvas !== null) {
+            var ctx = canvas.getContext('2d')
+            if (ctx !== null) {
+                ctx.clearRect(0, 0, 400, 1000)
+        }}
+        var canvas = document.getElementById('spectate2') as HTMLCanvasElement
+        if (canvas !== null) {
+            var ctx = canvas.getContext('2d')
+            if (ctx !== null) {
+                ctx.clearRect(0, 0, 400, 1000)
+        }}
+    }
+
     const utilsData = useSelector((state: RootState) => state.utils);
     
     utilsData.socket.removeAllListeners();
 
-    function callRender(){
-        utilsData.socket.emit('RENDER', props.roomID)
-    }
+    var interval = setInterval(() => { utilsData.socket.emit('RENDER', props.roomID) }, 10);
 
-    setInterval(callRender, 10);
-
-    utilsData.socket.on('render', function(room: gameRoomClass) {
+    function render(room: gameRoomClass) {
 
         var canvas = document.getElementById('pongBoard') as HTMLCanvasElement
         if (canvas !== null) {
             var ctx = canvas.getContext('2d')
             if (ctx !== null) {
+
+                resetCanvas()
 
                 drawFont(ctx)
 
@@ -158,6 +220,19 @@ const PongPage=(props: any) => {
                 drawLimitsMove(ctx)
 
                 drawScore(ctx, room)
+
+                drawSpectator(room)
+
+                if (room.players[0].score == 1 || room.players[1].score == 1) {
+                    var modal = document.getElementById("myModal");
+                    if (modal)
+                        modal.style.display = "block";
+                    var winnerHeader = document.getElementById("winnerHeader")
+                    if (winnerHeader)
+                        winnerHeader.innerHTML = (room.players[0].score > room.players[1].score ? room.players[0].id : room.players[1].id ) + " as won the game !"
+                    clearInterval(interval)
+                    return ;
+                }
 
                 if (!room.players[0].ready || !room.players[1].ready) {
                     drawText(ctx, room)
@@ -168,11 +243,9 @@ const PongPage=(props: any) => {
 
                 drawBall(ctx, room)
                     
-    }}});
+    }}}
 
-    utilsData.socket.on('finish', function(room: gameRoomClass) {
-        props.setGameFinish(true);
-    });
+    utilsData.socket.on('render', render);
 
         function onKeyDown(e: any) {
             if (e.key === 'ArrowUp')
@@ -180,34 +253,59 @@ const PongPage=(props: any) => {
             if (e.key === 'ArrowDown')
                 utilsData.socket.emit('ARROW_DOWN', [props.roomID, true]);
             if (e.key === 'Enter')
-                utilsData.socket.emit('ENTER', props.roomID);
+                utilsData.socket.emit('ENTER', [props.roomID, true]);
+            if (e.key === ' ')
+                utilsData.socket.emit('SPACE', [props.roomID, true]);
         }
     
         // Lance la fonction onKeyDown chaque fois qu'une touche est appuyée
         document.addEventListener("keydown", onKeyDown);
     
         function onKeyUp(e: any) {
+            console.log(e.key)
             if (e.key === 'ArrowUp')
-            utilsData.socket.emit('ARROW_UP', [props.roomID, false]);
+                utilsData.socket.emit('ARROW_UP', [props.roomID, false]);
             if (e.key === 'ArrowDown')
-            utilsData.socket.emit('ARROW_DOWN', [props.roomID, false]);
+                utilsData.socket.emit('ARROW_DOWN', [props.roomID, false]);
+            if (e.key === ' ')
+                utilsData.socket.emit('SPACE', [props.roomID, false]);
         }
     
         // Lance la fonction onKeyDown chaque fois qu'une touche est relachée
         document.addEventListener("keyup", onKeyUp);
 
     return (
-        <div className='Font'>
-            <Navbar/>
-            <canvas
-                id='pongBoard'
-                className='pongBoard'
-                height={canvas.height}
-                width={canvas.width}
-                />
-        </div>
-    );
+            <div className='blocksContainer'>
+                <video width="100%" height="100%" autoPlay loop>
+                    <source src={require('../assets/backgound.mp4')} type="video/ogg"/>
+                </video>
+                <canvas id='spectate1'
+                    className='spectate'
+                    height='1000'
+                    width='400'
+                    />
+                <canvas
+                    id='pongBoard'
+                    className='pongBoard'
+                    height={canvas.height}
+                    width={canvas.width}
+                    />
+                <canvas id='spectate2'
+                    className='spectate'
+                    height='1000'
+                    width='400'
+                    />
+                <div id="myModal" className="modal">
+                    <div className="modal-content">
+                        <h3 id='winnerHeader' className='winnerHeader'></h3>
+                        <div className='flex'>
+                            <button type="button" className='replayButton' onClick={() => {window.location.replace('/')}}> Home </button>
+                            <button type="button" className='replayButton' onClick={() => {window.location.reload()}}> Rejoin the queue </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+  );
   };
   
-  export default PongPage;
-  
+export default PongPage;

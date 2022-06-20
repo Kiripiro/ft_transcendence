@@ -6,6 +6,8 @@ import { RootState } from '../../State';
 
 const JoinRoom=(props: any) => {
     const [inQueue, setInQueue] = useState(false);
+    const [NotFound, setNotFound] = useState(false);
+
     
     const utilsData = useSelector((state: RootState) => state.utils);
     
@@ -15,6 +17,15 @@ const JoinRoom=(props: any) => {
         utilsData.socket.emit('JOIN_QUEUE');
     }
     
+    function spectate() {
+        utilsData.socket.emit('SPECTATE_CLIENT', props.specID);
+    }
+    
+    utilsData.socket.on('clientNotFound', function() {
+        props.setSpecID("");
+        setNotFound(true);
+    });
+
     utilsData.socket.on('joined', function() {
         setInQueue(true);
     });
@@ -26,10 +37,12 @@ const JoinRoom=(props: any) => {
 
     return (
         <div className='Font'>
-            <Navbar/>
+              <Navbar/>
             <div className='joinQueue'>
-                <button type="button" onClick={() => joinQueue()}> {inQueue ? <>Loading...</> : <>Search Game...</>} </button>
+                <button type="button" className='queueButton' onClick={() => joinQueue()}> {inQueue ? <>Loading...</> : <>Search Game...</>} </button>
             </div>
+                <button type="button" className='spectateButton' onClick={() => spectate()}> Spectate </button>
+                <input value={props.specID} onChange={e => props.setSpecID(e.target.value)} placeholder={NotFound ? 'Client not playing...' : 'Client To Spectate'} ></input>
         </div>
     );
 };

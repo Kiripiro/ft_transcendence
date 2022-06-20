@@ -1,3 +1,4 @@
+import { spawn } from "child_process"
 import { randomInt } from "crypto"
 
 export {Canvas, Player, gameRoomClass}
@@ -15,11 +16,15 @@ class Canvas {
 class Player {
 	id: string
 
+	connected: boolean
+
 	width: number
 	height: number
 	
 	down: boolean
 	up: boolean
+
+	cheat: boolean
 
 	expansion: boolean
 	reduce: boolean
@@ -36,11 +41,15 @@ class Player {
 	constructor(canvas: Canvas, id: string = "") {
 		this.id = id
 
+		this.connected = false
+
 		this.width = canvas.width / 40
 		this.height = canvas.height / 5
 
 		this.down = false
 		this.up = false
+
+		this.cheat = false
 
 		this.expansion = false
 		this.reduce = false
@@ -70,6 +79,29 @@ class Player {
 
   }
 
+  function random(min: number, max: number): number {
+	return (Math.floor(Math.random() * (max - min + 1)) + min)
+  }
+
+  class Spectator {
+	  id: string
+
+      pannel: boolean
+
+	  x: number
+	  y: number
+
+	  	constructor(id: string) {
+			this.id = id
+			
+			this.pannel = false
+			
+			this.x = 0
+			this.y = 0
+
+		}
+  }
+
   class Ball {
 	x : number
     y : number
@@ -85,10 +117,10 @@ class Player {
 		this.x = canvas.width / 2
 		this.y = canvas.height / 2
 
-		this.dx = -5
+		this.dx = random(0, 1) ? -1 : 1
 		this.dy = 0
 
-		this.speed = 5
+		this.speed = 1
 
 		this.radius = 10
 	}
@@ -97,10 +129,10 @@ class Player {
 		this.x = canvas.width / 2
 		this.y = canvas.height / 2
 
-		this.dx = -5
+		this.dx = random(0, 1) ? -1 : 1
 		this.dy = 0
 
-		this.speed = 5
+		this.speed = 1
 
 		this.radius = 10
 	}
@@ -110,6 +142,8 @@ class Player {
 	  roomID: string
 
 	  players: Array<Player>
+
+	  spectate: Array<Spectator>
 
 	  canvas: Canvas
 
@@ -121,6 +155,8 @@ class Player {
 		
 		this.players = new Array()
 
+		this.spectate = new Array()
+
 		this.players.push(new Player(this.canvas, creatorID))
 		this.players.push(new Player(this.canvas))
 		
@@ -129,7 +165,49 @@ class Player {
 
 	  setOponnent(id: string) {
 		this.players[1].id = id
+		this.players[1].connected = true
 		this.players[1].x = this.canvas.width / 8 * 7 - this.players[1].width / 2
+	  }
+
+	  checkCollisionSpectator(id: string, x: number, y: number): boolean {
+        var ptop = y - 20;
+        var pbottom = y + 20;
+        var pleft = x - 20;
+        var pright = x + 20;
+        
+		for (let i = 0; i < this.spectate.length; i++) {
+			if (id != this.spectate[i].id)
+			{var btop = this.spectate[i].y - 20;
+        	var bbottom = this.spectate[i].y + 20;
+        	var bleft = this.spectate[i].x - 20;
+        	var bright = this.spectate[i].x + 20;
+
+			if (pleft < bright && ptop < bbottom && pright > bleft && pbottom > btop)
+				return true}
+		}
+        
+        return false
+    }
+
+	  addSpectator(id: string) {
+		  this.spectate.push(new Spectator(id));
+
+		for (let i = 0; i < this.spectate.length; i++) {
+			if (this.spectate[i].id == id) {
+				if (random(0, 1))
+				this.spectate[i].pannel = true
+				else
+				this.spectate[i].pannel = false
+				
+				this.spectate[i].x = random(50, 350)
+				this.spectate[i].y = random(50, 950)
+
+				while (this.checkCollisionSpectator(id, this.spectate[i].x, this.spectate[i].y)) {
+					this.spectate[i].x = random(50, 350)
+					this.spectate[i].y = random(50, 950)
+				}
+			}
+		}
 	  }
 
 	  movePlayer() {
@@ -234,6 +312,6 @@ class Player {
 		}
 
 		win(): boolean {
-			return (this.players[0].score == 5 || this.players[1].score == 5)
+			return (this.players[0].score == 1 || this.players[1].score == 1)
 		}
   }

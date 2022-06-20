@@ -1,8 +1,10 @@
 .nav {
     background-color: #3A3935;
+
+    position: sticky;
     display: flex;
     align-items: center;
-    height: 3.5vw;
+    height: 7%;
 }
 
 .littleDiv, .bigDiv {
