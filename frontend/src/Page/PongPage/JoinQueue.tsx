@@ -1,13 +1,14 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Navbar from '../../Module/Navbar/Navbar';
 import './../assets/Font.css';
 import { useSelector } from "react-redux";
 import { RootState } from '../../State';
+import imageMap1 from "./map1.png";
+import imageMap2 from "./map2.png";
 
 const JoinRoom=(props: any) => {
     const [inQueue, setInQueue] = useState(false);
     const [NotFound, setNotFound] = useState(false);
-
     
     const utilsData = useSelector((state: RootState) => state.utils);
     
@@ -35,9 +36,63 @@ const JoinRoom=(props: any) => {
         props.setGameStart(true);
     });
 
+    function openMapModal() {
+        var mapModal = document.getElementById('mapModal')
+
+        if (mapModal !== null) {
+            mapModal.style.display = "block"
+        }
+    }
+
+    async function chooseMap(map: string) {
+
+        
+
+        props.setGameMap(map)
+    }
+
+    useEffect(() => {
+        var map1Button = document.getElementById('map1Button')
+        var map2Button = document.getElementById('map2Button')
+
+        if (props.gameMap == "map1") {
+            if (map1Button !== null)
+                map1Button.style.backgroundColor = "green"
+        } else {
+            if (map1Button !== null)
+                map1Button.style.backgroundColor = "#7d0000"
+        }
+        if (props.gameMap == "map2") {
+            if (map2Button !== null)
+                map2Button.style.backgroundColor = "green"
+        } else {
+            if (map2Button !== null)
+                map2Button.style.backgroundColor = "#7d0000"
+        }
+
+    });
+
     return (
         <div className='Font'>
               <Navbar/>
+            <div id="mapModal" className="modal">
+                <div className="modal-content">
+                    <div className='blocksContainer'>
+                        <button type="button" id='map1Button' className='mapButton' onClick={() => {chooseMap("map1");}}>
+                            <img src={imageMap1} />
+                        </button>
+                        <button type="button" id='map2Button' className='mapButton' onClick={() => {chooseMap("map2")}}>
+                            <img src={imageMap2} />
+                        </button>
+                    </div>
+                    <div className='blocksContainer'>
+                        <button type="button" className='saveButton' onClick={() => {var mapModal = document.getElementById('mapModal'); if (mapModal !== null) {mapModal.style.display = "none"}}}> Save </button>
+                    </div>
+                </div>
+            </div>
+            <div className='blocksContainer'>
+                <button type="button" className='chooseMapButton' onClick={() => openMapModal()}> Select map </button>
+            </div>
             <div className='joinQueue'>
                 <button type="button" className='queueButton' onClick={() => joinQueue()}> {inQueue ? <>Loading...</> : <>Search Game...</>} </button>
             </div>

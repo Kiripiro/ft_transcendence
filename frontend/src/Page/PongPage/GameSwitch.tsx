@@ -6,6 +6,7 @@ const GameSwitch=() => {
     const [gameStart, setGameStart] = useState(false);
     const [specID, setSpecID] = useState("0");
     const [roomID, setRoomID] = useState("");
+    const [gameMap, setGameMap] = React.useState("");
 
     if (gameStart)
         return (
@@ -13,7 +14,15 @@ const GameSwitch=() => {
         )
     else
         return (
-            <JoinRoom gameStart={gameStart} setGameStart={setGameStart} setRoomID={setRoomID} specID={specID} setSpecID={setSpecID}/>
+            <JoinRoom
+                gameStart={gameStart}
+                setGameStart={setGameStart}
+                setRoomID={setRoomID}
+                specID={specID}
+                setSpecID={setSpecID}
+                gameMap={gameMap}
+                setGameMap={setGameMap}
+                />
         )
 }
 

@@ -28,6 +28,38 @@
     border: 0;
 }
 
+.mapButton {
+    margin-left: 5vw;
+    margin-right: 5vw;
+    width: 40vw;
+    height: 20vh;
+
+    border: 0.2vw black solid;
+
+    background-color: #7d0000;
+}
+
+.mapButton img {
+
+    max-width: 100%;
+    max-height: 100%;
+
+    object-fit: cover;
+}
+
+.chooseMapButton {
+    font-size: 3vw;
+    color: #FFFFFF;
+
+    width: 30%;
+    
+    margin-top: 5%;
+
+    background-color: #1A1A1A;
+
+    border: 2px black solid;
+}
+
 .joinQueue {
     width: 50%;
     height: 40%;
@@ -51,7 +83,7 @@
     border: 0;
     color: white;
 
-    font-size: 200%;
+    font-size: 5vw;
 
     box-shadow: inset #901644 0 0 10px;
 }
@@ -135,4 +167,28 @@ video {
     text-align: center;
     color: #1A1A1A;
     font-size: calc(1vh + 1vw);
+}
+
+.saveButton {
+	
+    margin-top: 5%;
+
+    width: 20%;
+    height: 10%;
+
+    border-radius: 20px;
+
+    background-color:#44c767;
+	border:1px solid #18ab29;
+
+	color:#ffffff;
+	
+    font-size: calc(2vh + 2vw);
+}
+.saveButton:hover {
+	background-color:#1e5d2f;
+}
+.saveButton:active {
+	position:relative;
+	top:1px;
 }

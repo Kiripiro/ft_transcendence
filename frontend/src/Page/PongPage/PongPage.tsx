@@ -2,13 +2,9 @@ import React, { useState } from 'react';
 import Navbar from '../../Module/Navbar/Navbar';
 import './../assets/Font.css';
 import './PongPage.css';
-import JoinRoom from './JoinQueue'
 import { useSelector } from 'react-redux';
 import { RootState } from '../../State';
 import { gameRoomClass } from './gameRoomClass';
-import { tmpdir } from 'os';
-import Home from '../../Module/Navbar/Buttons/Home';
-import { Navigate } from 'react-router-dom';
 
 var canvas = {
     "width" : 800,
@@ -24,7 +20,7 @@ const PongPage=(props: any) => {
     function drawFont(ctx: CanvasRenderingContext2D | null) {
         if (ctx !== null) {
 
-            ctx.fillStyle = '#000000';
+            ctx.fillStyle = '#19022b';
 
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -138,20 +134,6 @@ const PongPage=(props: any) => {
 
     }}
 
-    function drawFinish(room: gameRoomClass) {
-        var canvas = document.getElementById('finishCanvas') as HTMLCanvasElement
-        if (canvas !== null) {
-            var ctx = canvas.getContext('2d')
-            if (ctx !== null) {
-
-            ctx.font = '20px Arial';
-            ctx.fillStyle = 'white';
-            ctx.textAlign = "center";
-            ctx.fillText((room.players[0].score > room.players[1].score ? room.players[0].id : room.players[1].id ) + " as won the game !", canvas.width / 2, canvas.height / 2);
-
-            
-}}}
-    
     function drawSpectator(room: gameRoomClass) {
 
         for (let i = 0; i < room.spectate.length; i++) {
@@ -276,7 +258,7 @@ const PongPage=(props: any) => {
 
     return (
             <div className='blocksContainer'>
-                <video width="100%" height="100%" autoPlay loop>
+                <video width="100%" height="100%" autoPlay loop muted>
                     <source src={require('../assets/backgound.mp4')} type="video/ogg"/>
                 </video>
                 <canvas id='spectate1'
