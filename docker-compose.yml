@@ -29,8 +29,6 @@ services:
 
   frontend:
     container_name: frontend
-    volumes:
-      - ./frontend:/app
     depends_on:
       - backend
     build: ./frontend
