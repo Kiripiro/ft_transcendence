@@ -1,5 +1,5 @@
-import { Body, Controller, Get, Inject, Param, ParseIntPipe, Post } from '@nestjs/common';
-import { BaseExceptionFilter } from '@nestjs/core';
+import { Body, Controller, Get, Inject, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { CreateUserDto } from './user.dto';
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';

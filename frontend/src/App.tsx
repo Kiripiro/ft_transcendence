@@ -1,5 +1,5 @@
-import HomePage from './Page/HomePage/HomePage';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import HomePage from './Page/HomePage/HomePage';
 import Connect from './Module/Connect/Connect';
 import NotFound from './Page/NotFound/NotFound';
 import PongPage from './Page/PongPage/PongPage';
