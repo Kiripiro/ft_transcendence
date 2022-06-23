@@ -1,2 +1,6 @@
+<<<<<<< HEAD
 **/node_modules
 .DS_Store
+=======
+node_modules
+>>>>>>> front-home
