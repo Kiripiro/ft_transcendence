@@ -2,7 +2,6 @@ import { Logger, Injectable, UnauthorizedException } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
 import { UserService } from '../user/user.service';
-import { Query } from 'typeorm/driver/Query';
 import { UserEntity } from '../user/user.entity';
 import { JwtService } from '@nestjs/jwt';
 
