@@ -1,21 +1,17 @@
 .pongBoard {
-    position: absolute;
-    
     display: flex;
 
     border: 0.8vw #1B1B1B solid;
 
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    
     margin: auto;
 
-    width: 80vw;
-    height: 70vh;
+    margin-top: 5%;
 
-    background: linear-gradient(90deg, #901644 0%, #040404 5%, #040404 95%, #74104D 100%);
+    width: 60%;
+    /* background: #040404; */
+
+    box-shadow: 5px 5px 50px blue,
+                -5px -5px 50px rgb(255, 0, 0);
 }
 
 .limitCamps {
@@ -66,4 +62,21 @@
     box-shadow: 0px 0px 15px blue;
 
     background-color: rgb(10, 10, 135);
+}
+
+.ball {
+    position: absolute;
+
+    width: 2vw;
+    height: 2vw;
+
+
+    top: calc(50% - 1vw);
+    left: calc(50% - 1vw);
+
+    border-radius: 50%;
+
+    background-color: green;
+ 
+    box-shadow: 0px 0px 20px 5px green;
 }
