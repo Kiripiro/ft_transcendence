@@ -90,21 +90,23 @@ import { gameRoomClass } from './gameRoomClass';
   }
 
     @SubscribeMessage('JOIN_QUEUE')
-    async joinQueue(client:Socket) {
+    async joinQueue(client:Socket, gameMap: string) {
       
       this.server.to(client.id).emit('joined')
 
       for (let roomId = 0; ; roomId++) {
-        var room: [number, gameRoomClass] | null = this.getRoomByID(roomId.toString())
+
+        var room: [number, gameRoomClass] | null = this.getRoomByID(gameMap + roomId.toString())
+        
         if (room == null || !room[1].players[1].id) {
           if (room == null) {
-            this.pongInfo.push(new gameRoomClass(roomId.toString(), client.id))
-            room = this.getRoomByID(roomId.toString());
+            this.pongInfo.push(new gameRoomClass(gameMap + roomId.toString(), client.id, gameMap))
+            room = this.getRoomByID(gameMap + roomId.toString());
             this.pongInfo[room[0]].players[0].connected = true
           }
           else
             this.pongInfo[room[0]].setOponnent(client.id)
-          this.joinRoom(client, roomId.toString())
+          this.joinRoom(client, gameMap + roomId.toString())
 
           if (this.pongInfo[room[0]].players[1].id)
             this.server.to(room[1].roomID).emit('start', room[1].roomID);
