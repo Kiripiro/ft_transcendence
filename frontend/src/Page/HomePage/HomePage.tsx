@@ -53,6 +53,5 @@ const HomePage = (props: any) => {
         </div>
     );
   };
-  
+
   export default HomePage;
-  

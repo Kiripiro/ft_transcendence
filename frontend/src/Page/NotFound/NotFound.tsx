@@ -2,8 +2,7 @@ import Navbar from '../../Module/Navbar/Navbar';
 import './../assets/Font.css';
 import './NotFound.css';
 
-
-const NotFound=() => {
+const NotFound = () => {
 
     return (
         <div className='Font'>
@@ -13,6 +12,5 @@ const NotFound=() => {
         </div>
     );
   };
-  
+
   export default NotFound;
-  

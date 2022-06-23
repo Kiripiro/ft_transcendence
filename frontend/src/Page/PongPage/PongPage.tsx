@@ -54,12 +54,12 @@ const PongPage=() => {
         var pbottom = Player1.y + Player1.height;
         var pleft = Player1.x;
         var pright = Player1.x + Player1.width;
-        
+
         var btop = Ball.y - Ball.radius;
         var bbottom = Ball.y + Ball.radius;
         var bleft = Ball.x - Ball.radius;
         var bright = Ball.x + Ball.radius;
-        
+
         return pleft < bright && ptop < bbottom && pright > bleft && pbottom > btop;
     }
 
@@ -73,12 +73,12 @@ const PongPage=() => {
         var pbottom = Player2.y + Player2.height;
         var pleft = Player2.x;
         var pright = Player2.x + Player2.width;
-        
+
         var btop = Ball.y - Ball.radius;
         var bbottom = Ball.y + Ball.radius;
         var bleft = Ball.x - Ball.radius;
         var bright = Ball.x + Ball.radius;
-        
+
         return pleft < bright && ptop < bbottom && pright > bleft && pbottom > btop;
     }
 
@@ -97,7 +97,7 @@ const PongPage=() => {
 
         Ball.speed = 3;
         Ball.dy = 0;
-        
+
         if (Player1.score > Player2.score)
             Ball.dx = 2;
         else if (Player1.score < Player2.score)
@@ -149,7 +149,7 @@ const PongPage=() => {
         if (e.key === 's')
             Player2.down = false;
     }
-    
+
     // Lance la fonction onKeyUp chaque fois qu'une touche est relachée
     document.addEventListener("keyup", onKeyUp);
 
@@ -207,7 +207,7 @@ const PongPage=() => {
             let direction = (Ball.x + Ball.radius < canvas.width/2) ? 1 : -1;
             Ball.dx = direction * Ball.speed * Math.cos(angleRad);
             Ball.dy = Ball.speed * Math.sin(angleRad);
-         
+
             Ball.speed += 0.1;
         }
 
@@ -286,7 +286,7 @@ const PongPage=() => {
 
             ctx.shadowBlur = 0;
     }}
-        
+
     // drawScore : dessine les scores des deux joueurs
     function drawScore(ctx: CanvasRenderingContext2D | null) {
         if (ctx !== null) {
@@ -296,7 +296,7 @@ const PongPage=() => {
 
             ctx.fillStyle = 'red'
             ctx.fillText(Player1.score.toString(), canvas.width / 4 + canvas.width / 16, canvas.height / 10);
-            
+
             ctx.fillStyle = 'blue'
             ctx.fillText(Player2.score.toString(), (canvas.width / 4 * 3) - canvas.width / 16, canvas.height / 10);
 
@@ -331,10 +331,10 @@ const PongPage=() => {
             ctx.lineWidth = 3;
             ctx.strokeStyle = '#3A3935';
             ctx.setLineDash([canvas.height / 30, canvas.height / 120]);
-            
+
             ctx.moveTo(canvas.width / 2, 0);
             ctx.lineTo(canvas.width / 2, canvas.height);
-            
+
             ctx.stroke();
 
             ctx.setLineDash([]);
@@ -387,7 +387,7 @@ const PongPage=() => {
             if (ctx !== null) {
 
                 refreshGame(ctx);
-                
+
                 if (!inPlay)
                     return startGame(ctx);
 
@@ -396,7 +396,7 @@ const PongPage=() => {
 
     setInterval(draw);
 
-    
+
     return (
         <div className='Font'>
             <Navbar/>
@@ -417,6 +417,5 @@ const PongPage=() => {
         </div>
     );
   };
-  
+
   export default PongPage;
-  

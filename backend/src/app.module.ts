@@ -1,11 +1,26 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ApiModule } from './api/api.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { EventsGateway } from './events.gateway';
+import { getEnvPath } from './common/helper/env.helper';
+import { TypeOrmConfigService } from './shared/typeorm/typeorm.service';
+import { AppLoggerMiddleware } from './app.middleware';
+
+const envFilePath: string = getEnvPath(`${__dirname}/common/envs`);
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService, EventsGateway],
+	imports: [
+		ConfigModule.forRoot({ envFilePath, isGlobal: true }),
+		TypeOrmModule.forRootAsync({ useClass: TypeOrmConfigService }),
+		ApiModule,
+	],
+	controllers: [AppController],
+	providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+	configure(consumer: MiddlewareConsumer): void {
+	  consumer.apply(AppLoggerMiddleware).forRoutes('*');
+	}
+}

@@ -46,7 +46,7 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
       };
       arrClient.push(newClient);
   }
-  
+
   async afterInit(server: any) {
       this.logger.log('Init');
   }
