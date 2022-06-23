@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
 import HomePage from './Page/HomePage/HomePage';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import NotFound from './Page/NotFound/NotFound';
 import GameSwitch from './Page/PongPage/GameSwitch';
+import ChatPage from './Page/Chat/ChatPage';
 
 const App=() => {
 
@@ -17,6 +17,7 @@ const App=() => {
                  <Route path='/HomePage' element={<HomePage/>}/>
                  <Route path='/pong' element={<GameSwitch/>}/>
                  <Route path='/NotFound' element={<NotFound/>}/>
+                 <Route path='/Chat' element={<ChatPage/>}/>
                  <Route path='/*' element={<Navigate to="/NotFound" replace />}/>
                   
               </Routes>

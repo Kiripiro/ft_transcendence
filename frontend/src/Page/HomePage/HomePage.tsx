@@ -1,6 +1,6 @@
 import { rmSync } from 'fs';
-import React, { useState, Component } from 'react';
 import { useSelector } from 'react-redux';
+import React, { Component } from 'react';
 import Navbar from '../../Module/Navbar/Navbar';
 import { RootState } from '../../State';
 import './../assets/Font.css';
