@@ -29,4 +29,7 @@ export class UserEntity {
 
   @Column({ type: 'int', nullable: true })
   public uid: number;
+
+  @Column( {type: 'varchar', nullable: true } )
+  public refreshToken: string
 }

@@ -17,17 +17,15 @@ export class UserService {
 
 	async getUserById(id: number): Promise<UserEntity> {
 		const user = await this.userRepository.findOneBy( {id: id} );
-		if (!user) {
+		if (!user)
 			return null;
-		}
 		return user;
 	}
 
 	async getUserByLogin(login: string): Promise<UserEntity> {
 		const user = await this.userRepository.findOneBy( {login: login} );
-		if (!user) {
+		if (!user)
 			return null;
-		}
 		return user;
 	}
 

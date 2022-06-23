@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, ParseIntPipe, Post, UseGuards, Req } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateUserDto } from './user.dto';
 import { UserEntity } from './user.entity';
@@ -8,6 +8,12 @@ import { UserService } from './user.service';
 export class UserController {
   @Inject(UserService)
   private readonly service: UserService;
+
+  @Get('fav-movies')
+  @UseGuards(AuthGuard('jwt'))
+  async movies(@Req() req){
+  	return ["Avatar", "Avengers"];
+  }
 
   @Get()
   public getAllUsers(): Promise<UserEntity[]> {

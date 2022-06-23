@@ -24,17 +24,21 @@ export class AuthService {
 	private logger: Logger = new Logger('AuthService');
 
 	/*
-	*	@query - contient la variable 'code' reçue via la méthode GET permettant d'identifier l'utilisateur qui s'est connecté
-	*	@token - contient le retour de la requête en méthode POST, afin de récupérer "l'acccess_token"
-	*	@access_token - token permettant d'effectuer des requêtes sur l'API 42
-	*	@data - contient le resultat de la requête permettant d'obtenir un profil Intra 42
-	*
-	*	Récupère les informations de l'utilisateur venant de se log avec l'Intra 42 et créer un profil s'il n'existe pas.
-	*/
-	async login(query) {
+    *   @query - contient la variable 'code' reçue via la méthode GET permettant d'identifier l'utilisateur qui s'est connecté
+    *   @token - contient le retour de la requête en méthode POST, afin de récupérer "l'acccess_token"
+    *   @access_token - token permettant d'effectuer des requêtes sur l'API 42
+    *   @data - contient le resultat de la requête permettant d'obtenir un profil Intra 42
+    *
+    *   returns: @accessToken
+    *
+    *   Récupère les informations de l'utilisateur venant de se log avec l'Intra 42 et créer un profil s'il n'existe pas.
+    *   La fonction retourne un "accessToken", qui devra être transmis aux routes protégées afin d'effectuer des requêtes.
+    */
+
+	async login(req: any) {
 		try {
 			const token = this.http.post(`${this.API_authorizationURI}`,
-			`grant_type=authorization_code&client_id=${this.clientId}&client_secret=${this.clientSecret}&code=${query.code}&redirect_uri=${this.redirectURI}`);
+			`grant_type=authorization_code&client_id=${this.clientId}&client_secret=${this.clientSecret}&code=${req.code}&redirect_uri=${this.redirectURI}`);
 
 			this.accessToken = (await lastValueFrom(token)).data.access_token;
 			this.headers = { Authorization: `Bearer ${this.accessToken}` };
@@ -50,19 +54,19 @@ export class AuthService {
 
 			if (!user) {
 				user = await this.userServices.createUser(data);
-				//CREER TOKEN JWT
 				console.log('User', data.login, 'created.');
 			}
 			return this.signUser(user);
 		} catch(error) {
 			this.logger.error(error);
+			return null;
 		}
 	}
 
 	signUser(user: UserEntity) {
 		return this.jwtService.sign({
-			user_id: user.id,
-			user_login: user.login,
+			sub: user.id,
+			login: user.login,
 		});
 	}
 }
