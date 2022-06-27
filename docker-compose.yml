@@ -6,6 +6,8 @@ networks:
 
 volumes:
   db_data: {}
+  backend_data: {}
+  frontend_data: {}
 
 services:
   db:
@@ -14,6 +16,8 @@ services:
     volumes:
     - db_data:/var/lib/postgres
     restart: always
+    env_file:
+      - ./.env
     environment:
       POSTGRES_HOST: ${POSTGRES_HOST}
       POSTGRES_PORT: ${POSTGRES_PORT}
@@ -27,11 +31,15 @@ services:
 
   frontend:
     container_name: frontend
+    volumes:
+      - /usr/src/app/frontend/node_modules
+      - ./frontend:/usr/src/app/frontend
+      - ./frontend:/app
     depends_on:
       - backend
     build: ./frontend
     environment:
-      - DB_SERVER=${POSTGRES_DB}
+      DB_SERVER: ${POSTGRES_DB}
     restart: always
     ports:
       - 3000:3000
@@ -40,11 +48,15 @@ services:
 
   backend:
     container_name: backend
+    volumes:
+      - /usr/src/app/backend/node_modules
+      - ./backend:/usr/src/app/backend
+      - ./backend:/app
     depends_on:
       - db
     build: ./backend
     environment:
-      - POSTGRES_USER=backend
+      - CHOKIDAR_USEPOLLING=true
     restart: always
     ports:
       - 5001:5001
@@ -52,7 +64,7 @@ services:
       - webapp
 
   adminer:
-    image: adminer
+    image: adminer:4.8.1
     container_name: adminer
     restart: always
     depends_on:

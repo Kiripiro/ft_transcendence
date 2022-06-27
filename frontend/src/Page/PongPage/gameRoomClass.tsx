@@ -1,11 +1,12 @@
+
 import { spawn } from "child_process"
 import { randomInt } from "crypto"
 
-export {Canvas, Player, gameRoomClass}
+export { Canvas, Player, gameRoomClass }
 
 class Canvas {
-	width : number
-    height : number
+	width: number
+	height: number
 
 	constructor() {
 		this.width = 800
@@ -20,7 +21,7 @@ class Player {
 
 	width: number
 	height: number
-	
+
 	down: boolean
 	up: boolean
 
@@ -28,10 +29,10 @@ class Player {
 
 	expansion: boolean
 	reduce: boolean
-	
+
 	x: number
 	y: number
-	
+
 	speed: number
 
 	score: number
@@ -77,41 +78,41 @@ class Player {
 		this.speed = 1
 	}
 
-  }
+}
 
-  function random(min: number, max: number): number {
+function random(min: number, max: number): number {
 	return (Math.floor(Math.random() * (max - min + 1)) + min)
-  }
+}
 
-  class Spectator {
-	  id: string
+class Spectator {
+	id: string
 
-      pannel: boolean
+	pannel: boolean
 
-	  x: number
-	  y: number
+	x: number
+	y: number
 
-	  	constructor(id: string) {
-			this.id = id
-			
-			this.pannel = false
-			
-			this.x = 0
-			this.y = 0
+	constructor(id: string) {
+		this.id = id
 
-		}
-  }
+		this.pannel = false
 
-  class Ball {
-	x : number
-    y : number
+		this.x = 0
+		this.y = 0
 
-    dx : number
-    dy : number
-    
-	speed : number
-    
-	radius : number
+	}
+}
+
+class Ball {
+	x: number
+	y: number
+
+	dx: number
+	dy: number
+
+	speed: number
+
+	radius: number
 
 	constructor(canvas: Canvas) {
 		this.x = canvas.width / 2
@@ -136,69 +137,77 @@ class Player {
 
 		this.radius = 10
 	}
-  }
+}
 
-  class gameRoomClass {
-	  roomID: string
+class gameRoomClass {
+	roomID: string
 
-	  players: Array<Player>
+	mapColor: string
 
-	  spectate: Array<Spectator>
+	players: Array<Player>
 
-	  canvas: Canvas
+	spectate: Array<Spectator>
 
-	  ball: Ball
+	canvas: Canvas
 
-	  constructor(roomId: string, creatorID: string) {
+	ball: Ball
+
+	constructor(roomId: string, creatorID: string, gameMap: string) {
 		this.roomID = roomId
 		this.canvas = new Canvas()
-		
+
 		this.players = new Array()
 
 		this.spectate = new Array()
 
 		this.players.push(new Player(this.canvas, creatorID))
 		this.players.push(new Player(this.canvas))
-		
-		this.ball = new Ball(this.canvas)
-	  }
 
-	  setOponnent(id: string) {
+		this.ball = new Ball(this.canvas)
+
+		if (gameMap == 'map1')
+			this.mapColor = 'black'
+		else
+			this.mapColor = '#19022b'
+	}
+
+	setOponnent(id: string) {
 		this.players[1].id = id
 		this.players[1].connected = true
 		this.players[1].x = this.canvas.width / 8 * 7 - this.players[1].width / 2
-	  }
+	}
 
-	  checkCollisionSpectator(id: string, x: number, y: number): boolean {
-        var ptop = y - 20;
-        var pbottom = y + 20;
-        var pleft = x - 20;
-        var pright = x + 20;
-        
+	checkCollisionSpectator(id: string, x: number, y: number): boolean {
+		var ptop = y - 20;
+		var pbottom = y + 20;
+		var pleft = x - 20;
+		var pright = x + 20;
+
 		for (let i = 0; i < this.spectate.length; i++) {
-			if (id != this.spectate[i].id)
-			{var btop = this.spectate[i].y - 20;
-        	var bbottom = this.spectate[i].y + 20;
-        	var bleft = this.spectate[i].x - 20;
-        	var bright = this.spectate[i].x + 20;
+			if (id != this.spectate[i].id) {
+				var btop = this.spectate[i].y - 20;
+				var bbottom = this.spectate[i].y + 20;
+				var bleft = this.spectate[i].x - 20;
+				var bright = this.spectate[i].x + 20;
 
-			if (pleft < bright && ptop < bbottom && pright > bleft && pbottom > btop)
-				return true}
+				if (pleft < bright && ptop < bbottom && pright > bleft && pbottom > btop)
+					return true
+			}
 		}
-        
-        return false
-    }
 
-	  addSpectator(id: string) {
-		  this.spectate.push(new Spectator(id));
+		return false
+	}
+
+	addSpectator(id: string) {
+		this.spectate.push(new Spectator(id));
 
 		for (let i = 0; i < this.spectate.length; i++) {
 			if (this.spectate[i].id == id) {
 				if (random(0, 1))
-				this.spectate[i].pannel = true
+					this.spectate[i].pannel = true
 				else
-				this.spectate[i].pannel = false
-				
+					this.spectate[i].pannel = false
+
 				this.spectate[i].x = random(50, 350)
 				this.spectate[i].y = random(50, 950)
 
@@ -208,110 +217,120 @@ class Player {
 				}
 			}
 		}
-	  }
+	}
 
-	  movePlayer() {
+	movePlayer() {
 		for (let i = 0; i < 2; i++) {
 			if (this.players[i].up)
-			  if (this.players[i].y >= this.players[i].speed)
-				this.players[i].y -= this.players[i].speed;
+				if (this.players[i].y >= this.players[i].speed)
+					this.players[i].y -= this.players[i].speed;
 			if (this.players[i].down)
-			  if (this.players[i].y + this.players[i].height < this.canvas.height)
-				this.players[i].y += this.players[i].speed;
+				if (this.players[i].y + this.players[i].height < this.canvas.height)
+					this.players[i].y += this.players[i].speed;
 			if (this.players[i].expansion)
 				if (this.players[i].height < this.canvas.height)
 					this.players[i].height++
 			if (this.players[i].reduce)
 				if (this.players[i].height > this.canvas.height / 6)
 					this.players[i].height--
-		  }
-	  }
+		}
+	}
 
 	/*
-        checkCollisionPlayer1 : retourne 1 si la balle rentre en collision avec le joueur 2
-                               retourne 0 si la balle ne rentre pas en collision avec le joueur 2
-    */
-    checkCollisionPlayer(id: number): boolean {
-        var ptop = this.players[id].y;
-        var pbottom = this.players[id].y + this.players[id].height;
-        var pleft = this.players[id].x;
-        var pright = this.players[id].x + this.players[id].width;
-        
-        var btop = this.ball.y - this.ball.radius;
-        var bbottom = this.ball.y + this.ball.radius;
-        var bleft = this.ball.x - this.ball.radius;
-        var bright = this.ball.x + this.ball.radius;
-        
-        return pleft < bright && ptop < bbottom && pright > bleft && pbottom > btop;
-    }
+	checkCollisionPlayer1 : retourne 1 si la balle rentre en collision avec le joueur 2
+						retourne 0 si la balle ne rentre pas en collision avec le joueur 2
+	*/
+	checkCollisionPlayer(id: number): boolean {
+		var ptop = this.players[id].y;
+		var pbottom = this.players[id].y + this.players[id].height;
+		var pleft = this.players[id].x;
+		var pright = this.players[id].x + this.players[id].width;
+
+		var btop = this.ball.y - this.ball.radius;
+		var bbottom = this.ball.y + this.ball.radius;
+		var bleft = this.ball.x - this.ball.radius;
+		var bright = this.ball.x + this.ball.radius;
+
+		return pleft < bright && ptop < bbottom && pright > bleft && pbottom > btop;
+	}
 
 
-	  moveBall() {
+	moveBall() {
 
-		    // si la balle touche le camps du joueur 1 : augmente le score du joueur 2 et redémare le jeu
-		    if (this.ball.x + this.ball.dx > this.canvas.width - this.ball.radius ) {
-		        this.players[0].score++;
-				this.resetAllPos()
-				this.players[0].ready = false
-				this.players[1].ready = false
-				return
-		    }
-	
-		    // si la balle touche le camps du joueur 2 : augmente le score du joueur 1 et redémare le jeu
-		    if (this.ball.x + this.ball.dx < this.ball.radius) {
-				this.players[1].score++;
-				this.resetAllPos()
-				this.players[0].ready = false
-				this.players[1].ready = false
-				return
-		    }
-	
-		    // si la balle touche le mur du haut ou le mur du bas : rebondis
-		    if (this.ball.y + this.ball.dy > this.canvas.height - this.ball.radius || this.ball.y + this.ball.dy < this.ball.radius) {
-		        this.ball.dy = 0 - this.ball.dy;
-		    }
-	
-		    // check des collisions avec le joueur 1
-			for (let i = 0; i < 2; i++)
-		    if (this.checkCollisionPlayer(i)) {
-	
-		        // ou la balle touche le player 1
-		        let collidePoint = (this.ball.y - (this.players[i].y + this.players[i].height / 2));
-	
-		        // changement du point de collision pour un chiffre en -1 et 1
-		        collidePoint = collidePoint / (this.players[i].height/2);
-	
-		        // nouvel angle de la balle suivant le point de collision
-		        let angleRad = (Math.PI/4) * collidePoint;
-	
-		        // nouvelle direction de la balle suivant le nouvel angle
-		        let direction = (this.ball.x + this.ball.radius < this.canvas.width/2) ? 1 : -1;
-	
-		        // donne les nouvelles direction à la balle
-		        this.ball.dx = direction * this.ball.speed * Math.cos(angleRad);
-		        this.ball.dy = this.ball.speed * Math.sin(angleRad);
-	
-		        // augmente la vitesse de la balle à chaque contact avec un joueur
-		        this.ball.speed += 0.1;
-		    }
-	
-		    // bouge la balle
-		    this.ball.x += this.ball.dx;
-		    this.ball.y += this.ball.dy;
+		// si la balle touche le camps du joueur 1 : augmente le score du joueur 2 et redémare le jeu
+		if (this.ball.x + this.ball.dx > this.canvas.width - this.ball.radius) {
+			this.players[0].score++;
+			this.resetAllPos()
+			this.players[0].ready = false
+			this.players[1].ready = false
+			return
 		}
 
-		ready(): boolean {
-			return this.players[0].ready && this.players[1].ready
+		// si la balle touche le camps du joueur 2 : augmente le score du joueur 1 et redémare le jeu
+		if (this.ball.x + this.ball.dx < this.ball.radius) {
+			this.players[1].score++;
+			this.resetAllPos()
+			this.players[0].ready = false
+			this.players[1].ready = false
+			return
 		}
 
-		resetAllPos() {
-			this.ball.reset(this.canvas)
-			for (let i = 0; i < 2; i++)
-				this.players[i].resetPos(this.canvas);
-			this.players[1].x = this.canvas.width / 8 * 7 - this.players[1].width / 2
+		// si la balle touche le mur du haut ou le mur du bas : rebondis
+		if (this.ball.y + this.ball.dy > this.canvas.height - this.ball.radius || this.ball.y + this.ball.dy < this.ball.radius) {
+			this.ball.dy = 0 - this.ball.dy;
 		}
 
-		win(): boolean {
-			return (this.players[0].score == 1 || this.players[1].score == 1)
-		}
-  }
+		// check des collisions avec le joueur 1
+		for (let i = 0; i < 2; i++)
+			if (this.checkCollisionPlayer(i)) {
+
+				// ou la balle touche le player 1
+				let collidePoint = (this.ball.y - (this.players[i].y + this.players[i].height / 2));
+
+				// changement du point de collision pour un chiffre en -1 et 1
+				collidePoint = collidePoint / (this.players[i].height / 2);
+
+				// nouvel angle de la balle suivant le point de collision
+				let angleRad = (Math.PI / 4) * collidePoint;
+
+				// nouvelle direction de la balle suivant le nouvel angle
+				let direction = (this.ball.x + this.ball.radius < this.canvas.width / 2) ? 1 : -1;
+
+				// donne les nouvelles direction à la balle
+				this.ball.dx = direction * this.ball.speed * Math.cos(angleRad);
+				this.ball.dy = this.ball.speed * Math.sin(angleRad);
+
+				if (this.ball.speed < 2) {
+					this.ball.speed += 0.1;
+					this.players[0].speed += 0.1;
+					this.players[1].speed += 0.1;
+				}
+				// augmente la vitesse de la balle à chaque contact avec un joueur
+			}
+
+		// bouge la balle
+		this.ball.x += this.ball.dx;
+		this.ball.y += this.ball.dy;
+	}
+
+	ready(): boolean {
+		return this.players[0].ready && this.players[1].ready
+	}
+
+	resetAllPos() {
+		this.ball.reset(this.canvas)
+		if (this.players[0].score > this.players[1].score)
+			this.ball.dx = 1
+		else if (this.players[0].score < this.players[1].score)
+			this.ball.dx = -1
+		else
+			this.ball.dx = random(0, 1) ? -1 : 1
+		for (let i = 0; i < 2; i++)
+			this.players[i].resetPos(this.canvas)
+		this.players[1].x = this.canvas.width / 8 * 7 - this.players[1].width / 2
+	}
+
+	win(): boolean {
+		return (this.players[0].score == 3 || this.players[1].score == 3)
+	}
+}
