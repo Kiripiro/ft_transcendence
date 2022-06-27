@@ -6,7 +6,7 @@ import FriendList from './FriendList';
 import { AddFriendHook, FriendListHook } from './Hooks';
 import AddFriend from './AddFriend';
 
-const HomePage = (props: any) => {
+const HomePage = () => {
     const [isFriendList, setFriendList] = FriendListHook(true);
     const [isAddFriend, setAddFriend] = AddFriendHook(false);
 
