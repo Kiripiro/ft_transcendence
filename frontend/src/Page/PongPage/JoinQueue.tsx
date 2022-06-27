@@ -15,9 +15,7 @@ const JoinRoom=(props: any) => {
     utilsData.socket.removeAllListeners();
     
     function joinQueue() {
-        if (!props.gameMap)
-            return
-        utilsData.socket.emit('JOIN_QUEUE', props.gameMap);
+        utilsData.socket.emit('JOIN_QUEUE');
     }
     
     function spectate() {
@@ -47,6 +45,9 @@ const JoinRoom=(props: any) => {
     }
 
     async function chooseMap(map: string) {
+
+        
+
         props.setGameMap(map)
     }
 
@@ -69,26 +70,6 @@ const JoinRoom=(props: any) => {
                 map2Button.style.backgroundColor = "#7d0000"
         }
 
-        var button = document.getElementById('queueButton')
-        if (!props.gameMap) {
-            if (button !== null) {
-                button.textContent = "Select map before..."
-                return
-            }
-        }
-        else if (!inQueue){
-            if (button !== null) {
-                button.textContent = "Join queue..."
-                return
-            }
-        }
-        else {
-            if (button !== null) {
-                button.textContent = "Loading..."
-                return
-            }
-        }
-
     });
 
     return (
@@ -97,7 +78,7 @@ const JoinRoom=(props: any) => {
             <div id="mapModal" className="modal">
                 <div className="modal-content">
                     <div className='blocksContainer'>
-                        <button type="button" id='map1Button' className='mapButton' onClick={() => {chooseMap("map1")}}>
+                        <button type="button" id='map1Button' className='mapButton' onClick={() => {chooseMap("map1");}}>
                             <img src={imageMap1} />
                         </button>
                         <button type="button" id='map2Button' className='mapButton' onClick={() => {chooseMap("map2")}}>
@@ -113,7 +94,7 @@ const JoinRoom=(props: any) => {
                 <button type="button" className='chooseMapButton' onClick={() => openMapModal()}> Select map </button>
             </div>
             <div className='joinQueue'>
-                <button id='queueButton' type="button" className='queueButton' onClick={() => joinQueue()}> </button>
+                <button type="button" className='queueButton' onClick={() => joinQueue()}> {inQueue ? <>Loading...</> : <>Search Game...</>} </button>
             </div>
                 <button type="button" className='spectateButton' onClick={() => spectate()}> Spectate </button>
                 <input value={props.specID} onChange={e => props.setSpecID(e.target.value)} placeholder={NotFound ? 'Client not playing...' : 'Client To Spectate'} ></input>

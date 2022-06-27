@@ -17,10 +17,10 @@ const PongPage=(props: any) => {
     const [finishGame, setFinishGame] = useState(false);
 
     // // drawFont : desine le fond du jeu
-    function drawFont(ctx: CanvasRenderingContext2D | null, room: gameRoomClass) {
+    function drawFont(ctx: CanvasRenderingContext2D | null) {
         if (ctx !== null) {
 
-            ctx.fillStyle = room.mapColor;
+            ctx.fillStyle = '#19022b';
 
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -195,7 +195,7 @@ const PongPage=(props: any) => {
 
                 resetCanvas()
 
-                drawFont(ctx, room)
+                drawFont(ctx)
 
                 drawLimitCamps(ctx)
                 

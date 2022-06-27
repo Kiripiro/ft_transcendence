@@ -141,8 +141,6 @@ class Player {
   class gameRoomClass {
 	  roomID: string
 
-	  mapColor: string 
-	 
 	  players: Array<Player>
 
 	  spectate: Array<Spectator>
@@ -151,7 +149,7 @@ class Player {
 
 	  ball: Ball
 
-	  constructor(roomId: string, creatorID: string, gameMap: string) {
+	  constructor(roomId: string, creatorID: string) {
 		this.roomID = roomId
 		this.canvas = new Canvas()
 		
@@ -163,12 +161,7 @@ class Player {
 		this.players.push(new Player(this.canvas))
 		
 		this.ball = new Ball(this.canvas)
-
-		if (gameMap == 'map1')
-			this.mapColor = '#19022b'
-		else
-			this.mapColor = '#1A1A1A'
-		}
+	  }
 
 	  setOponnent(id: string) {
 		this.players[1].id = id
