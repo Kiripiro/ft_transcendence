@@ -1,16 +1,23 @@
-import React, { useEffect } from "react";
+import React from "react";
 import FriendList from "./FriendList";
+import GetFriend from "./GetFriend";
 import { AddFriendHook, FriendListHook } from "./Hooks";
+import useFetch from "./useFetch";
 
 function AddFriend() {
 
 	const [isFriendList, setFriendList] = FriendListHook(false);
 	const [isAddFriend, setAddFriend] = AddFriendHook(true);
+	const { data, setData } = useFetch();
 
 	const handleClick = () => {
 		setFriendList(true);
 		setAddFriend(false)
     };
+
+	const handleChange = (e: any) => {
+		setData({ ...data, slug: e.target.value })
+	}
 
 	return (
 		<div>
@@ -23,10 +30,10 @@ function AddFriend() {
 							{isFriendList && <FriendList />}
 						</div>
 					</div>
-					<form>
-						<input type='text' />
-						<input type="submit" />
-					</form>
+					{/* <GetFriend /> */}
+					<input type="text" value={data.slug} onChange={handleChange} />
+					<br />
+      				{data.results.length > 0 ? <GetFriend family={data.results[0]} /> : null}
 				</div>
 			)}
 			{isFriendList && <FriendList />}
