@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import Navbar from '../../Module/Navbar/Navbar';
 import './../assets/Font.css';
-import './PongPage.css';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../State';
 import { gameRoomClass } from './gameRoomClass';
+
+import './CSS/GamePage/GamePage.css';
+import './CSS/GamePage/Board.css';
+import './CSS/Utils.css';
+
 
 var canvas = {
     "width": 800,
@@ -12,7 +16,7 @@ var canvas = {
 }
 
 
-const PongPage = (props: any) => {
+const GamePage = (props: any) => {
 
     const [finishGame, setFinishGame] = useState(false);
 
@@ -270,26 +274,31 @@ const PongPage = (props: any) => {
     document.addEventListener("keyup", onKeyUp);
 
     return (
-        <div className='blocksContainer'>
-            <video width="100%" height="100%" autoPlay loop muted>
+        <div className="mainDiv">
+            <Navbar/>
+            <video width="100%" height="93%" autoPlay loop muted>
                 <source src={require('../assets/backgound.mp4')} type="video/ogg" />
             </video>
-            <canvas id='spectate1'
-                className='spectate'
-                height='1000'
-                width='400'
-            />
-            <canvas
-                id='pongBoard'
-                className='pongBoard'
-                height={canvas.height}
-                width={canvas.width}
-            />
-            <canvas id='spectate2'
-                className='spectate'
-                height='1000'
-                width='400'
-            />
+            <div className="boardDiv">
+            <div className="blocksContainerCenter">
+                <canvas id='spectate1'
+                    className='spectate'
+                    height='1000'
+                    width='400'
+                />
+                <canvas
+                    id='pongBoard'
+                    className='pongBoard'
+                    height={canvas.height}
+                    width={canvas.width}
+                />
+                <canvas id='spectate2'
+                    className='spectate'
+                    height='1000'
+                    width='400'
+                />
+            </div>
+            </div>
             <div id="myModal" className="modal">
                 <div className="modal-content">
                     <h3 id='winnerHeader' className='winnerHeader'></h3>
@@ -303,4 +312,18 @@ const PongPage = (props: any) => {
     );
 };
 
-export default PongPage;
+{/*
+<canvas
+    id='pongBoard'
+    className='pongBoard'
+    height={canvas.height}
+    width={canvas.width}
+/>
+<canvas id='spectate2'
+    className='spectate'
+    height='1000'
+    width='400'
+/>
+*/}
+
+export default GamePage;

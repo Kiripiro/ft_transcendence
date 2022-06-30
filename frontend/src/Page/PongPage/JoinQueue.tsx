@@ -6,6 +6,11 @@ import { RootState } from '../../State';
 import imageMap1 from "./map1.png";
 import imageMap2 from "./map2.png";
 
+import './CSS/JoinQueue/Spectate.css'
+import './CSS/JoinQueue/Queue.css'
+import './CSS/JoinQueue/ChooseMap.css'
+import './CSS/Utils.css'
+
 const JoinRoom=(props: any) => {
     const [inQueue, setInQueue] = useState(false);
     const [NotFound, setNotFound] = useState(false);
@@ -93,30 +98,38 @@ const JoinRoom=(props: any) => {
 
     return (
         <div className='Font'>
-              <Navbar/>
-            <div id="mapModal" className="modal">
-                <div className="modal-content">
-                    <div className='blocksContainer'>
-                        <button type="button" id='map1Button' className='mapButton' onClick={() => {chooseMap("map1")}}>
-                            <img src={imageMap1} />
-                        </button>
-                        <button type="button" id='map2Button' className='mapButton' onClick={() => {chooseMap("map2")}}>
-                            <img src={imageMap2} />
-                        </button>
+            <Navbar/>
+            <main>
+                <div className='blocksContainerRow'>
+                    <div className="div50">
+                        <div className="queueDiv">
+                            <div className='blocksContainerCenter'>
+                                <div className='blocksContainerRow'>
+                                    <button type="button" id='map1Button' className='mapButton' onClick={() => {chooseMap("map1")}}>
+                                        <img src={imageMap1} />
+                                    </button>
+                                    <button type="button" id='map2Button' className='mapButton' onClick={() => {chooseMap("map2")}}>
+                                        <img src={imageMap2} />
+                                    </button>
+                                </div>
+                            </div>
+                            <div className='blocksContainerCenter'>
+                                <button id='queueButton' type="button" className='queueButton' onClick={() => joinQueue()} />
+                            </div>
+                        </div>
                     </div>
-                    <div className='blocksContainer'>
-                        <button type="button" className='saveButton' onClick={() => {var mapModal = document.getElementById('mapModal'); if (mapModal !== null) {mapModal.style.display = "none"}}}> Save </button>
+                    <div className="div50">
+                        <div className="spectateDiv">
+                            <div className='blocksContainerCenter'>
+                                <input  className='spectateInput' value={props.specID} onChange={e => props.setSpecID(e.target.value)} placeholder={NotFound ? 'Client not playing...' : 'Client To Spectate'} ></input>
+                            </div>
+                            <div className='blocksContainerCenter'>
+                                <button type="button" className='spectateButton' onClick={() => spectate()}> Spectate </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div className='blocksContainer'>
-                <button type="button" className='chooseMapButton' onClick={() => openMapModal()}> Select map </button>
-            </div>
-            <div className='joinQueue'>
-                <button id='queueButton' type="button" className='queueButton' onClick={() => joinQueue()}> </button>
-            </div>
-                <button type="button" className='spectateButton' onClick={() => spectate()}> Spectate </button>
-                <input value={props.specID} onChange={e => props.setSpecID(e.target.value)} placeholder={NotFound ? 'Client not playing...' : 'Client To Spectate'} ></input>
+            </main>
         </div>
     );
 };

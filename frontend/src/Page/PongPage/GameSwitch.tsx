@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import JoinRoom from './JoinQueue';
-import PongPage from './PongPage';
+import GamePage from './GamePage';
 
 const GameSwitch=() => {
     const [gameStart, setGameStart] = useState(false);
@@ -10,7 +10,7 @@ const GameSwitch=() => {
 
     if (gameStart)
         return (
-            <PongPage gameStart={gameStart} setGameStart={setGameStart} roomID={roomID} />
+            <GamePage gameStart={gameStart} setGameStart={setGameStart} roomID={roomID} />
         )
     else
         return (
