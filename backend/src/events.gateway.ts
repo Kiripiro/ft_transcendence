@@ -9,6 +9,7 @@ import {
 import { Server, Socket } from 'socket.io';
 import { Logger } from '@nestjs/common';
 import { gameRoomClass } from './gameRoomClass';
+import { Interval } from '@nestjs/schedule';
 
 interface Client {
   id: string;
@@ -184,6 +185,15 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     this.server.to(client.id).emit('start', room[1].roomID);
   }
 
+  @Interval(10)
+  handleInterval() {
+    for (let index = 0; index < this.pongInfo.length; index++) {
+      if (this.pongInfo[index].ready())
+        this.pongInfo[index].moveAll();
+    }
+  }
+  
+
   @SubscribeMessage('RENDER')
   async render(client: Socket, roomID: string) {
 
@@ -191,19 +201,19 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
     if (room != null) {
 
-      if (this.pongInfo[room[0]].ready()) {
+      // if (this.pongInfo[room[0]].ready()) {
 
         if (this.pongInfo[room[0]].win()) {
           this.server.to(client.id).emit('finish', this.pongInfo[room[0]])
           return
         }
-        for (let i = 0; i < 2; i++)
-          if (this.pongInfo[room[0]].players[i].id == client.id) {
-            this.pongInfo[room[0]].movePlayer()
-            this.pongInfo[room[0]].moveBall()
-          }
-
-      }
+        // for (let i = 0; i < 2; i++)
+        //   if (this.pongInfo[room[0]].players[i].id == client.id) {
+        //     this.pongInfo[room[0]].movePlayer()
+        //     this.pongInfo[room[0]].moveBall()
+        //     this.pongInfo[room[0]].moveObstacle()
+        //   }
+      // }
 
       this.server.to(client.id).emit('render', this.pongInfo[room[0]])
     }

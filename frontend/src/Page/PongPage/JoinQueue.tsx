@@ -9,6 +9,7 @@ import imageMap2 from "./map2.png";
 import './CSS/JoinQueue/Spectate.css'
 import './CSS/JoinQueue/Queue.css'
 import './CSS/JoinQueue/ChooseMap.css'
+import './CSS/JoinQueue/CreateMap.css'
 import './CSS/Utils.css'
 
 const JoinRoom=(props: any) => {
@@ -43,14 +44,6 @@ const JoinRoom=(props: any) => {
         props.setGameStart(true);
     });
 
-    function openMapModal() {
-        var mapModal = document.getElementById('mapModal')
-
-        if (mapModal !== null) {
-            mapModal.style.display = "block"
-        }
-    }
-
     async function chooseMap(map: string) {
         props.setGameMap(map)
     }
@@ -58,6 +51,8 @@ const JoinRoom=(props: any) => {
     useEffect(() => {
         var map1Button = document.getElementById('map1Button')
         var map2Button = document.getElementById('map2Button')
+        var map3Button = document.getElementById('map3Button')
+        var map4Button = document.getElementById('map4Button')
 
         if (props.gameMap == "map1") {
             if (map1Button !== null)
@@ -72,6 +67,20 @@ const JoinRoom=(props: any) => {
         } else {
             if (map2Button !== null)
                 map2Button.style.backgroundColor = "#7d0000"
+        }
+        if (props.gameMap == "map3") {
+            if (map3Button !== null)
+                map3Button.style.backgroundColor = "green"
+        } else {
+            if (map3Button !== null)
+                map3Button.style.backgroundColor = "#7d0000"
+        }
+        if (props.gameMap == "map4") {
+            if (map4Button !== null)
+                map4Button.style.backgroundColor = "green"
+        } else {
+            if (map4Button !== null)
+                map4Button.style.backgroundColor = "#7d0000"
         }
 
         var button = document.getElementById('queueButton')
@@ -107,9 +116,23 @@ const JoinRoom=(props: any) => {
                                 <div className='blocksContainerRow'>
                                     <button type="button" id='map1Button' className='mapButton' onClick={() => {chooseMap("map1")}}>
                                         <img src={imageMap1} />
+                                        <h3>Just color</h3>
                                     </button>
                                     <button type="button" id='map2Button' className='mapButton' onClick={() => {chooseMap("map2")}}>
                                         <img src={imageMap2} />
+                                        <h3>Just color</h3>
+                                    </button>
+                                </div>
+                            </div>
+                            <div className='blocksContainerCenter'>
+                                <div className='blocksContainerRow'>
+                                    <button type="button" id='map3Button' className='mapButton' onClick={() => {chooseMap("map3")}}>
+                                        <img src={imageMap1} />
+                                        <h3>Obstacle</h3>
+                                    </button>
+                                    <button type="button" id='map4Button' className='mapButton' onClick={() => {chooseMap("map4")}}>
+                                        <img src={imageMap2} />
+                                        <h3>Obstacle</h3>
                                     </button>
                                 </div>
                             </div>
@@ -125,6 +148,11 @@ const JoinRoom=(props: any) => {
                             </div>
                             <div className='blocksContainerCenter'>
                                 <button type="button" className='spectateButton' onClick={() => spectate()}> Spectate </button>
+                            </div>
+                        </div>
+                        <div className="createMapDiv">
+                            <div className='blocksContainerCenter'>
+                                <button type="button" className='createMapButton' onClick={() => {props.setCreateMap(true)}}> Create map </button>
                             </div>
                         </div>
                     </div>

@@ -20,14 +20,45 @@ const GamePage = (props: any) => {
 
     const [finishGame, setFinishGame] = useState(false);
 
-    // // drawFont : desine le fond du jeu
+    // drawFont : desine le fond du jeu
     function drawFont(ctx: CanvasRenderingContext2D | null, room: gameRoomClass) {
         if (ctx !== null) {
 
-            ctx.fillStyle = room.mapColor;
+            ctx.fillStyle = room.map.mapColor;
 
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+        }
+    }
+
+    // drawObstacle : desine les obstacles du jeu
+    function drawObstacle(ctx: CanvasRenderingContext2D | null, room: gameRoomClass) {
+        if (ctx !== null) {
+
+            for (let index = 0; index < room.map.obstacles.length; index++) {
+                const element = room.map.obstacles[index];
+
+                ctx.fillStyle = element.color;
+
+                ctx.fillRect(element.x, element.y, element.width, element.height);
+            }
+        }
+    }
+
+    function drawBallParticles(ctx: CanvasRenderingContext2D | null, room: gameRoomClass) {
+        if (ctx !== null) {
+
+            for (var index = room.ball.particle_x.length - 1; index >= 0; index--) {
+
+                ctx.beginPath();
+                
+                ctx.fillStyle = '#00' + ((255 - ((index) * (256 / 16))).toString(16).length == 1 ? "0" + (255 - ((index) * (256 / 16))).toString(16) : (255 - ((index) * (256 / 16))).toString(16)) + '00';
+
+                ctx.arc(room.ball.particle_x[index], room.ball.particle_y[index], room.ball.radius, 0, Math.PI * 2);
+                
+                ctx.fill();
+                
+            }
         }
     }
 
@@ -215,8 +246,10 @@ const GamePage = (props: any) => {
                 drawFont(ctx, room)
 
                 drawLimitCamps(ctx)
-
+                
                 drawLimitsMove(ctx)
+                
+                drawObstacle(ctx, room)
 
                 drawScore(ctx, room)
 
@@ -237,9 +270,11 @@ const GamePage = (props: any) => {
                     return
                 }
 
-                drawPlayers(ctx, room)
-
+                drawBallParticles(ctx, room)
+                
                 drawBall(ctx, room)
+                
+                drawPlayers(ctx, room)
 
             }
         }
@@ -311,19 +346,5 @@ const GamePage = (props: any) => {
         </div>
     );
 };
-
-{/*
-<canvas
-    id='pongBoard'
-    className='pongBoard'
-    height={canvas.height}
-    width={canvas.width}
-/>
-<canvas id='spectate2'
-    className='spectate'
-    height='1000'
-    width='400'
-/>
-*/}
 
 export default GamePage;
