@@ -49,6 +49,7 @@ const JoinRoom=(props: any) => {
     }
 
     useEffect(() => {
+        console.log('test')
         var map1Button = document.getElementById('map1Button')
         var map2Button = document.getElementById('map2Button')
         var map3Button = document.getElementById('map3Button')

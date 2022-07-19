@@ -22,6 +22,7 @@ class Player {
 	id: string
 
 	connected: boolean
+	dateDeconnection: number
 
 	width: number
 	height: number
@@ -47,6 +48,7 @@ class Player {
 		this.id = id
 
 		this.connected = false
+		this.dateDeconnection = 0
 
 		this.width = canvas.width / 40
 		this.height = canvas.height / 5
@@ -67,6 +69,7 @@ class Player {
 		this.score = 0
 
 		this.ready = false
+
 	}
 
 	resetPos(canvas: Canvas) {
@@ -150,13 +153,24 @@ class Ball {
 
 		this.radius = 10
 
-		this.particle_x.slice(0, this.particle_x.length)
-		this.particle_y.slice(0, this.particle_y.length)
+		while (this.particle_x.length) {
+			this.particle_x.pop()
+			this.particle_y.pop()
+		}
 	}
 
 	addParticles(x: number, y: number) {
+		if (this.particle_x.length && this.particle_x[0] - this.radius < x && this.particle_x[0] + this.radius >= x)
+			return
+		
 		this.particle_x.unshift(x)
 		this.particle_y.unshift(y)
+
+		if (this.particle_x.length > 16)
+			this.particle_x.pop()
+		if (this.particle_y.length > 16)
+			this.particle_y.pop()
+
 	}
 }
 
@@ -165,6 +179,7 @@ class Obstacle {
 
 	initialX: number
 	initialY: number
+	initialHeight: number
 
 	x: number
 	y: number
@@ -175,12 +190,16 @@ class Obstacle {
 	state: number
 
 	speed: number
+	initialSpeed: number
+
+	id: number
 
 	constructor(color: string, x: number, y: number, width: number, height: number, state: number, speed: number = 0) {
 		this.color = color
 		
 		this.width = width
 		this.height = height
+		this.initialHeight = height
 		
 		this.x = x
 		this.initialX = x
@@ -190,6 +209,9 @@ class Obstacle {
 		this.state = state
 
 		this.speed = speed
+		this.initialSpeed = speed
+
+		this.id = 0;
 	}
 }
 
@@ -203,20 +225,36 @@ class Map {
 
 		this.obstacles = new Array()
 
+		if (gameMap == 'custom') {
+			this.mapColor = 'black'
+			return
+		}
 		if (gameMap == 'map1')
 			this.mapColor = 'black'
-		else {
+		else if (gameMap == 'map2')
 			this.mapColor = '#19022b'
-
+		else if (gameMap == 'map3') {
+			this.mapColor = 'black'
 			this.obstacles.push(new Obstacle("#4B4B4B", canvas.width / 2 - 10, canvas.height / 2 - 30, 20, 60, MOTION, 0.4))
+		}
+		else {
+			this.mapColor = 'black'
+			this.obstacles.push(new Obstacle("#4B4B4B", canvas.width / 2 - 10, canvas.height / 2 - 30, 20, 60, EXPAND, 1))
 		}
 	}
 
 	resetObstaclesPos() {
 		for (let index = 0; index < this.obstacles.length; index++) {
 			this.obstacles[index].x = this.obstacles[index].initialX
-			this.obstacles[index].y = this.obstacles[index].initialY			
+			this.obstacles[index].y = this.obstacles[index].initialY
+			this.obstacles[index].height = this.obstacles[index].initialHeight
+			this.obstacles[index].speed = this.obstacles[index].initialSpeed
 		}
+	}
+
+	addObstacle(color: string, x: number, y: number, width: number, height: number, id: number) {
+		let length = this.obstacles.push(new Obstacle(color, x, y, width, height, STILL))
+		this.obstacles[length - 1].id = id
 	}
 
 }
@@ -351,6 +389,8 @@ class gameRoomClass {
 
 	moveBall() {
 
+		this.ball.addParticles(this.ball.x, this.ball.y)
+
 		// si la balle touche le camps du joueur 1 : augmente le score du joueur 2 et redémare le jeu
 		if (this.ball.x + this.ball.dx > this.canvas.width - this.ball.radius) {
 			this.players[0].score++
@@ -424,7 +464,8 @@ class gameRoomClass {
 	moveObstacle() {
 		for (let index = 0; index < this.map.obstacles.length; index++) {
 			if (this.map.obstacles[index].state == MOTION) {
-
+				if (this.checkCollisionObstacle(this.map.obstacles[index]))
+					return
 				if (this.map.obstacles[index].y + this.map.obstacles[index].height / 2 < this.ball.y)
 					if (this.map.obstacles[index].y + this.map.obstacles[index].height < this.canvas.height - this.ball.radius * 2 - this.map.obstacles[index].speed)
 					this.map.obstacles[index].y += this.map.obstacles[index].speed
@@ -432,7 +473,19 @@ class gameRoomClass {
 					if (this.map.obstacles[index].y > this.ball.radius * 2 + this.map.obstacles[index].speed)
 					this.map.obstacles[index].y -= this.map.obstacles[index].speed
 			}
+			else if (this.map.obstacles[index].state == EXPAND) {
+				this.map.obstacles[index].height += this.map.obstacles[index].speed
+				this.map.obstacles[index].y -= this.map.obstacles[index].speed / 2
+				if (this.map.obstacles[index].height == this.map.obstacles[index].initialHeight || this.map.obstacles[index].height == this.canvas.height)
+					this.map.obstacles[index].speed *= -1
+			}
 		}
+	}
+
+	moveAll() {
+		this.moveBall()
+		this.moveObstacle()
+		this.movePlayer()
 	}
 
 	ready(): boolean {

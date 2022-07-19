@@ -162,7 +162,13 @@ const GamePage = (props: any) => {
             ctx.font = '50px Arial';
             ctx.fillStyle = 'white';
             ctx.textAlign = "center";
-            ctx.fillText("Press ENTER to play !", canvas.width / 2, canvas.height / 2);
+
+            if (!room.players[0].connected || !room.players[1].connected) {
+                ctx.fillText("Oponent disconected.", canvas.width / 2, canvas.height / 3);
+                ctx.fillText((15 - Math.floor((Date.now() - room.players[room.players[0].connected ? 1 : 0].dateDeconnection) / 1000)).toString(), canvas.width / 2, canvas.height / 2);
+            }
+            else
+                ctx.fillText("Press ENTER to play !", canvas.width / 2, canvas.height / 2);
 
 
             ctx.fillStyle = (room.players[0].ready ? 'red' : '#220000');
@@ -255,16 +261,6 @@ const GamePage = (props: any) => {
 
                 drawSpectator(room)
 
-                if (room.players[0].score == 3 || room.players[1].score == 3) {
-                    var modal = document.getElementById("myModal");
-                    if (modal)
-                        modal.style.display = "block";
-                    var winnerHeader = document.getElementById("winnerHeader")
-                    if (winnerHeader)
-                        winnerHeader.innerHTML = (room.players[0].score > room.players[1].score ? room.players[0].id : room.players[1].id) + " as won the game !"
-                    return;
-                }
-
                 if (!room.players[0].ready || !room.players[1].ready) {
                     drawText(ctx, room)
                     return
@@ -281,6 +277,20 @@ const GamePage = (props: any) => {
     }
 
     utilsData.socket.on('render', render);
+
+    utilsData.socket.on('finish', (room: gameRoomClass) => {
+        var modal = document.getElementById("myModal");
+        if (modal)
+            modal.style.display = "block";
+        var winnerHeader = document.getElementById("winnerHeader")
+        if (winnerHeader)
+            winnerHeader.innerHTML = (room.players[0].score > room.players[1].score ? room.players[0].id : room.players[1].id) + " as won the game !"
+        return;
+    });
+
+    utilsData.socket.on('deconected', () => {
+
+    });
 
     function onKeyDown(e: any) {
         if (e.key === 'ArrowUp')

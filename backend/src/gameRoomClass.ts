@@ -22,6 +22,7 @@ class Player {
 	id: string
 
 	connected: boolean
+	dateDeconnection: number
 
 	width: number
 	height: number
@@ -47,6 +48,7 @@ class Player {
 		this.id = id
 
 		this.connected = false
+		this.dateDeconnection = 0
 
 		this.width = canvas.width / 40
 		this.height = canvas.height / 5
@@ -67,6 +69,7 @@ class Player {
 		this.score = 0
 
 		this.ready = false
+
 	}
 
 	resetPos(canvas: Canvas) {
@@ -168,7 +171,6 @@ class Ball {
 		if (this.particle_y.length > 16)
 			this.particle_y.pop()
 
-		console.log(this.particle_x)
 	}
 }
 
@@ -190,6 +192,8 @@ class Obstacle {
 	speed: number
 	initialSpeed: number
 
+	id: number
+
 	constructor(color: string, x: number, y: number, width: number, height: number, state: number, speed: number = 0) {
 		this.color = color
 		
@@ -206,6 +210,8 @@ class Obstacle {
 
 		this.speed = speed
 		this.initialSpeed = speed
+
+		this.id = 0;
 	}
 }
 
@@ -219,6 +225,10 @@ class Map {
 
 		this.obstacles = new Array()
 
+		if (gameMap == 'custom') {
+			this.mapColor = 'black'
+			return
+		}
 		if (gameMap == 'map1')
 			this.mapColor = 'black'
 		else if (gameMap == 'map2')
@@ -240,6 +250,11 @@ class Map {
 			this.obstacles[index].height = this.obstacles[index].initialHeight
 			this.obstacles[index].speed = this.obstacles[index].initialSpeed
 		}
+	}
+
+	addObstacle(color: string, x: number, y: number, width: number, height: number, id: number) {
+		let length = this.obstacles.push(new Obstacle(color, x, y, width, height, STILL))
+		this.obstacles[length - 1].id = id
 	}
 
 }
@@ -449,7 +464,8 @@ class gameRoomClass {
 	moveObstacle() {
 		for (let index = 0; index < this.map.obstacles.length; index++) {
 			if (this.map.obstacles[index].state == MOTION) {
-
+				if (this.checkCollisionObstacle(this.map.obstacles[index]))
+					return
 				if (this.map.obstacles[index].y + this.map.obstacles[index].height / 2 < this.ball.y)
 					if (this.map.obstacles[index].y + this.map.obstacles[index].height < this.canvas.height - this.ball.radius * 2 - this.map.obstacles[index].speed)
 					this.map.obstacles[index].y += this.map.obstacles[index].speed
@@ -457,7 +473,7 @@ class gameRoomClass {
 					if (this.map.obstacles[index].y > this.ball.radius * 2 + this.map.obstacles[index].speed)
 					this.map.obstacles[index].y -= this.map.obstacles[index].speed
 			}
-			else if (this.map.obstacles[index].state == EXPAND) {
+			else if (this.map.obstacles[index].state == EXPAND) {
 				this.map.obstacles[index].height += this.map.obstacles[index].speed
 				this.map.obstacles[index].y -= this.map.obstacles[index].speed / 2
 				if (this.map.obstacles[index].height == this.map.obstacles[index].initialHeight || this.map.obstacles[index].height == this.canvas.height)

@@ -1,5 +1,5 @@
 .createMapCanvas {
 	width: 100%;
 
-	background-color: red;
+	max-height: 100%;
 }

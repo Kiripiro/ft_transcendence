@@ -42,8 +42,10 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     var room: [number, gameRoomClass] | null = this.getRoomByClientID(client.id)
     if (room != null) {
       for (let i = 0; i < 2; i++)
-        if (this.pongInfo[room[0]].players[i].id == client.id)
+        if (this.pongInfo[room[0]].players[i].id == client.id) {
           this.pongInfo[room[0]].players[i].connected = false
+          this.pongInfo[room[0]].players[i].dateDeconnection = Date.now()
+        }
       if (!this.pongInfo[room[0]].players[0].connected && !this.pongInfo[room[0]].players[1].connected)
         this.pongInfo.splice(room[0], 1)
     }
@@ -185,11 +187,21 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     this.server.to(client.id).emit('start', room[1].roomID);
   }
 
-  @Interval(10)
+  @Interval(3)
   handleInterval() {
     for (let index = 0; index < this.pongInfo.length; index++) {
-      if (this.pongInfo[index].ready())
-        this.pongInfo[index].moveAll();
+      for (let i = 0; i < 2; i++)
+      if (!this.pongInfo[index].players[i].connected) {
+        this.pongInfo[index].players[i].ready = false
+        if (!(15 - Math.floor((Date.now() - this.pongInfo[index].players[i].dateDeconnection) / 1000)))
+          this.pongInfo[index].players[i ? 0 : 1].score = 3
+        return this.server.to(this.pongInfo[index].players[i ? 0 : 1].id).emit('deconected')
+
+      }
+
+      if (!this.pongInfo[index].win())
+        if (this.pongInfo[index].ready())
+          this.pongInfo[index].moveAll();
     }
   }
   
