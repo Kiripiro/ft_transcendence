@@ -2,9 +2,13 @@ import Navbar from "../../Module/Navbar/Navbar";
 
 import './CSS/CreateMap/Div.css'
 import './CSS/CreateMap/Canvas.css'
+import './CSS/CreateMap/Parameter.css'
 import './CSS/Utils.css'
-import { gameRoomClass } from "./gameRoomClass";
-import { useEffect, useState } from "react";
+import { gameRoomClass, Obstacle } from "./gameRoomClass";
+import { KeyboardEventHandler, useEffect, useState } from "react";
+import { render } from "react-dom";
+import { RootState } from "../../State";
+import { useSelector } from "react-redux";
 
 var canvas = {
     "width": 800,
@@ -78,12 +82,71 @@ const CreateMap=(props: any) => {
             for (let index = 0; index < room.map.obstacles.length; index++) {
                 const element = room.map.obstacles[index];
 
-                ctx.fillStyle = element.color;
+                if (actualObstacleID != element.id) {
+                    ctx.fillStyle = element.color;
 
-                ctx.fillRect(element.x, element.y, element.width, element.height);
+                    ctx.fillRect(element.x, element.y, element.width, element.height);
+                }
             }
         }
     }
+
+    function drawSelectedObstacle(ctx: CanvasRenderingContext2D | null, room: gameRoomClass) {
+        if (ctx !== null) {
+
+            
+            for (let index = 0; index < room.map.obstacles.length; index++) {
+                const element = room.map.obstacles[index];
+
+                if (actualObstacleID == element.id) {
+                    ctx.fillStyle = element.color;
+
+                    ctx.fillRect(element.x, element.y, element.width, element.height);
+
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(element.x + element.width / 2 - 5, element.y - 5, 10, 10);
+                    ctx.fillStyle = 'black';
+                    ctx.fillRect(element.x + element.width / 2 - 4, element.y - 4, 8, 8);
+
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(element.x + element.width / 2 - 5, element.y + element.height - 5, 10, 10);
+                    ctx.fillStyle = 'black';
+                    ctx.fillRect(element.x + element.width / 2 - 4, element.y + element.height - 4, 8, 8);
+
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(element.x + element.width - 5, element.y + element.height / 2 - 5, 10, 10);
+                    ctx.fillStyle = 'black';
+                    ctx.fillRect(element.x + element.width - 4, element.y + element.height / 2 - 4, 8, 8);
+
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(element.x - 5, element.y + element.height / 2 - 5, 10, 10);
+                    ctx.fillStyle = 'black';
+                    ctx.fillRect(element.x - 4, element.y + element.height / 2 - 4, 8, 8);
+
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(element.x - 5, element.y - 5, 10, 10);
+                    ctx.fillStyle = 'black';
+                    ctx.fillRect(element.x - 4, element.y - 4, 8, 8);
+
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(element.x + element.width - 5, element.y + element.height - 5, 10, 10);
+                    ctx.fillStyle = 'black';
+                    ctx.fillRect(element.x + element.width - 4, element.y + element.height - 4, 8, 8);
+
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(element.x + element.width - 5, element.y - 5, 10, 10);
+                    ctx.fillStyle = 'black';
+                    ctx.fillRect(element.x + element.width - 4, element.y - 4, 8, 8);
+
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(element.x - 5, element.y + element.height - 5, 10, 10);
+                    ctx.fillStyle = 'black';
+                    ctx.fillRect(element.x - 4, element.y + element.height - 4, 8, 8);
+
+                }
+            }
+        }
+    }    
 
     function drawScore(ctx: CanvasRenderingContext2D | null, room: gameRoomClass) {
         if (ctx !== null) {
@@ -117,19 +180,7 @@ const CreateMap=(props: any) => {
         }
     }
 
-    const [nbObstacle, setNbObstacle] = useState(0)
-
-	useEffect(() => {
-
-        setInputValue()
-
-        for (let index = 0; index < room.map.obstacles.length; index++) {
-            if (lastObstacleID == room.map.obstacles[index].id)
-                room.map.obstacles[index].color = 'gray'
-            if (actualObstacleID == room.map.obstacles[index].id)
-                room.map.obstacles[index].color = 'red'
-        }
-
+    function render() {
         var canvas = document.getElementById('canvas') as HTMLCanvasElement
         if (canvas !== null) {
             var ctx = canvas.getContext('2d')
@@ -143,13 +194,31 @@ const CreateMap=(props: any) => {
                 
                 drawObstacle(ctx, room)
 
-                drawScore(ctx, room)
-                
+                drawSelectedObstacle(ctx, room)
+
                 drawPlayers(ctx, room)
 
-                console.log('actualID', actualObstacleID)
+                drawScore(ctx, room)
+
             }
         }
+    }
+
+    const [nbObstacle, setNbObstacle] = useState(0)
+
+	useEffect(() => {
+
+        setInputValue()
+
+        for (let index = 0; index < room.map.obstacles.length; index++) {
+            if (lastObstacleID == room.map.obstacles[index].id)
+                room.map.obstacles[index].color = 'gray'
+            if (actualObstacleID == room.map.obstacles[index].id)
+                room.map.obstacles[index].color = '#003300'
+        }
+
+        render()
+        
     })
 
     function setInputValue() {
@@ -169,8 +238,81 @@ const CreateMap=(props: any) => {
     const [yInput, setYInput] = useState(0);
     const [widthInput, setWidthInput] = useState(0);
     const [heightInput, setHeightInput] = useState(0);
+    
+    const [holdClick, setHoldClick] = useState(false);
+    const [holdClickDiff] = useState({"diffX":0, "diffY":0});
+    const [holdClickExpand, setHoldClickExpand] = useState(0);
 
-    function handleCanvasClick(event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) {
+    function checkHoldClickExpandCollision(cursorX: number, cursorY: number,): boolean {
+        for (let index = 0; index < room.map.obstacles.length; index++) {
+            const element = room.map.obstacles[index];
+            if (actualObstacleID == element.id) {
+                if (cursorX >= element.x - 5 && cursorX <= element.x + 5 && cursorY >= element.y - 5 && cursorY <= element.y + 5) {
+                    setHoldClickExpand(1)
+                    return true
+                }
+                else if (cursorX >= element.x + element.width / 2 - 5 && cursorX <= element.x + element.width / 2 + 5 && cursorY >= element.y - 5 && cursorY <= element.y + 5) {
+                    setHoldClickExpand(2)
+                    return true
+                }
+                else if (cursorX >= element.x + element.width - 5 && cursorX <= element.x + element.width + 5 && cursorY >= element.y - 5 && cursorY <= element.y + 5) {
+                    setHoldClickExpand(3)
+                    return true
+                }
+                else if (cursorX >= element.x + element.width - 5 && cursorX <= element.x + element.width + 5 && cursorY >= element.y + element.height / 2 - 5 && cursorY <= element.y + element.height / 2 + 5) {
+                    setHoldClickExpand(4)
+                    return true
+                }
+                else if (cursorX >= element.x + element.width - 5 && cursorX <= element.x + element.width + 5 && cursorY >= element.y + element.height - 5 && cursorY <= element.y + element.height + 5) {
+                    setHoldClickExpand(5)
+                    return true
+                }
+                else if (cursorX >= element.x + element.width / 2 - 5 && cursorX <= element.x + element.width / 2 + 5 && cursorY >= element.y + element.height - 5 && cursorY <= element.y + element.height + 5) {
+                    setHoldClickExpand(6)
+                    return true
+                }
+                else if (cursorX >= element.x - 5 && cursorX <= element.x + 5 && cursorY >= element.y + element.height - 5 && cursorY <= element.y + element.height + 5) {
+                    setHoldClickExpand(7)
+                    return true
+                }
+                else if (cursorX >= element.x - 5 && cursorX <= element.x + 5 && cursorY >= element.y + element.height / 2 - 5 && cursorY <= element.y + element.height / 2 + 5) {
+                    setHoldClickExpand(8)
+                    return true
+                }
+            }
+        }
+        setHoldClickExpand(0)
+        return false
+    }
+
+    function checkCollisionsObstacle(obstacle: Obstacle, cursorX: number, cursorY: number) {
+        if (obstacle.width < 0 && obstacle.height < 0)
+            return (cursorX < obstacle.x && cursorX > obstacle.x + obstacle.width && cursorY < obstacle.y && cursorY > obstacle.y + obstacle.height)
+        else if (obstacle.width < 0)
+            return (cursorX < obstacle.x && cursorX > obstacle.x + obstacle.width && obstacle.y < cursorY && obstacle.y + obstacle.height > cursorY)
+        else if (obstacle.height < 0)
+            return (obstacle.x < cursorX && obstacle.x + obstacle.width > cursorX && cursorY < obstacle.y && cursorY > obstacle.y + obstacle.height)
+        else
+            return (obstacle.x < cursorX && obstacle.x + obstacle.width > cursorX && obstacle.y < cursorY && obstacle.y + obstacle.height > cursorY)
+    }
+
+    function checkCollisionsActualObstacle(cursorX: number, cursorY: number) {
+        for (let index = 0; index < room.map.obstacles.length; index++) {
+            const element = room.map.obstacles[index];
+            if (actualObstacleID == element.id) {
+                if (element.width < 0 && element.height < 0)
+                    return (cursorX < element.x && cursorX > element.x + element.width && cursorY < element.y && cursorY > element.y + element.height)
+                else if (element.width < 0)
+                    return (cursorX < element.x && cursorX > element.x + element.width && element.y < cursorY && element.y + element.height > cursorY)
+                else if (element.height < 0)
+                    return (element.x < cursorX && element.x + element.width > cursorX && cursorY < element.y && cursorY > element.y + element.height)
+                else
+                    return (element.x < cursorX && element.x + element.width > cursorX && element.y < cursorY && element.y + element.height > cursorY)
+            }
+        }
+    }
+
+    function handleCanvasMouseDown(event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) {
         var canvas = document.getElementById('canvas') as HTMLCanvasElement
         if (canvas != null) {
             var bound = canvas.getBoundingClientRect()
@@ -178,15 +320,116 @@ const CreateMap=(props: any) => {
             let cursorY = (event.clientY - bound.top) / (bound.bottom - bound.top) * canvas.height
 
             for (let index = 0; index < room.map.obstacles.length; index++) {
-                if (room.map.obstacles[index].x < cursorX && room.map.obstacles[index].x + room.map.obstacles[index].width > cursorX && room.map.obstacles[index].y < cursorY && room.map.obstacles[index].y + room.map.obstacles[index].height > cursorY) {
+                if (checkCollisionsActualObstacle(cursorX, cursorY)) {
+                    checkHoldClickExpandCollision(cursorX, cursorY)
+                    setHoldClick(true)
+                    for (let i = 0; i < room.map.obstacles.length; i++)
+                        if (actualObstacleID == room.map.obstacles[i].id) {
+                            holdClickDiff.diffX = cursorX - room.map.obstacles[i].x
+                            holdClickDiff.diffY = cursorY - room.map.obstacles[i].y
+                        }
+                    return
+                }
+                else if (checkHoldClickExpandCollision(cursorX, cursorY)) {
+                    setHoldClick(true)
+
+                    holdClickDiff.diffX = cursorX - room.map.obstacles[index].x
+                    holdClickDiff.diffY = cursorY - room.map.obstacles[index].y
+                    return
+                }
+                else if (checkCollisionsObstacle(room.map.obstacles[index], cursorX, cursorY)) {
                     if (actualObstacleID != room.map.obstacles[index].id) {
                         setlastObstacleID(actualObstacleID)
                         setActualObstacleID(room.map.obstacles[index].id)
+                    }
+                    else (checkHoldClickExpandCollision(cursorX, cursorY))
+                    
+                    setHoldClick(true)
+                    holdClickDiff.diffX = cursorX - room.map.obstacles[index].x
+                    holdClickDiff.diffY = cursorY - room.map.obstacles[index].y
+                    return
+                }
+            }
+            setlastObstacleID(actualObstacleID)
+            setActualObstacleID(-1)
+        }
+    }
+
+    function handleCanvasMouseUp(event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) {
+        setHoldClick(false)
+        setHoldClickExpand(0)
+    }
+
+    function dragNdrop(event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) {
+        var canvas = document.getElementById('canvas') as HTMLCanvasElement
+        if (canvas != null) {
+            var bound = canvas.getBoundingClientRect()
+            let cursorX = (event.clientX - bound.left) / (bound.right - bound.left) * canvas.width
+            let cursorY = (event.clientY - bound.top) / (bound.bottom - bound.top) * canvas.height
+            if (holdClick) {
+                for (let index = 0; index < room.map.obstacles.length; index++) {
+                    if (actualObstacleID == room.map.obstacles[index].id) {
+                        var ctx = canvas.getContext('2d')
+                        if (!holdClickExpand) {
+                            room.map.obstacles[index].x = cursorX - holdClickDiff.diffX
+                            room.map.obstacles[index].y = cursorY - holdClickDiff.diffY
+                        }
+                        else if (holdClickExpand == 1) {
+                            room.map.obstacles[index].width = room.map.obstacles[index].width + room.map.obstacles[index].x - cursorX
+                            room.map.obstacles[index].height = room.map.obstacles[index].height + room.map.obstacles[index].y - cursorY
+                            room.map.obstacles[index].x = cursorX
+                            room.map.obstacles[index].y = cursorY
+                        }
+                        else if (holdClickExpand == 2) {
+                            room.map.obstacles[index].height = room.map.obstacles[index].height + room.map.obstacles[index].y - cursorY
+                            room.map.obstacles[index].y = cursorY
+                        }
+                        else if (holdClickExpand == 3) {
+                            room.map.obstacles[index].width = cursorX - room.map.obstacles[index].x
+                            room.map.obstacles[index].height = room.map.obstacles[index].height + room.map.obstacles[index].y - cursorY
+                            room.map.obstacles[index].y = cursorY
+                        }
+                        else if (holdClickExpand == 4) {
+                            room.map.obstacles[index].width = cursorX - room.map.obstacles[index].x
+                        }
+                        else if (holdClickExpand == 5) {
+                            room.map.obstacles[index].width = cursorX - room.map.obstacles[index].x
+                            room.map.obstacles[index].height = cursorY - room.map.obstacles[index].y
+                        }
+                        else if (holdClickExpand == 6) {
+                            room.map.obstacles[index].height = cursorY - room.map.obstacles[index].y
+                        }
+                        else if (holdClickExpand == 7) {
+                            room.map.obstacles[index].height = cursorY - room.map.obstacles[index].y
+                            room.map.obstacles[index].width = room.map.obstacles[index].width + room.map.obstacles[index].x - cursorX
+                            room.map.obstacles[index].x = cursorX
+                        }
+                        else if (holdClickExpand == 8) {
+                            room.map.obstacles[index].width = room.map.obstacles[index].width + room.map.obstacles[index].x - cursorX
+                            room.map.obstacles[index].x = cursorX
+                        }
+                        render()
+                        setInputValue()
                     }
                 }
             }
         }
     }
+
+    const [inviteInput, setInvitInput] = useState('')
+
+    const utilsData = useSelector((state: RootState) => state.utils);
+
+    const [declineInvite, setDeclineInvite] = useState([false, ""])
+
+    utilsData.socket.on('decline_invitation', function(invitePlayer: string) {
+        setDeclineInvite([true, invitePlayer])
+    })
+
+    utilsData.socket.on('start', function(roomID: string) {
+        props.setRoomID(roomID);
+        props.setGameStart(true);
+    });
 
     return (
         <div className='Font'>
@@ -198,72 +441,104 @@ const CreateMap=(props: any) => {
                 	    className='createMapCanvas'
                 	    height={canvas.height}
                 	    width={canvas.width}
-                        onClick={handleCanvasClick}
+                        onMouseDown={handleCanvasMouseDown}
+                        onMouseUp={handleCanvasMouseUp}
+                        onMouseMove={dragNdrop}
                 	/>
 				</div>
 				<div className="parameterDiv">
-                    <button type="button" className='' onClick={async () => {
-                        
-                        setlastObstacleID(actualObstacleID)
+                    <div className="blocksContainerCollumn">
+                        <div className="blocksContainerRow">
+                            <button type="button" className='Button addObstacle' onClick={async () => {
 
-                        room.map.addObstacle('red', actualObstacleID ? 100 : 50, 50, 50, 50, nbObstacle + 1)
-                        setActualObstacleID(nbObstacle + 1)
-                        
-                        setNbObstacle(nbObstacle + 1)
-                        
-                    }}> Add obstacle </button>
-                    <input
-                        className=''
-                        type="range"
-                        value={xInput}
-                        min='0'
-                        max={canvas.width - 1}
-                        onChange={e => {
-                            for (let index = 0; index < room.map.obstacles.length; index++)
-                                if (actualObstacleID == room.map.obstacles[index].id)
-                                    room.map.obstacles[index].x = Number(e.target.value)
-                            setXInput(Number(e.target.value))
-                        }}>
-                    </input>
-                    <input
-                        className=''
-                        type="range"
-                        value={yInput}
-                        min='0'
-                        max={canvas.height - 1}
-                        onChange={e => {
-                            for (let index = 0; index < room.map.obstacles.length; index++)
-                                if (actualObstacleID == room.map.obstacles[index].id)
-                                    room.map.obstacles[index].y = Number(e.target.value)
-                            setYInput(Number(e.target.value))
-                        }}>
-                    </input>
-                    <input
-                        className=''
-                        type="range"
-                        value={widthInput}
-                        min='0'
-                        max={canvas.width}
-                        onChange={e => {
-                            for (let index = 0; index < room.map.obstacles.length; index++)
-                                if (actualObstacleID == room.map.obstacles[index].id)
-                                    room.map.obstacles[index].width = Number(e.target.value)
-                            setWidthInput(Number(e.target.value))
-                        }}>
-                    </input>
-                    <input
-                        className=''
-                        type="range"
-                        value={heightInput}
-                        min='0'
-                        max={canvas.height}
-                        onChange={e => {
-                            for (let index = 0; index < room.map.obstacles.length; index++)
-                                if (actualObstacleID == room.map.obstacles[index].id)
-                                    room.map.obstacles[index].height = Number(e.target.value)
-                            setHeightInput(Number(e.target.value))
-                        }}>
-                    </input>
+                                setlastObstacleID(actualObstacleID)
+                            
+                                room.map.addObstacle('red', actualObstacleID ? 100 : 50, 50, 50, 50, nbObstacle + 1)
+                                setActualObstacleID(nbObstacle + 1)
+
+                                setNbObstacle(nbObstacle + 1)
+
+                            }}> Add obstacle </button>
+                            <button type="button" className='Button delObstacle' onClick={async () => {
+
+                                for (let index = 0; index < room.map.obstacles.length; index++) {
+                                    const element = room.map.obstacles[index];
+                                    if (actualObstacleID == element.id) {
+                                        room.map.obstacles.splice(index, 1)
+                                        setActualObstacleID(-1)
+                                    }
+                                }
+
+                            }}> Del obstacle </button>
+                        </div>
+                        <div className="rangediv">
+                            <input
+                                className='rangeBar xInput'
+                                type="range"
+                                value={xInput}
+                                min='0'
+                                max={canvas.width - 1}
+                                onChange={e => {
+                                    for (let index = 0; index < room.map.obstacles.length; index++)
+                                        if (actualObstacleID == room.map.obstacles[index].id)
+                                            room.map.obstacles[index].x = Number(e.target.value)
+                                    setXInput(Number(e.target.value))
+                                }}>
+                            </input>
+                        </div>
+                        <div className="rangediv">
+                            <input
+                                className='rangeBar yInput'
+                                type="range"
+                                value={yInput}
+                                min='0'
+                                max={canvas.height - 1}
+                                onChange={e => {
+                                    for (let index = 0; index < room.map.obstacles.length; index++)
+                                        if (actualObstacleID == room.map.obstacles[index].id)
+                                            room.map.obstacles[index].y = Number(e.target.value)
+                                    setYInput(Number(e.target.value))
+                                }}>
+                            </input>
+                        </div>
+                        <div className="rangediv">
+                            <input
+                                className='rangeBar widthInput'
+                                type="range"
+                                value={widthInput}
+                                min={-canvas.width}
+                                max={canvas.width}
+                                onChange={e => {
+                                    for (let index = 0; index < room.map.obstacles.length; index++)
+                                        if (actualObstacleID == room.map.obstacles[index].id)
+                                            room.map.obstacles[index].width = Number(e.target.value)
+                                    setWidthInput(Number(e.target.value))
+                                }}>
+                            </input>
+                        </div>
+                        <div className="rangediv">
+                            <input
+                                className='rangeBar heightInput'
+                                type="range"
+                                value={heightInput}
+                                min={-canvas.height}
+                                max={canvas.height}
+                                onChange={e => {
+                                    for (let index = 0; index < room.map.obstacles.length; index++)
+                                        if (actualObstacleID == room.map.obstacles[index].id)
+                                            room.map.obstacles[index].height = Number(e.target.value)
+                                    setHeightInput(Number(e.target.value))
+                                }}>
+                            </input>
+                        </div>
+                        <input className="inviteBar" value={inviteInput} onChange={(e) => {setInvitInput(e.target.value);setDeclineInvite([false, ""])}} placeholder='ID of client to invite'/>
+                        <button 
+                        className="Button invite"
+                        onClick={async () => {
+                            utilsData.socket.emit('INVITE_CUSTOM', [room, inviteInput])
+                            console.log(room.players)
+                        }}>{declineInvite[0] ? <>{declineInvite[1]} declines your invitation</> : <>Invite player</>}</button>
+                    </div>
                 </div>
 			</main>
 		</div>

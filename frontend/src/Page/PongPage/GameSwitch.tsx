@@ -16,7 +16,10 @@ const GameSwitch=() => {
         )
     if (createMap)
         return (
-            <CreateMap/>
+            <CreateMap
+                setGameStart={setGameStart}
+                setRoomID={setRoomID}
+            />
         )
     else
         return (

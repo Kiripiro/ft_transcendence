@@ -1,8 +1,9 @@
 
+import { Injectable } from "@nestjs/common"
 import { spawn } from "child_process"
 import { randomInt } from "crypto"
 
-export { Canvas, Player, gameRoomClass }
+export { Canvas, Player, gameRoomClass, Obstacle }
 
 const STILL = 0
 const MOTION = 1
@@ -225,6 +226,7 @@ class Map {
 
 		this.obstacles = new Array()
 
+		this.mapColor = 'black'
 		if (gameMap == 'custom') {
 			this.mapColor = 'black'
 			return
@@ -510,9 +512,5 @@ class gameRoomClass {
 		this.players[1].x = this.canvas.width / 8 * 7 - this.players[1].width / 2
 
 		this.map.resetObstaclesPos()
-	}
-
-	win(): boolean {
-		return (this.players[0].score == 3 || this.players[1].score == 3)
 	}
 }

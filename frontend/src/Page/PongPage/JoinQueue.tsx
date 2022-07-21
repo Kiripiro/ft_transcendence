@@ -8,8 +8,10 @@ import imageMap2 from "./map2.png";
 
 import './CSS/JoinQueue/Spectate.css'
 import './CSS/JoinQueue/Queue.css'
+import './CSS/JoinQueue/Invite.css'
 import './CSS/JoinQueue/ChooseMap.css'
 import './CSS/JoinQueue/CreateMap.css'
+import './CSS/GamePage/GamePage.css';
 import './CSS/Utils.css'
 
 const JoinRoom=(props: any) => {
@@ -44,12 +46,24 @@ const JoinRoom=(props: any) => {
         props.setGameStart(true);
     });
 
+    const [invitePlayer, setInvitePlayer] = useState("")
+
+    utilsData.socket.on('invite_request_custom', function(invitePlayer: string) {
+        var modal = document.getElementById("myModal");
+        if (modal)
+            modal.style.display = "block";
+        var h3 = document.getElementById("invitePlayer")
+        if (h3)
+            h3.innerHTML = invitePlayer + " invite you to play on a custom map !"
+        setInvitePlayer(invitePlayer)
+    });
+    
+
     async function chooseMap(map: string) {
         props.setGameMap(map)
     }
 
     useEffect(() => {
-        console.log('test')
         var map1Button = document.getElementById('map1Button')
         var map2Button = document.getElementById('map2Button')
         var map3Button = document.getElementById('map3Button')
@@ -158,10 +172,24 @@ const JoinRoom=(props: any) => {
                         </div>
                     </div>
                 </div>
+                <div id="myModal" className="modal">
+                <div className="modal-content">
+                    <div className="inviteNameDiv">
+                        <h3 id='invitePlayer'/>
+                    </div>
+                    <div className="blocksContainerRow">
+                        <button className='inviteButton decline' onClick={() => {
+                            utilsData.socket.emit("DECLINE_INVITATION", invitePlayer)
+                        }} >Decline</button>
+                        <button className='inviteButton accept' onClick={() => {
+                            utilsData.socket.emit("ACCEPT_INVITATION", invitePlayer)
+                        }}>Accept</button>
+                    </div>
+                </div>
+            </div>
             </main>
         </div>
     );
 };
   
 export default JoinRoom;
-  

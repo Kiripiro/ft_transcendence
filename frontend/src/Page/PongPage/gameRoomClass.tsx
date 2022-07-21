@@ -2,7 +2,7 @@
 import { spawn } from "child_process"
 import { randomInt } from "crypto"
 
-export { Canvas, Player, gameRoomClass }
+export { Canvas, Player, gameRoomClass, Obstacle }
 
 const STILL = 0
 const MOTION = 1
@@ -225,6 +225,7 @@ class Map {
 
 		this.obstacles = new Array()
 
+		this.mapColor = 'black'
 		if (gameMap == 'custom') {
 			this.mapColor = 'black'
 			return
@@ -237,7 +238,7 @@ class Map {
 			this.mapColor = 'black'
 			this.obstacles.push(new Obstacle("#4B4B4B", canvas.width / 2 - 10, canvas.height / 2 - 30, 20, 60, MOTION, 0.4))
 		}
-		else {
+		else if (gameMap == 'map4') {
 			this.mapColor = 'black'
 			this.obstacles.push(new Obstacle("#4B4B4B", canvas.width / 2 - 10, canvas.height / 2 - 30, 20, 60, EXPAND, 1))
 		}

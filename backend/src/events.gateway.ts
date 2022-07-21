@@ -199,8 +199,8 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
       }
 
-      if (!this.pongInfo[index].win())
-        if (this.pongInfo[index].ready())
+      if (!(this.pongInfo[index].players[0].score == 3 || this.pongInfo[index].players[1].score == 3))
+        if (this.pongInfo[index].players[0].ready && this.pongInfo[index].players[1].ready)
           this.pongInfo[index].moveAll();
     }
   }
@@ -213,20 +213,10 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
     if (room != null) {
 
-      // if (this.pongInfo[room[0]].ready()) {
-
-        if (this.pongInfo[room[0]].win()) {
+        if (this.pongInfo[room[0]].players[0].score == 3 || this.pongInfo[room[0]].players[1].score == 3) {
           this.server.to(client.id).emit('finish', this.pongInfo[room[0]])
           return
         }
-        // for (let i = 0; i < 2; i++)
-        //   if (this.pongInfo[room[0]].players[i].id == client.id) {
-        //     this.pongInfo[room[0]].movePlayer()
-        //     this.pongInfo[room[0]].moveBall()
-        //     this.pongInfo[room[0]].moveObstacle()
-        //   }
-      // }
-
       this.server.to(client.id).emit('render', this.pongInfo[room[0]])
     }
   }
@@ -284,6 +274,54 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
           this.pongInfo[room[0]].players[index].down = info[1]
 
     }
+  }
+
+  @SubscribeMessage('INVITE_CUSTOM')
+  async inviteCustom(client: Socket, info: [gameRoomClass, string]) {
+    this.joinRoom(client, "custom" + client.id)
+    info[0].roomID = "custom" + client.id
+    info[0].players[0].connected = true
+    info[0].players[0].id = client.id
+
+    
+    for (let index = 0; index < info[0].map.obstacles.length; index++) {
+      info[0].map.obstacles[index].initialX = info[0].map.obstacles[index].x
+      info[0].map.obstacles[index].initialY = info[0].map.obstacles[index].y
+      info[0].map.obstacles[index].initialHeight = info[0].map.obstacles[index].height
+    }
+
+    console.log('room', info[0].map.obstacles)
+    this.pongInfo.push(new gameRoomClass(info[0].roomID, client.id, "map1"))
+
+    this.pongInfo[this.pongInfo.length - 1].map.obstacles = info[0].map.obstacles
+
+    console.log('room', info[0].map.obstacles)
+    console.log('ponginfo', this.pongInfo[this.pongInfo.length - 1].map.obstacles)
+
+    this.server.to(info[1]).emit('invite_request_custom', client.id)
+
+  }
+
+  @SubscribeMessage('DECLINE_INVITATION')
+  async declineInvitation(client: Socket, inviteID: string) {
+
+    this.server.to(inviteID).emit('decline_invitation', client.id)
+    
+    this.pongInfo.splice(this.getRoomByID("custom" + inviteID)[0], 1)
+  }
+
+  @SubscribeMessage('ACCEPT_INVITATION')
+  async acceptInvitation(client: Socket, inviteID: string) {
+
+    var room = this.getRoomByID("custom" + inviteID)
+
+    this.joinRoom(client, room[1].roomID)
+    
+    this.pongInfo[room[0]].players[0].connected = true
+    this.pongInfo[room[0]].setOponnent(client.id)
+    
+    this.server.to(room[1].roomID).emit('start', "custom" + inviteID)
+
   }
 
   ///////////////////////////////////////////////////////////
