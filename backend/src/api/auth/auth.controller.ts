@@ -7,7 +7,8 @@ import { AuthGuard } from '@nestjs/passport';
 @Controller('auth')
 export class AuthController {
 	constructor(
-		private authService: AuthService
+		private authService: AuthService,
+		private userServices: UserService
 	) {}
 
 	@Get('/login')
@@ -16,8 +17,8 @@ export class AuthController {
 
 		console.log(accessToken);
 
-		const refreshToken = await this.authService.createRefreshToken(accessToken);
-		console.log(refreshToken);
+		const refreshToken = await this.userServices.getRefreshTokens(accessToken);
+		console.log('refresh: ', refreshToken);
 		const secretData = {
 			accessToken,
 			refreshToken

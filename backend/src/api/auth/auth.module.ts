@@ -6,24 +6,24 @@ import { UserModule } from '../user/user.module';
 import { HttpModule } from '@nestjs/axios';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtStrategy } from './strategy/jwt.strategy';
+import { LocalStrategy } from './strategy/jwt.strategy';
 import { UserEntity } from '../user/user.entity';
 
 @Module({
   imports: [
 	  TypeOrmModule.forFeature([UserEntity]),
-	  PassportModule.register({ defaultStrategy: 'jwt' }),
+	  PassportModule.register({ defaultStrategy: 'local' }),
 	  JwtModule.register({
 		  secret: 'super-cat',
 		  signOptions: {
-			  expiresIn: '60s',
+			  expiresIn: '10min',
 		  },
 	  }),
 	  HttpModule,
 	  UserModule,
 	],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, LocalStrategy],
   exports: [AuthService]
 })
 

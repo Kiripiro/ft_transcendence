@@ -5,7 +5,7 @@ import { ExtractJwt, Strategy } from "passport-jwt";
 import { UserService } from "src/api/user/user.service";
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy,'jwt') {
+export class LocalStrategy extends PassportStrategy(Strategy,'local') {
     constructor(
 		private userServices: UserService
 	){
@@ -25,7 +25,7 @@ export class JwtStrategy extends PassportStrategy(Strategy,'jwt') {
     }
 
     async validate(payload:any){
-		console.log('user validate()', payload);
+		console.log('local validate()', payload);
 		const user = await this.userServices.getUserById(payload.sub);
 		const date = Date;
 		console.log(date);

@@ -1,10 +1,9 @@
-import { Logger, Injectable, UnauthorizedException, Req } from '@nestjs/common';
+import { Logger, Injectable, UnauthorizedException, Req, BadRequestException } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
 import { UserService } from '../user/user.service';
 import { UserEntity } from '../user/user.entity';
 import { JwtService } from '@nestjs/jwt';
-import { randomUUID } from 'crypto';
 
 @Injectable()
 export class AuthService {
@@ -54,10 +53,11 @@ export class AuthService {
 
 			let user = await this.userServices.getUserByLogin(data.login);
 
-			if (!user) {
-				user = await this.userServices.createUser(data);
-				console.log('User', data.login, 'created.');
+			if (user) {
+				throw new BadRequestException('User already exists');
 			}
+			user = await this.userServices.createUser(data);
+			console.log('User', data.login, 'created.');
 			return this.signUser(user);
 		} catch(error) {
 			this.logger.error(error);
@@ -70,33 +70,5 @@ export class AuthService {
 			sub: user.id,
 			login: user.login,
 		});
-	}
-
-	async createRefreshToken(accessToken: string) {
-		try {
-			const decodedJwtAccessToken = this.jwtService.decode(accessToken);
-
-			console.log('decoded: ', decodedJwtAccessToken);
-
-			const data = JSON.parse(JSON.stringify(decodedJwtAccessToken));
-			const refreshToken = randomUUID(); //hash
-
-			var user = await this.userServices.updateRefreshToken(data, refreshToken);
-			console.log('exp: ', data.exp); //acccess token pour les deux à modifier -> comment generer un refresh token correctement ?
-			console.log('iat: ', data.iat);
-
-			if (user)
-				console.log(user);
-
-			const dataToUpdate = {
-				refreshToken: refreshToken,
-			};
-
-			return refreshToken;
-		} catch (error) {
-			this.logger.error(error);
-			console.log('rate');
-			return null;
-		}
 	}
 }

@@ -9,8 +9,8 @@ import { ExtractJwt, Strategy } from "passport-jwt";
 export class JwtStrategy extends PassportStrategy(Strategy,'jwt') {
     constructor(){
         super({
-            ignoreExpiration: true,
-            secretOrKey: String(process.env.JWT_SECRET),
+            ignoreExpiration: false,
+            secretOrKey: 'super-cat',
             jwtFromRequest: ExtractJwt.fromExtractors([(request:Request) => {
 				console.log('ici');
                 let data = request?.cookies["auth-cookie"];
