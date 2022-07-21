@@ -1,4 +1,4 @@
-import { Index, Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Index, Entity, PrimaryGeneratedColumn, Column, JoinColumn, OneToMany } from 'typeorm';
 
 @Entity('user')
 export class UserEntity {
@@ -31,5 +31,11 @@ export class UserEntity {
   public uid: number;
 
   @Column( {type: 'varchar', nullable: true } )
-  public refreshToken: string
+  public refreshToken: string;
+
+  @Column( {nullable: true } )
+  public refreshTokenIAT: string;
+
+  @Column( {nullable: true } )
+  public refreshTokenExp: string;
 }

@@ -1,9 +1,10 @@
-import { Logger, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Logger, Injectable, UnauthorizedException, Req } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
 import { UserService } from '../user/user.service';
 import { UserEntity } from '../user/user.entity';
 import { JwtService } from '@nestjs/jwt';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class AuthService {
@@ -15,9 +16,9 @@ export class AuthService {
 
 	private readonly clientId: string = process.env.API_UID;
 	private readonly clientSecret: string = process.env.API_SECRET;
-	private readonly API_authorizationURI=process.env.API_authorizationURI;
-	private readonly redirectURI=process.env.API_redirectURI;
-	private readonly endpoint=process.env.API_endpoint;
+	private readonly API_authorizationURI: string = process.env.API_authorizationURI;
+	private readonly redirectURI: string = process.env.API_redirectURI;
+	private readonly endpoint: string = process.env.API_endpoint;
 	private accessToken: string;
 	private headers: { Authorization: string };
 	private logger: Logger = new Logger('AuthService');
@@ -38,8 +39,10 @@ export class AuthService {
 		try {
 			const token = this.http.post(`${this.API_authorizationURI}`,
 			`grant_type=authorization_code&client_id=${this.clientId}&client_secret=${this.clientSecret}&code=${req.code}&redirect_uri=${this.redirectURI}`);
+			console.log('token: ', token);
 
 			this.accessToken = (await lastValueFrom(token)).data.access_token;
+			console.log('access: ', this.accessToken);
 			this.headers = { Authorization: `Bearer ${this.accessToken}` };
 
 			const { data } = await lastValueFrom(
@@ -67,5 +70,33 @@ export class AuthService {
 			sub: user.id,
 			login: user.login,
 		});
+	}
+
+	async createRefreshToken(accessToken: string) {
+		try {
+			const decodedJwtAccessToken = this.jwtService.decode(accessToken);
+
+			console.log('decoded: ', decodedJwtAccessToken);
+
+			const data = JSON.parse(JSON.stringify(decodedJwtAccessToken));
+			const refreshToken = randomUUID(); //hash
+
+			var user = await this.userServices.updateRefreshToken(data, refreshToken);
+			console.log('exp: ', data.exp); //acccess token pour les deux à modifier -> comment generer un refresh token correctement ?
+			console.log('iat: ', data.iat);
+
+			if (user)
+				console.log(user);
+
+			const dataToUpdate = {
+				refreshToken: refreshToken,
+			};
+
+			return refreshToken;
+		} catch (error) {
+			this.logger.error(error);
+			console.log('rate');
+			return null;
+		}
 	}
 }

@@ -1,25 +1,45 @@
-import { Injectable } from "@nestjs/common";
+import { ConsoleLogger, Injectable, Req, UnauthorizedException } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
-import { ExtractJwt, Strategy } from 'passport-jwt'
+import { Request } from "express";
+import { ExtractJwt, Strategy } from "passport-jwt";
 import { UserService } from "src/api/user/user.service";
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy, 'local') {
-	constructor(
-		private readonly userService: UserService
-	) {
-		super({
-		  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-		  ignoreExpiration: false,
-		  secretOrKey: 'super-cat',
-		});
-	}
+export class JwtStrategy extends PassportStrategy(Strategy,'jwt') {
+    constructor(
+		private userServices: UserService
+	){
+        super({
+            ignoreExpiration: false,
+            secretOrKey: 'super-cat',
+            jwtFromRequest: ExtractJwt.fromExtractors([(request:Request) => {
+				console.log('ici');
+                let data = request?.cookies["auth-cookie"];
+                if (!data) {
+					return null;
+                }
+				console.log(data.accessToken);
+				return data.accessToken;
+            }])
+        });
+    }
 
-	async validate(payload: any) {
-		console.log('validate()', payload);
-		const user = await this.userService.getUserById(payload.id);
-		if (user)
-			return payload;
-		return undefined;
-	}
+    async validate(payload:any){
+		console.log('user validate()', payload);
+		const user = await this.userServices.getUserById(payload.sub);
+		const date = Date;
+		console.log(date);
+		console.log(user.refreshTokenExp);
+
+
+
+		//Ai-je un access token ? oui -> valide ? -> return payload
+		//Sinon recuperer via refreshToken
+		//
+
+        // if (payload === null) {
+        //     throw new UnauthorizedException();
+        // }
+        return payload;
+    }
 }

@@ -6,7 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { getEnvPath } from './common/helper/env.helper';
 import { TypeOrmConfigService } from './shared/typeorm/typeorm.service';
-import { AppLoggerMiddleware } from './app.middleware';
+//import { AppLoggerMiddleware } from './app.middleware';
 
 const envFilePath: string = getEnvPath(`${__dirname}/common/envs`);
 
@@ -20,7 +20,7 @@ const envFilePath: string = getEnvPath(`${__dirname}/common/envs`);
 	providers: [AppService],
 })
 export class AppModule {
-	configure(consumer: MiddlewareConsumer): void {
+	/*configure(consumer: MiddlewareConsumer): void {
 	  consumer.apply(AppLoggerMiddleware).forRoutes('*');
-	}
+	}*/
 }
