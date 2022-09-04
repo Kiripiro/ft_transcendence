@@ -21,7 +21,7 @@ export class UserEntity {
   @Column({ type: 'int', default: 0})
   public rank: number;
 
-  @Column({ type: 'varchar', nullable: true})
+  @Column({ type: 'varchar'})
   public profile_pic: string;
 
   @Column({ type: 'varchar', nullable: true})

@@ -5,8 +5,13 @@ import './HomePage.css';
 import FriendList from './FriendList';
 import { AddFriendHook, FriendListHook } from './Hooks';
 import AddFriend from './AddFriend';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../State';
+
 
 const HomePage = (props: any) => {
+    const userData = useSelector((state: RootState) => state.user)
+    console.log(userData.user);
     const [isFriendList, setFriendList] = FriendListHook(true);
     const [isAddFriend, setAddFriend] = AddFriendHook(false);
 
@@ -38,8 +43,10 @@ const HomePage = (props: any) => {
                     </main>
                     <div className="info">
                         <div className="user-info">
-                            <div className="user-picture"></div>
-                            <p className="username">username</p>
+                            <div className="user-picture">
+                                <img src={userData.user?.profile_pic}/>
+                            </div>
+                            <p className="username">{userData.user?.login}</p>
                             <p className="level">lvl</p>
                         </div>
                         <div className="friends-info">

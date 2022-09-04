@@ -1,6 +1,6 @@
 import { Dispatch } from "redux"
-import { clientListActionType, LogActionType } from "../Action-Types"
-import { clientListAction, logAction } from "../Actions"
+import { clientListActionType, LogActionType, userActionType } from "../Action-Types"
+import { clientListAction, logAction, userAction } from "../Actions"
 import { Client, msg } from "../type"
 
 //ClientList
@@ -54,6 +54,24 @@ export const setId = (item: string) => {
     return (dispatch: Dispatch<logAction>) => {
         dispatch({
             type: LogActionType.SETID,
+            payload: item
+        })
+    }
+}
+
+//User
+export const setUser = (item:{
+    id: number,
+    login: string,
+    nickname: string,
+    wins: number,
+    looses: number,
+    rank: number,
+    profile_pic: string
+} | null) => {
+    return (dispatch: Dispatch<userAction>) => {
+        dispatch({
+            type: userActionType.SETUSER,
             payload: item
         })
     }

@@ -1,11 +1,21 @@
+import axios from 'axios';
 import React from 'react';
+import Navbar from '../../Module/Navbar/Navbar';
+import './../assets/Font.css';
+import './Login.css'
 
-function Login() {
+function Login(props: { user?: any }) {
 	return (
-		<button className="i42-button" onClick={() => window.open(`https://api.intra.42.fr/oauth/authorize?client_id=f4c0d93db7acf37cb140cce5da2617265ab63195b7a60bcd981003b3d289a413&redirect_uri=http%3A%2F%2F10.4.1.7%3A5000%2Fauth%2Flogin&response_type=code`, '_self')}>
-							<img className="i42-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/42_Logo.svg/langfr-280px-42_Logo.svg.png" alt="" />
-							Connect with 42
-		</button>
+		<div className='Font'>
+			<div className='container'>
+				<button className="loginButton" onClick={() => window.open(`https://api.intra.42.fr/oauth/authorize?client_id=f4c0d93db7acf37cb140cce5da2617265ab63195b7a60bcd981003b3d289a413&redirect_uri=http%3A%2F%2Flocalhost%3A5001%2Fauth%2Flogin&response_type=code`, '_self')}>
+					<img className="i42-logo" src="https://42lyon.fr/wp-content/uploads/2022/04/Artboard-1.svg" alt="" />
+				</button>
+				<button className="loginButton" onClick={() => window.open(`http://localhost:5001/auth/loginSans42/ldauga`, '_self')}>
+					<img className="i42-logo" src="https://42lyon.fr/wp-content/uploads/2022/04/Artboard-1.svg" alt="" />
+				</button>
+			</div>
+		</div>
 	)
 }
 

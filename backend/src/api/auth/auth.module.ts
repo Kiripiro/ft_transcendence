@@ -6,7 +6,7 @@ import { UserModule } from '../user/user.module';
 import { HttpModule } from '@nestjs/axios';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { LocalStrategy } from './strategy/jwt.strategy';
+import { LocalStrategy } from './strategy/local.strategy';
 import { UserEntity } from '../user/user.entity';
 
 @Module({

@@ -157,8 +157,11 @@ main{
 .user-info .user-picture {
 	height: 100%;
 	aspect-ratio: 1/1;
-	background-image:url('danseuse.jpeg');
 	margin-right: 5%;
+}
+
+.user-picture img {
+	width: 100%;
 }
 
 .user-info .username {

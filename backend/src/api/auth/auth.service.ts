@@ -1,9 +1,10 @@
-import { Logger, Injectable, UnauthorizedException, Req, BadRequestException } from '@nestjs/common';
+import { Logger, Injectable, UnauthorizedException, BadRequestException, Req } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
 import { UserService } from '../user/user.service';
 import { UserEntity } from '../user/user.entity';
 import { JwtService } from '@nestjs/jwt';
+import { Request } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -53,16 +54,38 @@ export class AuthService {
 
 			let user = await this.userServices.getUserByLogin(data.login);
 
-			if (user) {
-				throw new BadRequestException('User already exists');
+			if (!user) {
+				//verifier si le user a deja un refresh token dans la db et les cookies, si oui, le refresh token est il expire ? etc
+				// throw new BadRequestException('User already exists');
+				user = await this.userServices.createUser(data);
 			}
-			user = await this.userServices.createUser(data);
 			console.log('User', data.login, 'created.');
 			return this.signUser(user);
 		} catch(error) {
 			this.logger.error(error);
 			return null;
 		}
+	}
+
+	async loginSans42(login: string)
+	{
+		console.log(login);
+		let user = await this.userServices.getUserByLogin(login);
+
+		if (!user) {
+			user = await this.userServices.createUserSans42(login);
+		}
+		console.log('User', login, 'created.');
+		return this.signUser(user);
+	}
+
+	async getCookieRefreshToken(@Req() req: Request) {
+	//	console.log('req', req);
+	console.log('cococococococococ', req.cookies)
+		const refreshToken = req.cookies;
+		if (!refreshToken)
+			return null;
+		return refreshToken;
 	}
 
 	signUser(user: UserEntity) {

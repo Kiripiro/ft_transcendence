@@ -13,3 +13,7 @@ export enum clientListActionType {
     ADDMSG = "ADDMSG",
     SETACTIVECONVERS = "SETACTIVECONVERS"
 }
+
+export enum userActionType {
+    SETUSER="SETUSER"
+}

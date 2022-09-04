@@ -20,16 +20,24 @@
 
 .bi{
     transition: all 0.5s;
-    font-size: 3vw;
     color: white;
 }
 
 .bi-bell{
-    font-size: 2vw;
+    font-size: calc(1.3vh + 1.3vw);
 }
 
 .bi-house{
-    font-size: 2.5vw;
+    font-size: calc(1.5vh + 1.5vw);
+}
+
+.bi-box-arrow-left {
+    font-size: calc(1.5vh + 1.5vw);
+}
+
+.bi-play {
+    font-size: calc(2vh + 2vw);
+
 }
 
 .bi:hover{

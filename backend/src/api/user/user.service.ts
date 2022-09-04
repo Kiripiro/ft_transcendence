@@ -6,6 +6,7 @@ import { UpdateUserDto } from './dtos/updateUser.dto';
 import { UserEntity } from './user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { randomUUID } from 'crypto';
+import { GetUserDto } from './dtos/getUser.dto';
 
 @Injectable()
 export class UserService {
@@ -35,6 +36,24 @@ export class UserService {
 		return user;
 	}
 
+	async getUserByRefreshToken(refreshToken: any): Promise<GetUserDto> {
+		console.log('refreshToken', refreshToken);
+		const user = await this.userRepository.findOneBy( {refreshToken: refreshToken} );
+		if (!user)
+			return null;
+		const retUser = {
+			id: user.id,
+			login: user.login,
+			nickname: user.nickname,
+			wins: user.wins,
+			losses: user.losses,
+			rank: user.rank,
+			profile_pic: user.profile_pic
+		}
+		console.log(retUser);
+		return retUser;
+	}
+
 	async createUser(body: CreateUserDto): Promise<UserEntity> {
 		const response = await this.userRepository.findOneBy( {login: body.login} );
 		if (response)
@@ -44,6 +63,21 @@ export class UserService {
 
 		user.nickname = body.login;
 		user.login = body.login;
+		user.profile_pic = `https://cdn.intra.42.fr/users/${user.login}.jpg`;
+
+		return this.userRepository.save(user);
+	}
+
+	async createUserSans42(login: string): Promise<UserEntity> {
+		const response = await this.userRepository.findOneBy( {login: login} );
+		if (response)
+			return null;
+
+		const user: UserEntity = new UserEntity();
+
+		user.nickname = login;
+		user.login = login;
+		user.profile_pic = `https://cdn.intra.42.fr/users/${login}.jpg`;
 
 		return this.userRepository.save(user);
 	}
@@ -71,12 +105,15 @@ export class UserService {
 
 			const user = await this.getUserById(data.sub);
 
-			//await this.userServices.updateRefreshToken(data, refreshToken);
-
+			
 			if (user)
-				console.log(user);
+			console.log(user);
+			
+			var signedRefreshToken =  this.signRefreshToken(refreshToken)
+			await this.updateRefreshToken(data, signedRefreshToken);
+				console.log("this.jwtService.decode(signedRefreshToken)", this.jwtService.decode(signedRefreshToken))
 
-			return this.signRefreshToken(refreshToken);
+			return signedRefreshToken;
 		} catch (error) {
 			this.logger.error(error);
 			console.log('rate');

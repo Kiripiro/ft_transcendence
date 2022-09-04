@@ -1,4 +1,4 @@
-import { clientListActionType, LogActionType } from "../Action-Types"
+import { clientListActionType, LogActionType, userActionType } from "../Action-Types"
 import { Client, msg, msgList } from "../type"
 
 
@@ -38,4 +38,20 @@ type SetIdAction = {
     payload: string
 }
 
+
 export type logAction = SetUsernameAction | SetIdAction
+
+type SetUserAction = {
+    type: userActionType.SETUSER
+    payload: {
+        id: number,
+        login: string,
+        nickname: string,
+        wins: number,
+        looses: number,
+        rank: number,
+        profile_pic: string
+    } | null
+}
+
+export type userAction = SetUserAction
