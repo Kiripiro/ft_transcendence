@@ -15,11 +15,13 @@ var canvas = {
     "height": 600
 }
 
+
 const CreateMap=(props: any) => {
+    const userData = useSelector((state: RootState) => state.user);
 
-	const [room] = useState(new gameRoomClass("", "", "custom"));
+	const [room] = useState(new gameRoomClass("", "", null, "custom"));
 
-    room.setOponnent("")
+    room.setOponnent("", null)
 
     function resetCanvas(ctx: CanvasRenderingContext2D) {
         if (ctx != null) {
@@ -535,7 +537,7 @@ const CreateMap=(props: any) => {
                         <button 
                         className="Button invite"
                         onClick={async () => {
-                            utilsData.socket.emit('INVITE_CUSTOM', [room, inviteInput])
+                            utilsData.socket.emit('INVITE_CUSTOM', {user: userData.user, gameRoom: room, IDToSend: inviteInput})
                             console.log(room.players)
                         }}>{declineInvite[0] ? <>{declineInvite[1]} declines your invitation</> : <>Invite player</>}</button>
                     </div>

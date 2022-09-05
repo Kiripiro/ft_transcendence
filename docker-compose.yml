@@ -37,6 +37,8 @@ services:
       - ./frontend:/app
     depends_on:
       - backend
+    volumes:
+      - ./frontend:/app
     build: ./frontend
     environment:
       DB_SERVER: ${POSTGRES_DB}
@@ -55,6 +57,8 @@ services:
     depends_on:
       - db
     build: ./backend
+    volumes:
+      - ./backend:/app
     environment:
       - CHOKIDAR_USEPOLLING=true
     restart: always

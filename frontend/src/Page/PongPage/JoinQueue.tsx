@@ -19,13 +19,14 @@ const JoinRoom=(props: any) => {
     const [NotFound, setNotFound] = useState(false);
     
     const utilsData = useSelector((state: RootState) => state.utils);
+    const userData = useSelector((state: RootState) => state.user);
     
     utilsData.socket.removeAllListeners();
     
     function joinQueue() {
         if (!props.gameMap)
             return
-        utilsData.socket.emit('JOIN_QUEUE', props.gameMap);
+        utilsData.socket.emit('JOIN_QUEUE', {user: userData.user, gameMap: props.gameMap});
     }
     
     function spectate() {
@@ -182,7 +183,7 @@ const JoinRoom=(props: any) => {
                             utilsData.socket.emit("DECLINE_INVITATION", invitePlayer)
                         }} >Decline</button>
                         <button className='inviteButton accept' onClick={() => {
-                            utilsData.socket.emit("ACCEPT_INVITATION", invitePlayer)
+                            utilsData.socket.emit("ACCEPT_INVITATION", {user: userData.user, inviteID: invitePlayer})
                         }}>Accept</button>
                     </div>
                 </div>

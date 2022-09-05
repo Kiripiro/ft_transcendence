@@ -9,6 +9,5 @@ const Play=() => {
       return (<a href="pong"><i className="bi bi-play"></i></a>);
     return <></>;
   };
-  
+
 export default Play;
-  

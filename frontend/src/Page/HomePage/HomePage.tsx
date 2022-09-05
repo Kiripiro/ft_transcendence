@@ -4,73 +4,64 @@ import React, { Component } from 'react';
 import Navbar from '../../Module/Navbar/Navbar';
 import { RootState } from '../../State';
 import './../assets/Font.css';
-import './HomePage.css'
+import './HomePage.css';
+import FriendList from './FriendList';
+import { AddFriendHook, FriendListHook } from './Hooks';
+import AddFriend from './AddFriend';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../State';
 
-// class HomePage extends Component<{}, {friends: any[]}> {
-function HomePage() {
 
-    // constructor(props: any){
-    //     super(props);
-    //     this.state = {
-    //         friends: []
-    //     };
-    // }
-    
+const HomePage = (props: any) => {
+    const userData = useSelector((state: RootState) => state.user)
+    console.log(userData.user);
+    const [isFriendList, setFriendList] = FriendListHook(true);
+    const [isAddFriend, setAddFriend] = AddFriendHook(false);
 
-    // componentDidMount() {
-
-    // }
-
-    // componentDidUpdate(prevProps: any, prevState: any){
-    //     if (prevState.friends !== this.state.friends)
-    //     {
-    //         for (let i = 0; i < this.state.friends.length; i++) {
-    //             if (this.state.friends[i].status)
-    //             {
-    //                 var tag = document.createElement("div");
-    //                 tag.className = "online-friends"
-    //                 var element = document.getElementById("friendsInfo");
-    //                 if (element)
-    //                     element.appendChild(tag);
-    //             }
-    //         }
-    //     }
-    // }
-        return (
-            <div className='Font'>
-                <div className="horizontal">
-                    <Navbar/>
-                    <div className="vertical">
-                        <main>
-                            <div className="match-history">
-                                <h3>Match History</h3>
-                            </div>
-                            <div className="stat">
-                                <div className="rank"></div>
-                                <div className="graph"></div>
-                            </div>
-                        </main>
-                        <div className="info">
-                            <div className="user-info">
-                                <div className="user-picture"></div>
-                                <p className="username">username</p>
-                                <p className="level">lvl</p>
-                            </div>
-                            <div className="friends-info" id='friendsInfo'>
-                                <h3>Friends</h3>
-                                {/* <div className='friends'>
-                                    {this.state.friends.map(friend => (<div key={friend.id} className='friend-card'>
-                                        {friend.user}
-                                    </div>))}
-                                </div> */}
-                            </div>
-                            <div className="chat"></div>
+    return (
+        <div className='Font'>
+            <div className="horizontal">
+                <Navbar/>
+                <div className="vertical">
+                    <main>
+                        <div className="match-history">
+                            <h3>Match History</h3>
+                            <div className='game game-win'></div>
+                            <div className='game game-win'></div>
+                            <div className='game game-lose'></div>
+                            <div className='game game-lose'></div>
+                            <div className='game game-win'></div>
+                            <div className='game game-lose'></div>
+                            <div className='game game-lose'></div>
+                            <div className='game game-win'></div>
+                            <div className='game game-lose'></div>
+                            <div className='game game-win'></div>
+                            <div className='game game-win'></div>
+                            <div className='game game-lose'></div>
                         </div>
+                        <div className="stat">
+                            <div className="rank"></div>
+                            <div className="graph"></div>
+                        </div>
+                    </main>
+                    <div className="info">
+                        <div className="user-info">
+                            <div className="user-picture">
+                                <img src={userData.user?.profile_pic}/>
+                            </div>
+                            <p className="username">{userData.user?.login}</p>
+                            <p className="level">lvl</p>
+                        </div>
+                        <div className="friends-info">
+                            {isFriendList && <FriendList />}
+                            {isAddFriend && <AddFriend />}
+                        </div>
+                        <div className="chat"></div>
                     </div>
                 </div>
             </div>
-        );
+        </div>
+    );
   };
-  
+
   export default HomePage;
-  

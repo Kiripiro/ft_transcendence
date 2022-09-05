@@ -26,3 +26,7 @@ export interface ClientList {
 export interface contextType {
     socket: Socket;
 }
+
+export interface User {
+    user: {} | null;
+}
