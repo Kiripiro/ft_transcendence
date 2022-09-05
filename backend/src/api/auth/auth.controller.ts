@@ -25,7 +25,7 @@ export class AuthController {
 
 		res.cookie('auth-cookie', secretData, {httpOnly: false});
 		//GESTION D ERREUR NECESSAIRE
-		res.status(302).redirect(`http://localhost:3000/Login/Callback`);
+		res.status(302).redirect(`http://localhost:3000/Login/Callback`);	
 	}
 
 	@Get('/loginSans42/:login')

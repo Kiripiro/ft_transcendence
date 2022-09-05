@@ -32,12 +32,12 @@ export class UserController {
 	return this.service.getUserByLogin(login);
   }
 
-  @Get('/userExist')
+  @Get('/userExist/:refreshToken')
   // @UseGuards(AuthGuard('local'))
-  public userExist(@Req() req: Request): Promise<GetUserDto> {
-    /*if (!req.cookies['auth-cookie'])
-      throw new BadRequestException();*/
-    return this.service.getUserByRefreshToken(req.cookies['auth-cookie']);
+  public userExist(@Param('refreshToken') refreshToken: string): Promise<GetUserDto> {
+    //if (!req.cookies['auth-cookie'])
+    //  throw new BadRequestException();
+    return this.service.getUserByRefreshToken(refreshToken);
   }
 
   @Post()
