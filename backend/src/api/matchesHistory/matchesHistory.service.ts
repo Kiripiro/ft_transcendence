@@ -18,7 +18,6 @@ export class MatchesHistoryService {
 	}
 
 	async getUserMatchesHistory(id: number): Promise<MatchesHistoryEntity[]> {
-		console.log(id);
 		const matches = await this.MatchesHistoryRepository.find( {
 			where: [
            	 {id_user1: id},

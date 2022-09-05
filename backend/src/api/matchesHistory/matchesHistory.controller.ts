@@ -25,7 +25,6 @@ export class MatchesHistoryController {
 
   @Post()
   public createMatch(@Body() body: any): Promise<MatchesHistoryEntity> {
-    console.log('ouiouioui')
 	  const match = this.service.createMatch(body);
     if(!match)
       return null;

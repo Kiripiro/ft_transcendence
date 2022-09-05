@@ -37,9 +37,7 @@ export class UserService {
 	}
 
 	async getUserByRefreshToken(refreshToken: any): Promise<GetUserDto> {
-		console.log('cookies.refreshToken', refreshToken);
 		const user = await this.userRepository.findOneBy( {refreshToken: refreshToken} );
-		console.log(user);
 		if (!user)
 			return null;
 		const retUser = {
@@ -51,7 +49,6 @@ export class UserService {
 			rank: user.rank,
 			profile_pic: user.profile_pic
 		}
-		console.log(retUser);
 		return retUser;
 	}
 
@@ -99,7 +96,6 @@ export class UserService {
 		try {
 			const decodedJwtAccessToken = this.jwtService.decode(accessToken);
 
-			console.log('decoded: ', decodedJwtAccessToken);
 
 			const data = JSON.parse(JSON.stringify(decodedJwtAccessToken));
 			const refreshToken = randomUUID(); //hash
@@ -107,17 +103,13 @@ export class UserService {
 			const user = await this.getUserById(data.sub);
 
 			
-			if (user)
-			console.log(user);
 			
 			var signedRefreshToken =  this.signRefreshToken(refreshToken)
 			await this.updateRefreshToken(data, signedRefreshToken);
-				console.log("this.jwtService.decode(signedRefreshToken)", this.jwtService.decode(signedRefreshToken))
 
 			return signedRefreshToken;
 		} catch (error) {
 			this.logger.error(error);
-			console.log('rate');
 			return null;
 		}
 	}

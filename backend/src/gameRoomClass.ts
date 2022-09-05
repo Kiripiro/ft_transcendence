@@ -276,6 +276,8 @@ class Map {
 }
 
 class gameRoomClass {
+	started: boolean
+
 	roomID: string
 	
 	map: Map
@@ -297,6 +299,8 @@ class gameRoomClass {
         rank: number,
         profile_pic: string
 	}, gameMap: string) {
+		this.started = false
+		
 		this.roomID = roomId
 		
 		this.canvas = new Canvas()

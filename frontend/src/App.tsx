@@ -22,7 +22,6 @@ import { persistor } from './State/store';
 function App() {
 
   const userData = useSelector((state: RootState) => state.user)
-  console.log(userData);
     return (
 
 

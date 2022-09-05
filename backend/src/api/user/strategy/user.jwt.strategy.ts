@@ -12,20 +12,17 @@ export class JwtStrategy extends PassportStrategy(Strategy,'jwt') {
             ignoreExpiration: false,
             secretOrKey: 'super-cat',
             jwtFromRequest: ExtractJwt.fromExtractors([(request:Request) => {
-				console.log('ici');
                 let data = request?.cookies["auth-cookie"];
                 if (!data) {
 
 					return null;
                 }
-				console.log(data.accessToken);
 				return data.accessToken;
             }])
         });
     }
 
     async validate(payload:any){
-		console.log('user validate()', payload);
         return payload;
     }
 }

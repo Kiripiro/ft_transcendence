@@ -238,7 +238,7 @@ const GamePage = (props: any) => {
 
     utilsData.socket.removeAllListeners();
 
-    var interval = setInterval(() => { utilsData.socket.emit('RENDER', props.roomID) }, 10);
+    var interval = setInterval(() => { console.log('test');utilsData.socket.emit('RENDER', props.roomID) }, 10);
 
     function render(room: gameRoomClass) {
 

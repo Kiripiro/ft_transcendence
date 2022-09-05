@@ -119,8 +119,9 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     client.join(roomId);
     this.logger.log(`${client.id} join: ${roomId}`)
 
-    var roomSockets = this.server.in(roomId).fetchSockets();
+    var roomSockets = await this.server.in(roomId).fetchSockets();
 
+    roomSockets.forEach(item => console.log(item.id))
   }
 
   ///////////////////////////////////////////////////////////
@@ -145,6 +146,35 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
           return [i, this.pongInfo[i]]
     return null
   }
+
+  @SubscribeMessage('CHECK_RECONNEXION')
+  checkReconnexion(
+    client: Socket,
+    info : {
+      user: {
+        id: number,
+        login: string,
+        nickname: string,
+        wins: number,
+        looses: number,
+        rank: number,
+        profile_pic: string
+      }
+    }) {
+      this.pongInfo.forEach((item) => {
+        item.players.forEach((player) => {
+            console.log('player.user', player.user)
+            if (item.started && player.user.login == info.user.login) {
+              this.joinRoom(client, item.roomID)
+              player.id = client.id
+              console.log('test', player.id)
+            player.connected = true
+            this.server.to(client.id).emit('start', client.id)
+          } 
+        })
+      })
+    }
+
 
   @SubscribeMessage('JOIN_QUEUE')
   async joinQueue(
@@ -176,13 +206,13 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
           this.pongInfo[room[0]].setOponnent(client.id, info.user)
         this.joinRoom(client, info.gameMap + roomId.toString())
 
-        if (this.pongInfo[room[0]].players[1].id)
+        if (this.pongInfo[room[0]].players[1].id) {
+          this.pongInfo[room[0]].started = true
           this.server.to(room[1].roomID).emit('start', room[1].roomID);
+        }
         break
       }
     }
-
-    this.server.to(client.id).emit('start', room[1].roomID);
   }
 
   @SubscribeMessage('SPECTATE_CLIENT')
@@ -239,7 +269,6 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
           score_u2: this.pongInfo[room[0]].players[1].score,
           winner_id: this.pongInfo[room[0]].players[0].score === 3 ? this.pongInfo[room[0]].players[0].user.id : this.pongInfo[room[0]].players[1].user.id
         }
-        console.log('data :', this.pongInfo[room[0]].players[0].user)
         const match = this.http.post('http://localhost:5001/matchesHistory', data);
         console.log(match.forEach(item => (console.log(item))));
         this.server.to(client.id).emit('finish', this.pongInfo[room[0]])

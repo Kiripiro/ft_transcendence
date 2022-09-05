@@ -81,7 +81,6 @@ export class AuthService {
 
 	async getCookieRefreshToken(@Req() req: Request) {
 	//	console.log('req', req);
-	console.log('cococococococococ', req.cookies)
 		const refreshToken = req.cookies;
 		if (!refreshToken)
 			return null;
