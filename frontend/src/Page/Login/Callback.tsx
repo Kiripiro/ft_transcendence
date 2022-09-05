@@ -12,11 +12,11 @@ export default function Callback() {
     const userData = useSelector((state: RootState) => state.user)
     const dispatch = useDispatch();
     const { setUser } = bindActionCreators(actionCreators, dispatch);
-    //const [cookies, setCookie, removeCookie] = useCookies(["auth-cookie"]);
-    var refreshToken: any;
-    console.log('ici');
-    axios.get("http://localhost:5001/auth/getCookieRefreshToken").then(item => {console.log('item', item)/*refreshToken = item.data*/});
-    axios.get("http://localhost:5001/user/userExist/" + refreshToken).then((item) => { console.log('item.data', item.data); setUser(item.data) }    )
+
+    //A MODIFIER ALED CA MARCHE PAS COMME ON VEUT
+    const [cookies, setCookie, removeCookie] = useCookies(["auth-cookie"]);
+    
+    axios.get("http://localhost:5001/user/userExist/" + cookies["auth-cookie"].refreshToken).then((item) => { console.log('item.data', item.data); setUser(item.data) })
 
     return (
         <>

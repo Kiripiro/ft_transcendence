@@ -1,8 +1,3 @@
-
-import { Injectable } from "@nestjs/common"
-import { spawn } from "child_process"
-import { randomInt } from "crypto"
-
 export { Canvas, Player, gameRoomClass, Obstacle }
 
 const STILL = 0
@@ -21,6 +16,16 @@ class Canvas {
 
 class Player {
 	id: string
+
+	user: {
+        id: number,
+        login: string,
+        nickname: string,
+        wins: number,
+        looses: number,
+        rank: number,
+        profile_pic: string
+	} | null
 
 	connected: boolean
 	dateDeconnection: number
@@ -45,8 +50,17 @@ class Player {
 
 	ready: boolean
 
-	constructor(canvas: Canvas, id: string = "") {
+	constructor(canvas: Canvas, id: string = "", user: {
+        id: number,
+        login: string,
+        nickname: string,
+        wins: number,
+        looses: number,
+        rank: number,
+        profile_pic: string
+	} | null = null) {
 		this.id = id
+		this.user = user
 
 		this.connected = false
 		this.dateDeconnection = 0
@@ -274,7 +288,15 @@ class gameRoomClass {
 
 	ball: Ball
 
-	constructor(roomId: string, creatorID: string, gameMap: string) {
+	constructor(roomId: string, creatorID: string, creatorUser: {
+        id: number,
+        login: string,
+        nickname: string,
+        wins: number,
+        looses: number,
+        rank: number,
+        profile_pic: string
+	}, gameMap: string) {
 		this.roomID = roomId
 		
 		this.canvas = new Canvas()
@@ -285,14 +307,23 @@ class gameRoomClass {
 
 		this.spectate = new Array()
 
-		this.players.push(new Player(this.canvas, creatorID))
+		this.players.push(new Player(this.canvas, creatorID, creatorUser))
 		this.players.push(new Player(this.canvas))
 
 		this.ball = new Ball(this.canvas)
 	}
 
-	setOponnent(id: string) {
+	setOponnent(id: string, user: {
+        id: number,
+        login: string,
+        nickname: string,
+        wins: number,
+        looses: number,
+        rank: number,
+        profile_pic: string
+	}) {
 		this.players[1].id = id
+		this.players[1].user = user
 		this.players[1].connected = true
 		this.players[1].x = this.canvas.width / 8 * 7 - this.players[1].width / 2
 	}

@@ -37,8 +37,9 @@ export class UserService {
 	}
 
 	async getUserByRefreshToken(refreshToken: any): Promise<GetUserDto> {
-		console.log('refreshToken', refreshToken);
+		console.log('cookies.refreshToken', refreshToken);
 		const user = await this.userRepository.findOneBy( {refreshToken: refreshToken} );
+		console.log(user);
 		if (!user)
 			return null;
 		const retUser = {

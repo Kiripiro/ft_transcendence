@@ -1,8 +1,6 @@
 import { rmSync } from 'fs';
-import { useSelector } from 'react-redux';
 import React, { Component } from 'react';
 import Navbar from '../../Module/Navbar/Navbar';
-import { RootState } from '../../State';
 import './../assets/Font.css';
 import './HomePage.css';
 import FriendList from './FriendList';
