@@ -51,13 +51,13 @@ const GamePage = (props: any) => {
             for (var index = room.ball.particle_x.length - 1; index >= 0; index--) {
 
                 ctx.beginPath();
-                
+
                 ctx.fillStyle = '#00' + ((255 - ((index) * (256 / 16))).toString(16).length == 1 ? "0" + (255 - ((index) * (256 / 16))).toString(16) : (255 - ((index) * (256 / 16))).toString(16)) + '00';
 
                 ctx.arc(room.ball.particle_x[index], room.ball.particle_y[index], room.ball.radius, 0, Math.PI * 2);
-                
+
                 ctx.fill();
-                
+
             }
         }
     }
@@ -182,33 +182,54 @@ const GamePage = (props: any) => {
         }
     }
 
+    function roundedImage(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number) {
+        if (ctx) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+        }
+    }
+
     function drawSpectator(room: gameRoomClass) {
 
-        for (let i = 0; i < room.spectate.length; i++) {
+        room.spectate.forEach((item) => {
             var canvas: HTMLCanvasElement | null
-            if (room.spectate[i].pannel)
+            if (item.pannel)
                 canvas = document.getElementById('spectate1') as HTMLCanvasElement
             else
                 canvas = document.getElementById('spectate2') as HTMLCanvasElement
             if (canvas !== null) {
                 var ctx = canvas.getContext('2d')
                 if (ctx !== null) {
+                    const img = new Image();
 
-                    ctx.beginPath();
+                    img.onload = function () {
+                        if (ctx) {
 
-                    ctx.fillStyle = 'white';
-                    ctx.shadowBlur = 20;
-                    ctx.shadowColor = 'lime';
-
-                    ctx.arc(room.spectate[i].x, room.spectate[i].y, 20, 0, Math.PI * 2);
-
-                    ctx.fill();
-
-                    ctx.shadowBlur = 0;
+                            // draw image with circle shape clip
+                            ctx.save()
+                            ctx.beginPath()
+                            ctx.arc(item.x, item.y, 80, 0, Math.PI * 2, false)
+                            ctx.stroke()
+                            ctx.clip()
+                            ctx.drawImage(img, item.x - 80, item.y - 80, 160, 160)
+                            ctx.restore()
+                        }
+                    };
+                    img.src = item.user.profile_pic
                 }
             }
-        }
+        })
     }
+
 
     function resetCanvas() {
         var canvas = document.getElementById('pongBoard') as HTMLCanvasElement
@@ -218,27 +239,13 @@ const GamePage = (props: any) => {
                 ctx.clearRect(0, 0, canvas.width, canvas.height)
             }
         }
-        var canvas = document.getElementById('spectate1') as HTMLCanvasElement
-        if (canvas !== null) {
-            var ctx = canvas.getContext('2d')
-            if (ctx !== null) {
-                ctx.clearRect(0, 0, 400, 1000)
-            }
-        }
-        var canvas = document.getElementById('spectate2') as HTMLCanvasElement
-        if (canvas !== null) {
-            var ctx = canvas.getContext('2d')
-            if (ctx !== null) {
-                ctx.clearRect(0, 0, 400, 1000)
-            }
-        }
     }
 
     const utilsData = useSelector((state: RootState) => state.utils);
 
     utilsData.socket.removeAllListeners();
 
-    var interval = setInterval(() => { console.log('test');utilsData.socket.emit('RENDER', props.roomID) }, 10);
+    var interval = setInterval(() => { utilsData.socket.emit('RENDER', props.roomID) }, 10);
 
     function render(room: gameRoomClass) {
 
@@ -249,17 +256,18 @@ const GamePage = (props: any) => {
 
                 resetCanvas()
 
+                drawSpectator(room)
+
                 drawFont(ctx, room)
 
                 drawLimitCamps(ctx)
-                
+
                 drawLimitsMove(ctx)
-                
+
                 drawObstacle(ctx, room)
 
                 drawScore(ctx, room)
 
-                drawSpectator(room)
 
                 if (!room.players[0].ready || !room.players[1].ready) {
                     drawText(ctx, room)
@@ -267,9 +275,9 @@ const GamePage = (props: any) => {
                 }
 
                 drawBallParticles(ctx, room)
-                
+
                 drawBall(ctx, room)
-                
+
                 drawPlayers(ctx, room)
 
             }
@@ -320,29 +328,29 @@ const GamePage = (props: any) => {
 
     return (
         <div className="mainDiv">
-            <Navbar/>
+            <Navbar />
             <video width="100%" height="93%" autoPlay loop muted>
                 <source src={require('../assets/backgound.mp4')} type="video/ogg" />
             </video>
             <div className="boardDiv">
-            <div className="blocksContainerCenter">
-                <canvas id='spectate1'
-                    className='spectate'
-                    height='1000'
-                    width='400'
-                />
-                <canvas
-                    id='pongBoard'
-                    className='pongBoard'
-                    height={canvas.height}
-                    width={canvas.width}
-                />
-                <canvas id='spectate2'
-                    className='spectate'
-                    height='1000'
-                    width='400'
-                />
-            </div>
+                <div className="blocksContainerCenter">
+                    <canvas id='spectate1'
+                        className='spectate'
+                        height='1000'
+                        width='400'
+                    />
+                    <canvas
+                        id='pongBoard'
+                        className='pongBoard'
+                        height={canvas.height}
+                        width={canvas.width}
+                    />
+                    <canvas id='spectate2'
+                        className='spectate'
+                        height='1000'
+                        width='400'
+                    />
+                </div>
             </div>
             <div id="myModal" className="modal">
                 <div className="modal-content">

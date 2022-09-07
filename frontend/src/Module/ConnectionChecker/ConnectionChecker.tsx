@@ -6,25 +6,27 @@ import { bindActionCreators } from "redux";
 import { useCookies } from "react-cookie";
 import axios from "axios";
 
+var test = false
+
 function ConnectionChecker(props: {
   component: any;
 }): JSX.Element {
 
-  const userData = useSelector((state: RootState) => state.user)
-    const dispatch = useDispatch();
-    const { setUser } = bindActionCreators(actionCreators, dispatch);
 
+  const userData = useSelector((state: RootState) => state.user)
+  const dispatch = useDispatch();
+  const { setUser } = bindActionCreators(actionCreators, dispatch);
+
+  if (!test) {
     //A MODIFIER ALED CA MARCHE PAS COMME ON VEUT
     const [cookies, setCookie, removeCookie] = useCookies(["auth-cookie"]);
 
     if (!cookies["auth-cookie"])
       setUser(null)
     else
-      axios.get("http://localhost:5001/user/userExist/" + cookies["auth-cookie"].refreshToken).then((item) => { console.log('item.data', item.data); setUser(item.data) })
-
-  useEffect(() => {
-    console.log('useEffect')
-  })
+      axios.get("http://localhost:5001/user/userExist/" + cookies["auth-cookie"].refreshToken).then((item) => { setUser(item.data) })
+    test = true
+  }
 
   return userData.user !== null ? <>{props.component}</> : <Navigate to="/Login" />;
 }

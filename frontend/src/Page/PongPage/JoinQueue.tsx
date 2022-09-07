@@ -30,7 +30,7 @@ const JoinRoom=(props: any) => {
     }
     
     function spectate() {
-        utilsData.socket.emit('SPECTATE_CLIENT', props.specID);
+        utilsData.socket.emit('SPECTATE_CLIENT', {specID: props.specID, user: userData.user});
     }
     
     utilsData.socket.on('clientNotFound', function() {

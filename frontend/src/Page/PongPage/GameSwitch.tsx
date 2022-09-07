@@ -8,7 +8,7 @@ import { RootState } from '../../State';
 const GameSwitch=() => {
     const [gameStart, setGameStart] = useState(false);
     const [createMap, setCreateMap] = useState(false);
-    const [checkReconnexion, setCheckReconnexion] = useState(false);
+    // const [checkReconnexion, setCheckReconnexion] = useState(false);
     const [specID, setSpecID] = useState("0");
     const [roomID, setRoomID] = useState("");
     const [gameMap, setGameMap] = React.useState("");
@@ -16,13 +16,15 @@ const GameSwitch=() => {
     const userData = useSelector((state: RootState) => state.user);
     const utilsData = useSelector((state: RootState) => state.utils);
 
-    useEffect(() => {
+    var checkReconnexion = false
+
+    // useEffect(() => {
         if (!checkReconnexion) {
-            setCheckReconnexion(true)
+            checkReconnexion = true
             utilsData.socket.emit('CHECK_RECONNEXION', {user: userData.user})
         }
 
-    })
+    // })
 
     if (gameStart)
         return (

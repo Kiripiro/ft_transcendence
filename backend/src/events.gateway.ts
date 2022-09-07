@@ -147,10 +147,18 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     return null
   }
 
+  getRoomByClientLogin(ClientLogin: string): [number, gameRoomClass] | null {
+    for (let i = 0; i < this.pongInfo.length; i++)
+      for (let j = 0; j < 2; j++)
+        if (this.pongInfo[i].players[j].user.login == ClientLogin)
+          return [i, this.pongInfo[i]]
+    return null
+  }
+
   @SubscribeMessage('CHECK_RECONNEXION')
   checkReconnexion(
     client: Socket,
-    info : {
+    info: {
       user: {
         id: number,
         login: string,
@@ -161,19 +169,19 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
         profile_pic: string
       }
     }) {
-      this.pongInfo.forEach((item) => {
-        item.players.forEach((player) => {
-            console.log('player.user', player.user)
-            if (item.started && player.user.login == info.user.login) {
-              this.joinRoom(client, item.roomID)
-              player.id = client.id
-              console.log('test', player.id)
-            player.connected = true
-            this.server.to(client.id).emit('start', client.id)
-          } 
-        })
+    this.pongInfo.forEach((item) => {
+      item.players.forEach((player) => {
+        console.log('player.user', player.user)
+        if (item.started && player.user.login == info.user.login) {
+          this.joinRoom(client, item.roomID)
+          player.id = client.id
+          // console.log('test', player.id)
+          player.connected = true
+          this.server.to(client.id).emit('start', item.roomID)
+        }
       })
-    }
+    })
+  }
 
 
   @SubscribeMessage('JOIN_QUEUE')
@@ -216,16 +224,38 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   }
 
   @SubscribeMessage('SPECTATE_CLIENT')
-  async spectateClient(client: Socket, specID: string) {
+  async spectateClient(client: Socket,
+    info: {
+      user: {
+        id: number,
+        login: string,
+        nickname: string,
+        wins: number,
+        looses: number,
+        rank: number,
+        profile_pic: string
+      },
+      specID: string
+    }) {
 
-    var room = this.getRoomByID(specID)
+    var room = this.getRoomByID(info.specID)
     if (room == null) {
-      this.server.to(client.id).emit('clientNotFound')
-      return
+      room = this.getRoomByClientID(info.specID)
+      if (room == null) {
+        room = this.getRoomByClientLogin(info.specID)
+        if (room == null) {
+          this.server.to(client.id).emit('clientNotFound')
+          return
+        }
+      }
     }
     this.joinRoom(client, room[1].roomID)
-    // for (let i = 0; i < 100; i++)
-    this.pongInfo[room[0]].addSpectator(client.id)
+
+    this.pongInfo[room[0]].addSpectator(client.id, info.user)
+    this.pongInfo[room[0]].addSpectator(client.id, info.user)
+    this.pongInfo[room[0]].addSpectator(client.id, info.user)
+    this.pongInfo[room[0]].addSpectator(client.id, info.user)
+    this.pongInfo[room[0]].addSpectator(client.id, info.user)
 
     for (let i = 0; i < this.pongInfo[room[0]].spectate.length; i++) {
       this.logger.log(`pannel: ${this.pongInfo[room[0]].spectate[i].pannel} x: ${this.pongInfo[room[0]].spectate[i].x} | y: ${this.pongInfo[room[0]].spectate[i].y}`)

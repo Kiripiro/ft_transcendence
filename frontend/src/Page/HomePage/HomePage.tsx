@@ -12,7 +12,7 @@ import { RootState } from '../../State';
 
 const HomePage = (props: any) => {
     const userData = useSelector((state: RootState) => state.user)
-    console.log(userData.user);
+    // console.log(userData.user);
     const [isFriendList, setFriendList] = FriendListHook(true);
     const [isAddFriend, setAddFriend] = AddFriendHook(false);
 
