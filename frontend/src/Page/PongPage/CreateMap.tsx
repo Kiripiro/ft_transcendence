@@ -4,7 +4,7 @@ import './CSS/CreateMap/Div.css'
 import './CSS/CreateMap/Canvas.css'
 import './CSS/CreateMap/Parameter.css'
 import './CSS/Utils.css'
-import { gameRoomClass, Obstacle } from "./gameRoomClass";
+import { Ball, gameRoomClass, Obstacle } from "./gameRoomClass";
 import { KeyboardEventHandler, useEffect, useState } from "react";
 import { render } from "react-dom";
 import { RootState } from "../../State";
@@ -16,10 +16,10 @@ var canvas = {
 }
 
 
-const CreateMap=(props: any) => {
+const CreateMap = (props: any) => {
     const userData = useSelector((state: RootState) => state.user);
 
-	const [room] = useState(new gameRoomClass("", "", null, "custom"));
+    const [room] = useState(new gameRoomClass("", "", null, "custom"));
 
     room.setOponnent("", null)
 
@@ -80,7 +80,7 @@ const CreateMap=(props: any) => {
     function drawObstacle(ctx: CanvasRenderingContext2D | null, room: gameRoomClass) {
         if (ctx !== null) {
 
-            
+
             for (let index = 0; index < room.map.obstacles.length; index++) {
                 const element = room.map.obstacles[index];
 
@@ -96,7 +96,7 @@ const CreateMap=(props: any) => {
     function drawSelectedObstacle(ctx: CanvasRenderingContext2D | null, room: gameRoomClass) {
         if (ctx !== null) {
 
-            
+
             for (let index = 0; index < room.map.obstacles.length; index++) {
                 const element = room.map.obstacles[index];
 
@@ -148,7 +148,7 @@ const CreateMap=(props: any) => {
                 }
             }
         }
-    }    
+    }
 
     function drawScore(ctx: CanvasRenderingContext2D | null, room: gameRoomClass) {
         if (ctx !== null) {
@@ -182,7 +182,46 @@ const CreateMap=(props: any) => {
         }
     }
 
+    function drawBall(ctx: CanvasRenderingContext2D | null, room: gameRoomClass) {
+        if (ctx !== null) {
+
+            ctx.beginPath();
+
+            ctx.shadowBlur = 20;
+
+            ctx.fillStyle = 'green';
+            ctx.shadowColor = 'green';
+
+            room.map.obstacles.forEach((item) => {
+                if (checkCollisionsBall(room.ball, item)) {
+                    ctx.fillStyle = 'red';
+                    ctx.shadowColor = 'red';
+
+                    var button = document.getElementById('inviteButton')
+                    if (button) {
+                        button.style.backgroundColor = 'red'
+                        button.textContent = 'Move ball first'
+                    }
+
+                }
+            })
+
+            ctx.arc(room.ball.x, room.ball.y, room.ball.radius, 0, Math.PI * 2);
+
+            ctx.fill();
+
+            ctx.shadowBlur = 0;
+
+        }
+    }
+
     function render() {
+        var button = document.getElementById('inviteButton')
+        if (button) {
+            button.style.backgroundColor = 'blue'
+            button.textContent = 'Invite Player'
+        }
+
         var canvas = document.getElementById('canvas') as HTMLCanvasElement
         if (canvas !== null) {
             var ctx = canvas.getContext('2d')
@@ -191,9 +230,9 @@ const CreateMap=(props: any) => {
                 drawFont(ctx)
 
                 drawLimitCamps(ctx)
-             
+
                 drawLimitsMove(ctx)
-                
+
                 drawObstacle(ctx, room)
 
                 drawSelectedObstacle(ctx, room)
@@ -202,13 +241,15 @@ const CreateMap=(props: any) => {
 
                 drawScore(ctx, room)
 
+                drawBall(ctx, room)
+
             }
         }
     }
 
     const [nbObstacle, setNbObstacle] = useState(0)
 
-	useEffect(() => {
+    useEffect(() => {
 
         setInputValue()
 
@@ -220,7 +261,7 @@ const CreateMap=(props: any) => {
         }
 
         render()
-        
+
     })
 
     function setInputValue() {
@@ -240,9 +281,9 @@ const CreateMap=(props: any) => {
     const [yInput, setYInput] = useState(0);
     const [widthInput, setWidthInput] = useState(0);
     const [heightInput, setHeightInput] = useState(0);
-    
+
     const [holdClick, setHoldClick] = useState(false);
-    const [holdClickDiff] = useState({"diffX":0, "diffY":0});
+    const [holdClickDiff] = useState({ "diffX": 0, "diffY": 0 });
     const [holdClickExpand, setHoldClickExpand] = useState(0);
 
     function checkHoldClickExpandCollision(cursorX: number, cursorY: number,): boolean {
@@ -314,12 +355,56 @@ const CreateMap=(props: any) => {
         }
     }
 
+    function checkCollisionsBall(ball: Ball, obstacle: Obstacle) {
+        var otop = obstacle.y
+        var obottom = obstacle.y + obstacle.height
+        var oleft = obstacle.x
+        var oright = obstacle.x + obstacle.width
+
+        var btop = ball.y - ball.radius
+        var bbottom = ball.y + ball.radius
+        var bleft = ball.x - ball.radius
+        var bright = ball.x + ball.radius
+
+        return oleft < bright && otop < bbottom && oright > bleft && obottom > btop
+    }
+
+    function checkAllCollisionsBall(ball: Ball) {
+        var btop = ball.y - ball.radius
+        var bbottom = ball.y + ball.radius
+        var bleft = ball.x - ball.radius
+        var bright = ball.x + ball.radius
+
+        var ret = false;
+
+        room.map.obstacles.forEach((obstacle) => {
+
+            var otop = obstacle.y
+            var obottom = obstacle.y + obstacle.height
+            var oleft = obstacle.x
+            var oright = obstacle.x + obstacle.width
+
+            if (oleft < bright && otop < bbottom && oright > bleft && obottom > btop)
+                ret = true
+        })
+        return ret
+    }
+
     function handleCanvasMouseDown(event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) {
         var canvas = document.getElementById('canvas') as HTMLCanvasElement
         if (canvas != null) {
             var bound = canvas.getBoundingClientRect()
             let cursorX = (event.clientX - bound.left) / (bound.right - bound.left) * canvas.width
             let cursorY = (event.clientY - bound.top) / (bound.bottom - bound.top) * canvas.height
+
+            if (Math.abs(Math.sqrt(Math.pow((cursorX - room.ball.x), 2) + Math.pow((cursorY - room.ball.y), 2))) < room.ball.radius) {
+                setHoldClick(true)
+                setlastObstacleID(actualObstacleID)
+                setActualObstacleID(-666)
+                holdClickDiff.diffX = cursorX - room.ball.x
+                holdClickDiff.diffY = cursorY - room.ball.y
+                return;
+            }
 
             for (let index = 0; index < room.map.obstacles.length; index++) {
                 if (checkCollisionsActualObstacle(cursorX, cursorY)) {
@@ -345,7 +430,7 @@ const CreateMap=(props: any) => {
                         setActualObstacleID(room.map.obstacles[index].id)
                     }
                     else (checkHoldClickExpandCollision(cursorX, cursorY))
-                    
+
                     setHoldClick(true)
                     holdClickDiff.diffX = cursorX - room.map.obstacles[index].x
                     holdClickDiff.diffY = cursorY - room.map.obstacles[index].y
@@ -369,6 +454,11 @@ const CreateMap=(props: any) => {
             let cursorX = (event.clientX - bound.left) / (bound.right - bound.left) * canvas.width
             let cursorY = (event.clientY - bound.top) / (bound.bottom - bound.top) * canvas.height
             if (holdClick) {
+                if (actualObstacleID === -666) {
+                    room.ball.initial_x = room.ball.x = cursorX - holdClickDiff.diffX
+                    room.ball.initial_y = room.ball.y = cursorY - holdClickDiff.diffY
+                    render()
+                }
                 for (let index = 0; index < room.map.obstacles.length; index++) {
                     if (actualObstacleID == room.map.obstacles[index].id) {
                         var ctx = canvas.getContext('2d')
@@ -424,37 +514,37 @@ const CreateMap=(props: any) => {
 
     const [declineInvite, setDeclineInvite] = useState([false, ""])
 
-    utilsData.socket.on('decline_invitation', function(invitePlayer: string) {
+    utilsData.socket.on('decline_invitation', function (invitePlayer: string) {
         setDeclineInvite([true, invitePlayer])
     })
 
-    utilsData.socket.on('start', function(roomID: string) {
+    utilsData.socket.on('start', function (roomID: string) {
         props.setRoomID(roomID);
         props.setGameStart(true);
     });
 
     return (
         <div className='Font'>
-			<Navbar/>
-			<main>
-				<div className="canvasDiv">
-					<canvas
-                	    id='canvas'
-                	    className='createMapCanvas'
-                	    height={canvas.height}
-                	    width={canvas.width}
+            <Navbar />
+            <main>
+                <div className="canvasDiv">
+                    <canvas
+                        id='canvas'
+                        className='createMapCanvas'
+                        height={canvas.height}
+                        width={canvas.width}
                         onMouseDown={handleCanvasMouseDown}
                         onMouseUp={handleCanvasMouseUp}
                         onMouseMove={dragNdrop}
-                	/>
-				</div>
-				<div className="parameterDiv">
+                    />
+                </div>
+                <div className="parameterDiv">
                     <div className="blocksContainerCollumn">
                         <div className="blocksContainerRow">
                             <button type="button" className='Button addObstacle' onClick={async () => {
 
                                 setlastObstacleID(actualObstacleID)
-                            
+
                                 room.map.addObstacle('red', actualObstacleID ? 100 : 50, 50, 50, 50, nbObstacle + 1)
                                 setActualObstacleID(nbObstacle + 1)
 
@@ -533,17 +623,20 @@ const CreateMap=(props: any) => {
                                 }}>
                             </input>
                         </div>
-                        <input className="inviteBar" value={inviteInput} onChange={(e) => {setInvitInput(e.target.value);setDeclineInvite([false, ""])}} placeholder='ID of client to invite'/>
-                        <button 
-                        className="Button invite"
-                        onClick={async () => {
-                            utilsData.socket.emit('INVITE_CUSTOM', {user: userData.user, gameRoom: room, IDToSend: inviteInput})
-                            console.log(room.players)
-                        }}>{declineInvite[0] ? <>{declineInvite[1]} declines your invitation</> : <>Invite player</>}</button>
+                        <input className="inviteBar" value={inviteInput} onChange={(e) => { setInvitInput(e.target.value); setDeclineInvite([false, ""]) }} placeholder='ID of client to invite' />
+                        <button
+                            className="Button invite"
+                            id="inviteButton"
+                            onClick={async () => {
+                                if (!checkAllCollisionsBall(room.ball)) {
+                                    setInvitInput("")
+                                    utilsData.socket.emit('INVITE_CUSTOM', { user: userData.user, gameRoom: room, IDToSend: inviteInput })
+                                }
+                                }}>{declineInvite[0] ? <>{declineInvite[1]} declines your invitation</> : <>Invite player</>}</button>
                     </div>
                 </div>
-			</main>
-		</div>
-	);
+            </main>
+        </div>
+    );
 }
 export default CreateMap;

@@ -161,6 +161,9 @@ class Ball {
 	particle_x: Array<number>
 	particle_y: Array<number>
 
+	initial_x: number
+	initial_y: number
+
 	constructor(canvas: Canvas) {
 		this.x = canvas.width / 2
 		this.y = canvas.height / 2
@@ -177,11 +180,20 @@ class Ball {
 
 		this.particle_x = new Array()
 		this.particle_y = new Array()
+
+		this.initial_x = -1;
+		this.initial_y = -1;
 	}
 
 	reset(canvas: Canvas) {
-		this.x = canvas.width / 2
-		this.y = canvas.height / 2
+		if (this.initial_x < 0) {
+			this.x = canvas.width / 2
+			this.y = canvas.height / 2
+		}
+		else {
+			this.x = this.initial_x
+			this.y = this.initial_y
+		}
 
 		this.dx = random(0, 1) ? -1 : 1
 		this.dy = 0
@@ -355,17 +367,17 @@ class gameRoomClass {
 	}
 
 	checkCollisionSpectator(index: number, x: number, y: number): boolean {
-		var ptop = y - 80
-		var pbottom = y + 80
-		var pleft = x - 80
-		var pright = x + 80
+		var ptop = y - 40
+		var pbottom = y + 40
+		var pleft = x - 40
+		var pright = x + 40
 
 		for (let i = 0; i < this.spectate.length; i++) {
 			if (index != i) {
-				var btop = this.spectate[i].y - 80
-				var bbottom = this.spectate[i].y + 80
-				var bleft = this.spectate[i].x - 80
-				var bright = this.spectate[i].x + 80
+				var btop = this.spectate[i].y - 40
+				var bbottom = this.spectate[i].y + 40
+				var bleft = this.spectate[i].x - 40
+				var bright = this.spectate[i].x + 40
 
 				if (pleft < bright && ptop < bbottom && pright > bleft && pbottom > btop)
 					return true
@@ -585,7 +597,7 @@ class gameRoomClass {
 		else
 			this.ball.dx = random(0, 1) ? -1 : 1
 
-		this.ball.x += this.ball.dx * 100
+		// this.ball.x += this.ball.dx * 100
 
 		for (let i = 0; i < 2; i++)
 			this.players[i].resetPos(this.canvas)

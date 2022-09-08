@@ -37,6 +37,7 @@
 		"cookie-parser": "^1.4.6",
 		"moment": "^2.29.4",
 		"npm-check-updates": "^13.1.5",
+		"passport": "^0.6.0",
 		"passport-jwt": "^4.0.0",
 		"pg": "^8.7.3",
 		"rand-token": "^1.0.1",

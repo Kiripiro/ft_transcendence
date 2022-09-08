@@ -182,22 +182,6 @@ const GamePage = (props: any) => {
         }
     }
 
-    function roundedImage(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number) {
-        if (ctx) {
-            ctx.beginPath();
-            ctx.moveTo(x + radius, y);
-            ctx.lineTo(x + width - radius, y);
-            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-            ctx.lineTo(x + width, y + height - radius);
-            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-            ctx.lineTo(x + radius, y + height);
-            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-            ctx.lineTo(x, y + radius);
-            ctx.quadraticCurveTo(x, y, x + radius, y);
-            ctx.closePath();
-        }
-    }
-
     function drawSpectator(room: gameRoomClass) {
 
         room.spectate.forEach((item) => {
@@ -214,13 +198,12 @@ const GamePage = (props: any) => {
                     img.onload = function () {
                         if (ctx) {
 
-                            // draw image with circle shape clip
                             ctx.save()
                             ctx.beginPath()
-                            ctx.arc(item.x, item.y, 80, 0, Math.PI * 2, false)
+                            ctx.arc(item.x, item.y, 40, 0, Math.PI * 2, false)
                             ctx.stroke()
                             ctx.clip()
-                            ctx.drawImage(img, item.x - 80, item.y - 80, 160, 160)
+                            ctx.drawImage(img, item.x - 40, item.y - 40, 80, 80)
                             ctx.restore()
                         }
                     };

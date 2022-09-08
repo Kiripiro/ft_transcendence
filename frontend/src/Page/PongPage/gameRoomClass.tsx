@@ -1,4 +1,4 @@
-export { Canvas, Player, gameRoomClass, Obstacle }
+export { Canvas, Player, gameRoomClass, Obstacle, Ball }
 
 const STILL = 0
 const MOTION = 1
@@ -161,6 +161,9 @@ class Ball {
 	particle_x: Array<number>
 	particle_y: Array<number>
 
+	initial_x: number
+	initial_y: number
+
 	constructor(canvas: Canvas) {
 		this.x = canvas.width / 2
 		this.y = canvas.height / 2
@@ -177,11 +180,20 @@ class Ball {
 
 		this.particle_x = new Array()
 		this.particle_y = new Array()
+
+		this.initial_x = -1;
+		this.initial_y = -1;
 	}
 
 	reset(canvas: Canvas) {
-		this.x = canvas.width / 2
-		this.y = canvas.height / 2
+		if (this.initial_x < 0) {
+			this.x = canvas.width / 2
+			this.y = canvas.height / 2
+		}
+		else {
+			this.x = this.initial_x
+			this.y = this.initial_y
+		}
 
 		this.dx = random(0, 1) ? -1 : 1
 		this.dy = 0
@@ -354,18 +366,18 @@ class gameRoomClass {
 		this.players[1].x = this.canvas.width / 8 * 7 - this.players[1].width / 2
 	}
 
-	checkCollisionSpectator(id: string, x: number, y: number): boolean {
-		var ptop = y - 20
-		var pbottom = y + 20
-		var pleft = x - 20
-		var pright = x + 20
+	checkCollisionSpectator(index: number, x: number, y: number): boolean {
+		var ptop = y - 80
+		var pbottom = y + 80
+		var pleft = x - 80
+		var pright = x + 80
 
 		for (let i = 0; i < this.spectate.length; i++) {
-			if (id != this.spectate[i].id) {
-				var btop = this.spectate[i].y - 20
-				var bbottom = this.spectate[i].y + 20
-				var bleft = this.spectate[i].x - 20
-				var bright = this.spectate[i].x + 20
+			if (index != i) {
+				var btop = this.spectate[i].y - 80
+				var bbottom = this.spectate[i].y + 80
+				var bleft = this.spectate[i].x - 80
+				var bright = this.spectate[i].x + 80
 
 				if (pleft < bright && ptop < bbottom && pright > bleft && pbottom > btop)
 					return true
@@ -386,21 +398,35 @@ class gameRoomClass {
 			rank: number,
 			profile_pic: string
 		}) {
-		this.spectate.push(new Spectator(id, user))
+
+			this.spectate.push(new Spectator(id, user))
 
 		for (let i = 0; i < this.spectate.length; i++) {
 			if (this.spectate[i].id == id) {
-				if (random(0, 1))
-					this.spectate[i].pannel = true
-				else
+				var nbPannel1 = 0
+				var nbPannel2 = 0
+				for (let j = 0; j < i; j++)
+					if (this.spectate[j].pannel)
+						nbPannel1++;
+					else
+						nbPannel2++;
+
+				if (nbPannel1 > nbPannel2)
 					this.spectate[i].pannel = false
+				else
+					this.spectate[i].pannel = true
 
-				this.spectate[i].x = random(50, 350)
-				this.spectate[i].y = random(50, 950)
+				this.spectate[i].x = random(90, 310)
+				this.spectate[i].y = random(90, 910)
 
-				while (this.checkCollisionSpectator(id, this.spectate[i].x, this.spectate[i].y)) {
-					this.spectate[i].x = random(50, 350)
-					this.spectate[i].y = random(50, 950)
+				var check = 0
+				while (this.checkCollisionSpectator(i, this.spectate[i].x, this.spectate[i].y)) {
+					if (check++ == 100) {
+						this.spectate.splice(this.spectate.length, 1)
+						break
+					}
+					this.spectate[i].x = random(90, 310)
+					this.spectate[i].y = random(90, 910)
 				}
 			}
 		}
@@ -571,7 +597,7 @@ class gameRoomClass {
 		else
 			this.ball.dx = random(0, 1) ? -1 : 1
 
-		this.ball.x += this.ball.dx * 100
+		// this.ball.x += this.ball.dx * 100
 
 		for (let i = 0; i < 2; i++)
 			this.players[i].resetPos(this.canvas)

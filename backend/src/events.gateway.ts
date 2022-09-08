@@ -9,8 +9,8 @@ import {
 import { Server, Socket } from 'socket.io';
 import { Logger } from '@nestjs/common';
 import { Interval } from '@nestjs/schedule';
-import { gameRoomClass } from './GameRoomClass';
 import { HttpService } from '@nestjs/axios';
+import { gameRoomClass } from './gameRoomClass';
 
 interface Client {
   id: string;
@@ -252,10 +252,6 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     this.joinRoom(client, room[1].roomID)
 
     this.pongInfo[room[0]].addSpectator(client.id, info.user)
-    this.pongInfo[room[0]].addSpectator(client.id, info.user)
-    this.pongInfo[room[0]].addSpectator(client.id, info.user)
-    this.pongInfo[room[0]].addSpectator(client.id, info.user)
-    this.pongInfo[room[0]].addSpectator(client.id, info.user)
 
     for (let i = 0; i < this.pongInfo[room[0]].spectate.length; i++) {
       this.logger.log(`pannel: ${this.pongInfo[room[0]].spectate[i].pannel} x: ${this.pongInfo[room[0]].spectate[i].x} | y: ${this.pongInfo[room[0]].spectate[i].y}`)
@@ -379,9 +375,9 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
       IDToSend: string
     }) {
     this.joinRoom(client, "custom" + client.id)
-    info[0].roomID = "custom" + client.id
-    info[0].players[0].connected = true
-    info[0].players[0].id = client.id
+    info.gameRoom.roomID = "custom" + client.id
+    info.gameRoom.players[0].connected = true
+    info.gameRoom.players[0].id = client.id
 
 
     for (let index = 0; index < info.gameRoom.map.obstacles.length; index++) {
@@ -394,6 +390,8 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     this.pongInfo.push(new gameRoomClass(info.gameRoom.roomID, client.id, info.user, "map1"))
 
     this.pongInfo[this.pongInfo.length - 1].map.obstacles = info.gameRoom.map.obstacles
+    this.pongInfo[this.pongInfo.length - 1].ball.x = this.pongInfo[this.pongInfo.length - 1].ball.initial_x = info.gameRoom.ball.initial_x
+    this.pongInfo[this.pongInfo.length - 1].ball.y = this.pongInfo[this.pongInfo.length - 1].ball.initial_y = info.gameRoom.ball.initial_y
 
     console.log('room', info.gameRoom.map.obstacles)
     console.log('ponginfo', this.pongInfo[this.pongInfo.length - 1].map.obstacles)

@@ -9,7 +9,7 @@ const GameSwitch=() => {
     const [gameStart, setGameStart] = useState(false);
     const [createMap, setCreateMap] = useState(false);
     // const [checkReconnexion, setCheckReconnexion] = useState(false);
-    const [specID, setSpecID] = useState("0");
+    const [specID, setSpecID] = useState("atourret");
     const [roomID, setRoomID] = useState("");
     const [gameMap, setGameMap] = React.useState("");
 
