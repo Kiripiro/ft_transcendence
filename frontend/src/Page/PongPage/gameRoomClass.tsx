@@ -367,17 +367,17 @@ class gameRoomClass {
 	}
 
 	checkCollisionSpectator(index: number, x: number, y: number): boolean {
-		var ptop = y - 80
-		var pbottom = y + 80
-		var pleft = x - 80
-		var pright = x + 80
+		var ptop = y - 40
+		var pbottom = y + 40
+		var pleft = x - 40
+		var pright = x + 40
 
 		for (let i = 0; i < this.spectate.length; i++) {
 			if (index != i) {
-				var btop = this.spectate[i].y - 80
-				var bbottom = this.spectate[i].y + 80
-				var bleft = this.spectate[i].x - 80
-				var bright = this.spectate[i].x + 80
+				var btop = this.spectate[i].y - 40
+				var bbottom = this.spectate[i].y + 40
+				var bleft = this.spectate[i].x - 40
+				var bright = this.spectate[i].x + 40
 
 				if (pleft < bright && ptop < bbottom && pright > bleft && pbottom > btop)
 					return true
