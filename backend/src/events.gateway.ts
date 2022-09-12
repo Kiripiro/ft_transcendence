@@ -62,6 +62,12 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     arrClient.push(newClient);
   }
 
+  @SubscribeMessage('storeClientInfo')
+  async storeClientInfo(client: Socket, user: { login: string }) {
+    arrClient.forEach((item) => { if (item.id == client.id) item.username = user.login })
+    console.log(arrClient)
+  };
+
   async afterInit(server: any) {
     this.logger.log('Init');
   }
@@ -118,10 +124,6 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
     client.join(roomId);
     this.logger.log(`${client.id} join: ${roomId}`)
-
-    var roomSockets = await this.server.in(roomId).fetchSockets();
-
-    roomSockets.forEach(item => console.log(item.id))
   }
 
   ///////////////////////////////////////////////////////////
@@ -171,11 +173,9 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     }) {
     this.pongInfo.forEach((item) => {
       item.players.forEach((player) => {
-        console.log('player.user', player.user)
         if (item.started && player.user.login == info.user.login) {
           this.joinRoom(client, item.roomID)
           player.id = client.id
-          // console.log('test', player.id)
           player.connected = true
           this.server.to(client.id).emit('start', item.roomID)
         }
@@ -295,6 +295,7 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
           score_u2: this.pongInfo[room[0]].players[1].score,
           winner_id: this.pongInfo[room[0]].players[0].score === 3 ? this.pongInfo[room[0]].players[0].user.id : this.pongInfo[room[0]].players[1].user.id
         }
+        console.log('data :', this.pongInfo[room[0]].players[0].user)
         const match = this.http.post('http://localhost:5001/matchesHistory', data);
         console.log(match.forEach(item => (console.log(item))));
         this.server.to(client.id).emit('finish', this.pongInfo[room[0]])
@@ -372,7 +373,7 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
         profile_pic: string
       },
       gameRoom: gameRoomClass,
-      IDToSend: string
+      userLoginToSend: string
     }) {
     this.joinRoom(client, "custom" + client.id)
     info.gameRoom.roomID = "custom" + client.id
@@ -386,25 +387,43 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
       info.gameRoom.map.obstacles[index].initialHeight = info.gameRoom.map.obstacles[index].height
     }
 
-    console.log('room', info.gameRoom.map.obstacles)
     this.pongInfo.push(new gameRoomClass(info.gameRoom.roomID, client.id, info.user, "map1"))
 
     this.pongInfo[this.pongInfo.length - 1].map.obstacles = info.gameRoom.map.obstacles
-    this.pongInfo[this.pongInfo.length - 1].ball.x = this.pongInfo[this.pongInfo.length - 1].ball.initial_x = info.gameRoom.ball.initial_x
-    this.pongInfo[this.pongInfo.length - 1].ball.y = this.pongInfo[this.pongInfo.length - 1].ball.initial_y = info.gameRoom.ball.initial_y
 
-    console.log('room', info.gameRoom.map.obstacles)
-    console.log('ponginfo', this.pongInfo[this.pongInfo.length - 1].map.obstacles)
+    this.pongInfo[this.pongInfo.length - 1].ball.x = info.gameRoom.ball.x
+    this.pongInfo[this.pongInfo.length - 1].ball.y = info.gameRoom.ball.y
 
-    this.server.to(info.IDToSend).emit('invite_request_custom', client.id)
+    if (info.gameRoom.ball.initial_x >= 0) {
+      this.pongInfo[this.pongInfo.length - 1].ball.x = this.pongInfo[this.pongInfo.length - 1].ball.initial_x = info.gameRoom.ball.initial_x
+      this.pongInfo[this.pongInfo.length - 1].ball.y = this.pongInfo[this.pongInfo.length - 1].ball.initial_y = info.gameRoom.ball.initial_y
+    }
 
+    arrClient.forEach((item) => {
+      if (info.userLoginToSend == item.username) {
+
+        this.server.to(item.id).emit('invite_request_custom', { inviteSocketID: client.id, inviteUser: info.user })
+      }
+    })
   }
 
   @SubscribeMessage('DECLINE_INVITATION')
-  async declineInvitation(client: Socket, inviteID: string) {
+  async declineInvitation(client: Socket,
+    info: {
+      sendTo: string,
+      user: {
+        id: number,
+        login: string,
+        nickname: string,
+        wins: number,
+        looses: number,
+        rank: number,
+        profile_pic: string
+      }
+    }) {
 
-    this.server.to(inviteID).emit('decline_invitation', client.id)
-    this.pongInfo.splice(this.getRoomByID("custom" + inviteID)[0], 1)
+    this.server.to(info.sendTo).emit('decline_invitation', info.user)
+    this.pongInfo.splice(this.getRoomByID("custom" + info.sendTo)[0], 1)
   }
 
   @SubscribeMessage('ACCEPT_INVITATION')
@@ -427,7 +446,10 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     this.joinRoom(client, room[1].roomID)
 
     this.pongInfo[room[0]].players[0].connected = true
+    this.pongInfo[room[0]].started = true
     this.pongInfo[room[0]].setOponnent(client.id, info.user)
+
+    console.log(this.pongInfo[room[0]])
 
     this.server.to(room[1].roomID).emit('start', "custom" + info.inviteID)
 

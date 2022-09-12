@@ -219,7 +219,7 @@ const CreateMap = (props: any) => {
         var button = document.getElementById('inviteButton')
         if (button) {
             button.style.backgroundColor = 'blue'
-            button.textContent = 'Invite Player'
+            button.textContent = (declineInvite[0] ? declineInvite[1] + " declines your invitation" : "Invite player")
         }
 
         var canvas = document.getElementById('canvas') as HTMLCanvasElement
@@ -514,14 +514,21 @@ const CreateMap = (props: any) => {
 
     const [declineInvite, setDeclineInvite] = useState([false, ""])
 
-    utilsData.socket.on('decline_invitation', function (invitePlayer: string) {
-        setDeclineInvite([true, invitePlayer])
+    utilsData.socket.on('decline_invitation', function (invitePlayer: any) {
+        console.log('tete')
+        setDeclineInvite([true, invitePlayer.login])
     })
 
     utilsData.socket.on('start', function (roomID: string) {
         props.setRoomID(roomID);
         props.setGameStart(true);
     });
+
+    function inviteButtonClick() {
+        if (!checkAllCollisionsBall(room.ball)) {
+            utilsData.socket.emit('INVITE_CUSTOM', { user: userData.user, gameRoom: room, userLoginToSend: inviteInput })
+        }
+    }
 
     return (
         <div className='Font'>
@@ -623,16 +630,11 @@ const CreateMap = (props: any) => {
                                 }}>
                             </input>
                         </div>
-                        <input className="inviteBar" value={inviteInput} onChange={(e) => { setInvitInput(e.target.value); setDeclineInvite([false, ""]) }} placeholder='ID of client to invite' />
+                        <input className="inviteBar" value={inviteInput} onChange={(e) => { setInvitInput(e.target.value); setDeclineInvite([false, ""]) }} onKeyDown={(event) => { if (event.key == 'Enter') inviteButtonClick() }} placeholder='ID of client to invite' />
                         <button
                             className="Button invite"
                             id="inviteButton"
-                            onClick={async () => {
-                                if (!checkAllCollisionsBall(room.ball)) {
-                                    setInvitInput("")
-                                    utilsData.socket.emit('INVITE_CUSTOM', { user: userData.user, gameRoom: room, IDToSend: inviteInput })
-                                }
-                                }}>{declineInvite[0] ? <>{declineInvite[1]} declines your invitation</> : <>Invite player</>}</button>
+                            onClick={inviteButtonClick}></button>
                     </div>
                 </div>
             </main>

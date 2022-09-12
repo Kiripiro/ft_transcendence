@@ -43,8 +43,6 @@ main{
 	box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
 	margin: 1%;
 	width: 50%;
-	display: flex;
-	flex-direction: column;
 	transition: all 0.5s;
 	overflow: hidden;
 }
@@ -61,18 +59,46 @@ main{
 	animation: apparition .8s ease-out;
 }
 
+.game {
+	display: flex;
+}
+
 .game-win {
 	margin: .5vw;
-	height: 8vh;
+	height: 16vh;
 	min-height: 8vh;
 	background: rgba(182, 230, 189, 1);
 }
 
 .game-lose {
 	margin: .5vw;
-	height: 8vh;
+	height: 16vh;
 	min-height: 8vh;
 	background: rgba(245, 154, 142, 1);
+}
+
+.player {
+	width: 50%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	/* justify-content: center; */
+}
+
+.player .PlayerNickname, .player .Score {
+	color: black;
+}
+
+.player .PlayerNickname {
+	margin: auto;
+	margin-top: 0;
+	font-size: calc(1vh + 1vw);
+}
+
+.player .Score {
+	margin: auto;
+	margin-top: 5%;
+	font-size: calc(2vh + 2vw);
 }
 
 .match-history:hover {

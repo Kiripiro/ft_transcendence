@@ -275,7 +275,7 @@ const GamePage = (props: any) => {
             modal.style.display = "block";
         var winnerHeader = document.getElementById("winnerHeader")
         if (winnerHeader)
-            winnerHeader.innerHTML = (room.players[0].score > room.players[1].score ? room.players[0].id : room.players[1].id) + " as won the game !"
+            winnerHeader.innerHTML = (room.players[0].score > room.players[1].score ? room.players[0].user?.login : room.players[1].user?.login) + " as won the game !"
         return;
     });
 

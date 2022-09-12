@@ -5,6 +5,8 @@ import CreateMap from './CreateMap';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../State';
 
+let checkReconnexion = false
+
 const GameSwitch=() => {
     const [gameStart, setGameStart] = useState(false);
     const [createMap, setCreateMap] = useState(false);
@@ -16,11 +18,11 @@ const GameSwitch=() => {
     const userData = useSelector((state: RootState) => state.user);
     const utilsData = useSelector((state: RootState) => state.utils);
 
-    var checkReconnexion = false
 
     // useEffect(() => {
         if (!checkReconnexion) {
             checkReconnexion = true
+            console.log('oui')
             utilsData.socket.emit('CHECK_RECONNEXION', {user: userData.user})
         }
 

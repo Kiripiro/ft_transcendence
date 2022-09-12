@@ -14,51 +14,38 @@ import './CSS/JoinQueue/CreateMap.css'
 import './CSS/GamePage/GamePage.css';
 import './CSS/Utils.css'
 
-const JoinRoom=(props: any) => {
+const JoinRoom = (props: any) => {
     const [inQueue, setInQueue] = useState(false);
     const [NotFound, setNotFound] = useState(false);
-    
+
     const utilsData = useSelector((state: RootState) => state.utils);
     const userData = useSelector((state: RootState) => state.user);
-    
-    utilsData.socket.removeAllListeners();
-    
+
+    // utilsData.socket.removeAllListeners();
+
     function joinQueue() {
         if (!props.gameMap)
             return
-        utilsData.socket.emit('JOIN_QUEUE', {user: userData.user, gameMap: props.gameMap});
+        utilsData.socket.emit('JOIN_QUEUE', { user: userData.user, gameMap: props.gameMap });
     }
-    
+
     function spectate() {
-        utilsData.socket.emit('SPECTATE_CLIENT', {specID: props.specID, user: userData.user});
+        utilsData.socket.emit('SPECTATE_CLIENT', { specID: props.specID, user: userData.user });
     }
-    
-    utilsData.socket.on('clientNotFound', function() {
+
+    utilsData.socket.on('clientNotFound', function () {
         props.setSpecID("");
         setNotFound(true);
     });
 
-    utilsData.socket.on('joined', function() {
+    utilsData.socket.on('joined', function () {
         setInQueue(true);
     });
 
-    utilsData.socket.on('start', function(roomID: string) {
+    utilsData.socket.on('start', function (roomID: string) {
         props.setRoomID(roomID);
         props.setGameStart(true);
     });
-
-    const [invitePlayer, setInvitePlayer] = useState("")
-
-    utilsData.socket.on('invite_request_custom', function(invitePlayer: string) {
-        var modal = document.getElementById("myModal");
-        if (modal)
-            modal.style.display = "block";
-        var h3 = document.getElementById("invitePlayer")
-        if (h3)
-            h3.innerHTML = invitePlayer + " invite you to play on a custom map !"
-        setInvitePlayer(invitePlayer)
-    });
-    
 
     async function chooseMap(map: string) {
         props.setGameMap(map)
@@ -106,7 +93,7 @@ const JoinRoom=(props: any) => {
                 return
             }
         }
-        else if (!inQueue){
+        else if (!inQueue) {
             if (button !== null) {
                 button.textContent = "Join queue..."
                 return
@@ -123,18 +110,18 @@ const JoinRoom=(props: any) => {
 
     return (
         <div className='Font'>
-            <Navbar/>
+            <Navbar />
             <main>
                 <div className='blocksContainerRow'>
                     <div className="div50">
                         <div className="queueDiv">
                             <div className='blocksContainerCenter'>
                                 <div className='blocksContainerRow'>
-                                    <button type="button" id='map1Button' className='mapButton' onClick={() => {chooseMap("map1")}}>
+                                    <button type="button" id='map1Button' className='mapButton' onClick={() => { chooseMap("map1") }}>
                                         <img src={imageMap1} />
                                         <h3>Just color</h3>
                                     </button>
-                                    <button type="button" id='map2Button' className='mapButton' onClick={() => {chooseMap("map2")}}>
+                                    <button type="button" id='map2Button' className='mapButton' onClick={() => { chooseMap("map2") }}>
                                         <img src={imageMap2} />
                                         <h3>Just color</h3>
                                     </button>
@@ -142,11 +129,11 @@ const JoinRoom=(props: any) => {
                             </div>
                             <div className='blocksContainerCenter'>
                                 <div className='blocksContainerRow'>
-                                    <button type="button" id='map3Button' className='mapButton' onClick={() => {chooseMap("map3")}}>
+                                    <button type="button" id='map3Button' className='mapButton' onClick={() => { chooseMap("map3") }}>
                                         <img src={imageMap1} />
                                         <h3>Obstacle</h3>
                                     </button>
-                                    <button type="button" id='map4Button' className='mapButton' onClick={() => {chooseMap("map4")}}>
+                                    <button type="button" id='map4Button' className='mapButton' onClick={() => { chooseMap("map4") }}>
                                         <img src={imageMap2} />
                                         <h3>Obstacle</h3>
                                     </button>
@@ -160,7 +147,7 @@ const JoinRoom=(props: any) => {
                     <div className="div50">
                         <div className="spectateDiv">
                             <div className='blocksContainerCenter'>
-                                <input  className='spectateInput' value={props.specID} onChange={e => props.setSpecID(e.target.value)} placeholder={NotFound ? 'Client not playing...' : 'Client To Spectate'} ></input>
+                                <input className='spectateInput' value={props.specID} onChange={e => props.setSpecID(e.target.value)} onKeyDown={(event) => { if (event.key === 'Enter') spectate() }} placeholder={NotFound ? 'Client not playing...' : 'Client To Spectate'} ></input>
                             </div>
                             <div className='blocksContainerCenter'>
                                 <button type="button" className='spectateButton' onClick={() => spectate()}> Spectate </button>
@@ -168,29 +155,14 @@ const JoinRoom=(props: any) => {
                         </div>
                         <div className="createMapDiv">
                             <div className='blocksContainerCenter'>
-                                <button type="button" className='createMapButton' onClick={() => {props.setCreateMap(true)}}> Create map </button>
+                                <button type="button" className='createMapButton' onClick={() => { props.setCreateMap(true) }}> Create map </button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div id="myModal" className="modal">
-                <div className="modal-content">
-                    <div className="inviteNameDiv">
-                        <h3 id='invitePlayer'/>
-                    </div>
-                    <div className="blocksContainerRow">
-                        <button className='inviteButton decline' onClick={() => {
-                            utilsData.socket.emit("DECLINE_INVITATION", invitePlayer)
-                        }} >Decline</button>
-                        <button className='inviteButton accept' onClick={() => {
-                            utilsData.socket.emit("ACCEPT_INVITATION", {user: userData.user, inviteID: invitePlayer})
-                        }}>Accept</button>
-                    </div>
-                </div>
-            </div>
             </main>
         </div>
     );
 };
-  
+
 export default JoinRoom;
