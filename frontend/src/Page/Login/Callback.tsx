@@ -16,7 +16,7 @@ export default function Callback() {
     //A MODIFIER ALED CA MARCHE PAS COMME ON VEUT
     const [cookies, setCookie, removeCookie] = useCookies(["auth-cookie"]);
     
-    axios.get("http://localhost:5001/user/userExist/" + cookies["auth-cookie"].refreshToken).then((item) => { console.log('item.data', item.data); setUser(item.data) })
+    axios.get("http://172.16.1.10:5001/user/userExist/" + cookies["auth-cookie"].refreshToken).then((item) => { console.log('item.data', item.data); setUser(item.data) })
 
     return (
         <>

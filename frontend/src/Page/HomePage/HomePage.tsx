@@ -21,23 +21,33 @@ const HomePage = (props: any) => {
     const [isAddFriend, setAddFriend] = AddFriendHook(false);
 
     const [matchesHistory, setMatchesHistory] = useState(Array<any>)
+    const [leaderBoardUsers, setLeaderBoardUsers] = useState(Array<any>)
 
-    
+    var monthNames = ["Jan.", "Feb.", "Mar.", "Apr.", "May.", "Jun.",
+        "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec."]
+
+    var dayNames = ["Sun.", "Mon.", "Tues.", "Wed.", "Thurs.", "Fri.", "Sat."]
+
     useEffect(() => {
-        
+
         if (!test) {
-            axios.get('http://localhost:5001/matchesHistory/' + userData.user?.id).then((res) => {
+            axios.get('http://172.16.1.10:5001/matchesHistory/parsedMatchesHistory/' + userData.user?.id).then((res) => {
+                console.log('testestest', res.data)
+
                 let matches: any[] = []
-                res.data.forEach((item: { id_user1: number, score_u1: number, id_user2: number, score_u2: number, winner_id: number }) => {
-                    matches.push(<div key={matches.length.toString()} className={(item.winner_id == userData.user?.id ? 'game game-win' : 'game game-lose')} >
-                        <div className='player'>
-                            <div className='Score'>{item.score_u1}</div>
-                            <div className='PlayerNickname'>{item.id_user1 == userData.user?.id ? userData.user.login : ""}</div>
+                res.data.forEach((item: { login_user1: string, score_u1: number, login_user2: string, score_u2: number, winner_login: string, date: Date }) => {
+                    matches.push(<div key={matches.length.toString()} className={(item.winner_login == userData.user?.login ? 'game game-win' : 'game game-lose')} >
+                        <div className='matchPlayers'>
+                            <div className='player'>
+                                <div className='Score'>{item.score_u1}</div>
+                                <div className='PlayerNickname'>{item.login_user1}</div>
+                            </div>
+                            <div className='player'>
+                                <div className='Score'>{item.score_u2}</div>
+                                <div className='PlayerNickname'>{item.login_user2}</div>
+                            </div>
                         </div>
-                        <div className='player'>
-                        <div className='Score'>{item.score_u2}</div>
-                            <div className='PlayerNickname'>{item.id_user2 == userData.user?.id ? userData.user.login : ""}</div>
-                        </div>
+                        <div className='matchDate'><>{dayNames[new Date(item.date).getDay()] + ' ' + new Date(item.date).getDate() + ' ' + monthNames[new Date(item.date).getMonth()] + ' ' + new Date(item.date).getHours() + ':' + new Date(item.date).getMinutes()}</></div>
                     </div>)
                 })
                 console.log('matches', matches)
@@ -46,7 +56,42 @@ const HomePage = (props: any) => {
                     invertMatches.push(matches[index])
                 setMatchesHistory(invertMatches)
             })
+
             test = true
+        } else if (!leaderBoardUsers.length) {
+            axios.get('http://172.16.1.10:5001/user').then((res) => {
+                let tmp: any[] = []
+                res.data.forEach((item: any) => {
+                    tmp.push(<div className='UserLeaderBoard' key={tmp.length + 1} style={{ backgroundColor: (item.login == userData.user?.login ? 'darkblue' : 'none') }}>
+                        <div className='UserLeaderBoardInfo little' id={item.login + 'Rank'}>{}</div>
+                        <div className='UserLeaderBoardInfo medium'>{item.login}</div>
+                        <div className='UserLeaderBoardInfo little'>{item.wins}</div>
+                        <div className='UserLeaderBoardInfo little'>{item.losses}</div>
+                        <div className='UserLeaderBoardInfo medium'>{Math.floor((item.wins / (item.wins + item.losses)) * 100).toString() + '%'}</div>
+                    </div>)
+                })
+
+                for (let index = 0; index < tmp.length; index++) {
+                    if (index + 1 != tmp.length && tmp[index].props.children[2].props.children > tmp[index + 1].props.children[2].props.children) {
+                        var oui = tmp[index]
+                        tmp[index] = tmp[index + 1]
+                        tmp[index + 1] = oui
+                        index = 0
+                    }
+                }
+
+                tmp.forEach((item, index) => {
+                    var rank = document.getElementById(item.props.children[1].props.children + 'Rank')
+                    if (rank)
+                        rank.textContent = (tmp.length - index).toString()
+                })
+
+                var invertMatches: any[] = []
+                for (let index = tmp.length - 1; index >= 0; index--)
+                    invertMatches.push(tmp[index])
+
+                setLeaderBoardUsers(invertMatches)
+            })
         }
     })
 
@@ -62,7 +107,16 @@ const HomePage = (props: any) => {
                         </div>
                         <div className="stat">
                             <div className="rank"></div>
-                            <div className="graph"></div>
+                            <div className="leaderBoard">
+                                <div className='infoLeaderBoard'>
+                                    <div className='infoContent little'>Rank</div>
+                                    <div className='infoContent medium'>Nickname</div>
+                                    <div className='infoContent little'>Wins</div>
+                                    <div className='infoContent little'>Looses</div>
+                                    <div className='infoContent medium'>Win Rate</div>
+                                </div>
+                                {leaderBoardUsers}
+                            </div>
                         </div>
                     </main>
                     <div className="info">

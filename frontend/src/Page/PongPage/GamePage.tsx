@@ -312,9 +312,9 @@ const GamePage = (props: any) => {
     return (
         <div className="mainDiv">
             <Navbar />
-            <video width="100%" height="93%" autoPlay loop muted>
+            {/* <video width="100%" height="93%" autoPlay loop muted>
                 <source src={require('../assets/backgound.mp4')} type="video/ogg" />
-            </video>
+            </video> */}
             <div className="boardDiv">
                 <div className="blocksContainerCenter">
                     <canvas id='spectate1'

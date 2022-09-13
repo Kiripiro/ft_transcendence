@@ -293,12 +293,12 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
           score_u1: this.pongInfo[room[0]].players[0].score,
           id_user2: this.pongInfo[room[0]].players[1].user.id,
           score_u2: this.pongInfo[room[0]].players[1].score,
-          winner_id: this.pongInfo[room[0]].players[0].score === 3 ? this.pongInfo[room[0]].players[0].user.id : this.pongInfo[room[0]].players[1].user.id
+          winner_id: this.pongInfo[room[0]].players[0].score === 3 ? this.pongInfo[room[0]].players[0].user.id : this.pongInfo[room[0]].players[1].user.id,
         }
-        console.log('data :', this.pongInfo[room[0]].players[0].user)
-        const match = this.http.post('http://localhost:5001/matchesHistory', data);
+        console.log('data :', data)
+        const match = this.http.post('http://172.16.1.10:5001/matchesHistory', data);
         console.log(match.forEach(item => (console.log(item))));
-        this.server.to(client.id).emit('finish', this.pongInfo[room[0]])
+        this.server.to(roomID).emit('finish', this.pongInfo[room[0]])
         this.pongInfo.splice(room[0], 1)
         return
       }

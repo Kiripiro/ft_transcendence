@@ -7,7 +7,7 @@ export default function useFindUser() {
 
     useEffect(() =>{
         async function findUser() {
-        await axios.get('localhost:5001/user/userExist')
+        await axios.get('172.16.1.10:5001/user/userExist')
         .then(res => {
             setUser(res.data);
             setLoading(false);

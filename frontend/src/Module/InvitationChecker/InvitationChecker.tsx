@@ -50,7 +50,7 @@ function InvitationChecker(props: { children: any }) {
 						}} >Decline</button>
 						<button className='inviteButton accept' onClick={() => {
 							utilsData.socket.emit("ACCEPT_INVITATION", { user: userData.user, inviteID: inviteSocketID })
-							window.location.href = 'http://localhost:3000/pong'
+							window.location.href = 'http://172.16.1.10:3000/pong'
 						}}>Accept</button>
 					</div>
 				</div>

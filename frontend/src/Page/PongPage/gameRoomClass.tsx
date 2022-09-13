@@ -399,7 +399,7 @@ class gameRoomClass {
 			profile_pic: string
 		}) {
 
-		this.spectate.push(new Spectator(id, user))
+			this.spectate.push(new Spectator(id, user))
 
 		for (let i = 0; i < this.spectate.length; i++) {
 			if (this.spectate[i].id == id) {
@@ -597,8 +597,7 @@ class gameRoomClass {
 		else
 			this.ball.dx = random(0, 1) ? -1 : 1
 
-		if (this.ball.initial_x < 0)
-			this.ball.x += this.ball.dx * 100
+		// this.ball.x += this.ball.dx * 100
 
 		for (let i = 0; i < 2; i++)
 			this.players[i].resetPos(this.canvas)

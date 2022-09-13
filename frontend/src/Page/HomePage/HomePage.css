@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap');
 
-body{
+body {
 	background: #302E2D;
 	overflow-y: hidden;
 	overflow-x: hidden;
@@ -19,7 +19,7 @@ body{
 	display: flex;
 }
 
-main{
+main {
 	background: #3A3935;
 	display: flex;
 	width: 70%;
@@ -31,7 +31,8 @@ main{
 	from {
 		opacity: 0;
 		transform: translateY(200px);
-	}	
+	}
+
 	to {
 		opacity: 1;
 		transform: translateY(0);
@@ -55,26 +56,28 @@ main{
 	display: none;
 }
 
-.game, .match-history h3 {
+.game,
+.match-history h3 {
 	animation: apparition .8s ease-out;
 }
 
 .game {
-	display: flex;
+	margin: .5vw;
+	height: 16vh;
 }
 
 .game-win {
-	margin: .5vw;
-	height: 16vh;
-	min-height: 8vh;
 	background: rgba(182, 230, 189, 1);
 }
 
 .game-lose {
-	margin: .5vw;
-	height: 16vh;
-	min-height: 8vh;
 	background: rgba(245, 154, 142, 1);
+}
+
+.matchPlayers {
+	width: 100%;
+	height: 80%;
+	display: flex;
 }
 
 .player {
@@ -82,10 +85,10 @@ main{
 	height: 100%;
 	display: flex;
 	flex-direction: column;
-	/* justify-content: center; */
 }
 
-.player .PlayerNickname, .player .Score {
+.player .PlayerNickname,
+.player .Score {
 	color: black;
 }
 
@@ -99,6 +102,19 @@ main{
 	margin: auto;
 	margin-top: 5%;
 	font-size: calc(2vh + 2vw);
+}
+
+.matchDate {
+	width: 92.5%;
+	height: 20%;
+
+	margin-left: 5%;
+
+	display: flex;
+
+	align-items: center;
+
+	color: black;
 }
 
 .match-history:hover {
@@ -117,7 +133,7 @@ main{
 	margin: 1% 1% 1% 0;
 	width: 50%;
 	max-height: inherit;
-	
+
 }
 
 .rank {
@@ -127,21 +143,78 @@ main{
 	margin-bottom: 1%;
 	transition: all 0.5s;
 }
+
 .rank:hover {
 	transition: all 0.5s;
 	box-shadow: #901644 2.4px 2.4px 10px;
 }
 
-.graph {
+.leaderBoard {
 	height: 49.5%;
 	background: #302E2D;
 	box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
 	transition: all 0.5s;
+
+	overflow: hidden;
+	overflow-y: scroll;
 }
 
-.graph:hover {
+.leaderBoard:hover {
 	transition: all 0.5s;
 	box-shadow: #901644 2.4px 2.4px 10px;
+}
+
+.infoLeaderBoard {
+	background: #302E2D;
+
+	position: sticky;
+	top: 0;
+
+	width: 100%;
+	height: 10%;
+
+	display: flex;
+}
+
+.infoLeaderBoard .infoContent {
+	margin-left: 2%;
+
+	height: 100%;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.infoLeaderBoard .little,
+.UserLeaderBoard .little {
+	width: 10%;
+}
+
+.infoLeaderBoard .medium,
+.UserLeaderBoard .medium {
+	width: 30%;
+}
+
+.UserLeaderBoard {
+	margin-top: 2%;
+
+	width: 100%;
+	height: 20%;
+
+	display: flex;
+
+	background-color: rgb(0, 0, 0, 0.3);
+}
+
+.UserLeaderBoard .UserLeaderBoardInfo {
+	margin-left: 2%;
+	height: 100%;
+
+	display: flex;
+
+	align-items: center;
+	justify-content: center;
 }
 
 .info {
@@ -159,7 +232,8 @@ main{
 	from {
 		opacity: 0;
 		transform: translateY(400px);
-	}	
+	}
+
 	to {
 		opacity: 1;
 		transform: translateY(0);
@@ -182,12 +256,11 @@ main{
 
 .user-info .user-picture {
 	height: 100%;
-	aspect-ratio: 1/1;
 	margin-right: 5%;
 }
 
 .user-picture img {
-	width: 100%;
+	height: 100%;
 }
 
 .user-info .username {
@@ -224,7 +297,8 @@ main{
 	right: 0;
 }
 
-.friends-info-typo .bi-person-plus, .friends-info .bi-search {
+.friends-info-typo .bi-person-plus,
+.friends-info .bi-search {
 	font-size: 2rem;
 }
 
@@ -237,7 +311,7 @@ main{
 	box-shadow: #901644 2.4px 2.4px 10px;
 }
 
-.friends-info h3{
+.friends-info h3 {
 	letter-spacing: 2px;
 	/* display: flex; */
 	justify-content: center;

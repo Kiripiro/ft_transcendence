@@ -7,6 +7,7 @@ import { UserEntity } from './user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { randomUUID } from 'crypto';
 import { GetUserDto } from './dtos/getUser.dto';
+import { UpdateWinLooseDto } from './dtos/updateWinLoose.dto';
 
 @Injectable()
 export class UserService {
@@ -87,6 +88,19 @@ export class UserService {
 			user.refreshTokenIAT = body.iat;
 			user.refreshTokenExp = body.exp
 			this.userRepository.save(user);
+			return user;
+		}
+		return null;
+	}
+
+	async updateWinLoose(body: UpdateWinLooseDto) {
+		let user = await this.getUserById(body.id);
+		if (user) {
+			if (body.win)
+				user.wins++;
+			else
+				user.losses++;
+				this.userRepository.save(user);
 			return user;
 		}
 		return null;

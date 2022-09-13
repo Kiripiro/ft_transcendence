@@ -24,4 +24,7 @@ export class MatchesHistoryEntity {
   @Column()
   public winner_id: number;
 
+  @Column({ type: "timestamp"})
+  public date: Date;
+
 }
