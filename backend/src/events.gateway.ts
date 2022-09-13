@@ -10,7 +10,7 @@ import { Server, Socket } from 'socket.io';
 import { Logger } from '@nestjs/common';
 import { Interval } from '@nestjs/schedule';
 import { HttpService } from '@nestjs/axios';
-import { gameRoomClass } from './gameRoomClass';
+import { gameRoomClass } from './GameRoomClass';
 
 interface Client {
   id: string;

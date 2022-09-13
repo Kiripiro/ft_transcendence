@@ -399,7 +399,7 @@ class gameRoomClass {
 			profile_pic: string
 		}) {
 
-			this.spectate.push(new Spectator(id, user))
+		this.spectate.push(new Spectator(id, user))
 
 		for (let i = 0; i < this.spectate.length; i++) {
 			if (this.spectate[i].id == id) {
@@ -483,6 +483,11 @@ class gameRoomClass {
 	}
 
 	moveBall() {
+
+		if (this.ball.y < this.ball.radius)
+			this.ball.y = this.ball.radius
+		else if (this.ball.y > this.canvas.height - this.ball.radius)
+			this.ball.y = this.canvas.height - this.ball.radius
 
 		this.ball.addParticles(this.ball.x, this.ball.y)
 

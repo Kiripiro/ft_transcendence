@@ -457,6 +457,12 @@ const CreateMap = (props: any) => {
                 if (actualObstacleID === -666) {
                     room.ball.initial_x = room.ball.x = cursorX - holdClickDiff.diffX
                     room.ball.initial_y = room.ball.y = cursorY - holdClickDiff.diffY
+                    
+                    if (room.ball.initial_y < room.ball.radius)
+                        room.ball.initial_y = room.ball.y = room.ball.radius
+                    else if (room.ball.initial_y > room.canvas.height - room.ball.radius)
+                        room.ball.initial_y = room.ball.y = room.canvas.height - room.ball.radius
+
                     render()
                 }
                 for (let index = 0; index < room.map.obstacles.length; index++) {

@@ -142,11 +142,100 @@ main {
 	box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
 	margin-bottom: 1%;
 	transition: all 0.5s;
+	display: flex;
+	flex-direction: column;
 }
 
 .rank:hover {
 	transition: all 0.5s;
 	box-shadow: #901644 2.4px 2.4px 10px;
+}
+
+.rank .rankInfo {
+	margin: 2.5%;
+
+	width: 95%;
+	height: 55%;
+
+	display: flex;
+	flex-direction: row;
+
+	background-color: rgba(255, 255, 255, 0.05);
+}
+
+.rankInfo .imgContainer {
+	margin: 1%;
+	
+	width: 30%;
+	height: 94%;
+
+	background-color: rgba(255, 255, 255, 0.05);
+	
+	display: flex;
+	justify-content: center;
+}
+
+.imgContainer img {
+	height: 100%;
+}
+
+.rankInfo .rankName {
+	margin: 1%;
+	width: 66%;
+	height: 94%;
+
+	display: flex;
+	flex-direction: column;
+
+	background-color: rgba(255, 255, 255, 0.05);
+}
+
+.rankName .rankNameText {
+	margin: 5%;
+
+	width: 70%;
+	height: 30%;
+
+	background-color: rgba(255, 255, 255, 0.05);
+
+	display: flex;
+	align-items: center;
+
+}
+
+.rank .userInfoContainer {
+	margin: 2.5%;
+	margin-top: 0;
+	
+	width: 95%;
+	height: 45%;
+
+	display: flex;
+
+	flex-direction: column;
+
+	background-color: rgba(255, 255, 255, 0.05);
+}
+
+.rank .userInfoContainer .userInfo {
+	margin-top: 1%;
+
+	width: 60%;
+	height: 30%;
+
+	background-color: rgba(255, 255, 255, 0.05);
+}
+
+.userInfoContainer .first {
+	margin-left: 5%;
+}
+
+.userInfoContainer .second {
+	margin-left: 20%;
+}
+
+.userInfoContainer .third {
+	margin-left: 35%;
 }
 
 .leaderBoard {

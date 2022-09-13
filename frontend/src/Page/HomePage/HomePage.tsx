@@ -11,6 +11,8 @@ import { RootState } from '../../State';
 import axios from 'axios';
 import ReactDOM from 'react-dom';
 
+import rankImg from '../assets/bronze_rank.png'
+
 var test = false
 const matches: any[] = [];
 
@@ -106,7 +108,28 @@ const HomePage = (props: any) => {
                             {matchesHistory}
                         </div>
                         <div className="stat">
-                            <div className="rank"></div>
+                            <div className="rank">
+                                <div className='rankInfo'>
+                                    <div className='imgContainer'>
+                                        <img src={rankImg} alt="" />
+                                    </div>
+                                    <div className='rankName'>
+                                        <div className='rankNameText'>Rank :</div>
+                                        <div className='rankNameText'>Grand master splinter</div>
+                                    </div>
+                                </div>
+                                <div className='userInfoContainer'>
+                                    <div className='userInfo first'>
+
+                                    </div>
+                                    <div className='userInfo second'>
+
+                                    </div>
+                                    <div className='userInfo third'>
+
+                                    </div>
+                                </div>
+                            </div>
                             <div className="leaderBoard">
                                 <div className='infoLeaderBoard'>
                                     <div className='infoContent little'>Rank</div>
