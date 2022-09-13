@@ -13,6 +13,9 @@ import { useSelector } from 'react-redux';
 import { RootState } from './State';
 import { PersistGate } from 'redux-persist/integration/react'
 import { persistor } from './State/store';
+import TestMsg from './Page/Tests/test';
+import Chat from './Components/Chat/Chat';
+import NewChatPage from './Page/newChat/newChat';
 
 // const { 
 //   user, 
@@ -22,32 +25,32 @@ import { persistor } from './State/store';
 function App() {
 
   const userData = useSelector((state: RootState) => state.user)
-    return (
+  return (
 
 
-      <BrowserRouter>
-<PersistGate loading={null} persistor={persistor}>
+    <BrowserRouter>
+      <PersistGate loading={null} persistor={persistor}>
 
         <Routes>
           <Route path='/' element={<Navigate to="/HomePage" replace />} />
+          export default HomePage;
+          <Route path='/Login' element={<Login />} />
+          <Route path='/Login/Callback' element={<Callback />} />
 
-          <Route path='/Login' element={<Login/>} />
-          <Route path='/Login/Callback' element={<Callback/>} />
+          <Route path='/HomePage' element={<ConnectionChecker component={<HomePage />} />} />
 
-          <Route path='/HomePage' element={<ConnectionChecker component={<HomePage/>} />} />
-          
-          <Route path='/pong' element={<ConnectionChecker component={<GameSwitch/>} />} />
-          
-          <Route path='/Chat' element={<ConnectionChecker component={<ChatPage/>} />} />
+          <Route path='/pong' element={<ConnectionChecker component={<GameSwitch />} />} />
+
+          <Route path='/Chat' element={<ConnectionChecker component={<NewChatPage />} />} />
 
           <Route path='/NotFound' element={<NotFound />} />
           <Route path='/*' element={<Navigate to="/NotFound" replace />} />
         </Routes>
       </PersistGate>
 
-      </BrowserRouter>
+    </BrowserRouter>
 
-    );
+  );
 };
 
 export default App;

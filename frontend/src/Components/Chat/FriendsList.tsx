@@ -14,9 +14,8 @@ function FriendsList() {
 
   const { setActivConvers } = bindActionCreators(actionCreators, dispatch);
 
-  function DisplayClientFrame(props: {index: number, client: Client}) {
-    if (clientList.active == props.client.username)
-    {
+  function DisplayClientFrame(props: { index: number, client: Client }) {
+    if (clientList.active == props.client.username) {
       return (
         <div id="friendFrameActiv">
           <div id="bubble_blue"></div>
@@ -26,8 +25,7 @@ function FriendsList() {
         </div>
       );
     }
-    else
-    {
+    else {
       return (
         <div id="friendFrame" onClick={() => setActivConvers(props.client.username)}>
           <div id="bubble_blue"></div>
@@ -41,18 +39,18 @@ function FriendsList() {
 
   return (
     <>
-    <div className="main_container" id="main_FriendsList">
-      <div id="friendsList">
-        <div id="listTitle">
-          <p>Clients Connected</p>
-        </div>
+      <div className="main_container" id="main_FriendsList">
+        <div id="friendsList">
+          <div id="listTitle">
+            <p>Clients Connected</p>
+          </div>
           {clientList.list.map((client, index) => (
             <div id="friendFrameMain" key={index}>
-              <DisplayClientFrame index={index} client={client}/>
+              <DisplayClientFrame index={index} client={client} />
             </div>
           ))}
+        </div>
       </div>
-    </div>
     </>
   );
 }

@@ -12,30 +12,30 @@ export class UserEntity {
   @Column({ type: 'varchar', length: 30 })
   public nickname: string;
 
-  @Column({ default: 0})
+  @Column({ default: 0 })
   public wins: number;
 
-  @Column({ default: 0})
+  @Column({ default: 0 })
   public losses: number;
 
-  @Column({ type: 'int', default: 0})
+  @Column({ type: 'int', default: 0 })
   public rank: number;
 
-  @Column({ type: 'varchar'})
+  @Column({ type: 'varchar' })
   public profile_pic: string;
 
-  @Column({ type: 'varchar', nullable: true})
+  @Column({ type: 'varchar', nullable: true })
   public totpsecret: string;
 
   @Column({ type: 'int', nullable: true })
   public uid: number;
 
-  @Column( {type: 'varchar', nullable: true } )
+  @Column({ type: 'varchar', nullable: true })
   public refreshToken: string;
 
-  @Column( {nullable: true } )
+  @Column({ nullable: true })
   public refreshTokenIAT: string;
 
-  @Column( {nullable: true } )
+  @Column({ nullable: true })
   public refreshTokenExp: string;
 }

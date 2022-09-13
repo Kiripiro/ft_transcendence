@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../State";
+import { useDispatch, useSelector } from "react-redux";
+import { bindActionCreators } from "redux";
+import { actionCreators, RootState } from "../../State";
+import { Client, msg } from "../../State/type";
 
 import './InvitationChecker.css'
 
@@ -34,6 +36,28 @@ function InvitationChecker(props: { children: any }) {
 			setInviteSocketID(info.inviteSocketID)
 		});
 
+	const logData = useSelector((state: RootState) => state.log)
+	const clientList = useSelector((state: RootState) => state.clientList)
+
+	const dispatch = useDispatch();
+
+	const { addClient, removeClient, addMsg } = bindActionCreators(actionCreators, dispatch);
+
+	utilsData.socket.on('friendsList', function (arrClient: Client[]) {
+		console.log('Friends List received, useEffect()');
+		for (var i = 0; i < arrClient.length; i++) {
+			if (arrClient[i].username.length > 0 && Number(arrClient[i].id) != userData.user?.id) {
+				console.log(`add client: ${arrClient[i].username}`)
+				let newClient: Client = {
+					username: arrClient[i].username,
+					id: arrClient[i].id,
+					convers: { count: 0, msg: [] }
+				}
+				addClient(newClient);
+			}
+		}
+	})
+
 	return (
 		<>
 			<div id="invitationModal" className="invitationModal">
@@ -46,7 +70,7 @@ function InvitationChecker(props: { children: any }) {
 							var modal = document.getElementById("invitationModal");
 							if (modal)
 								modal.style.display = "none";
-							utilsData.socket.emit("DECLINE_INVITATION", {sendTo: inviteSocketID, user: userData.user})
+							utilsData.socket.emit("DECLINE_INVITATION", { sendTo: inviteSocketID, user: userData.user })
 						}} >Decline</button>
 						<button className='inviteButton accept' onClick={() => {
 							utilsData.socket.emit("ACCEPT_INVITATION", { user: userData.user, inviteID: inviteSocketID })

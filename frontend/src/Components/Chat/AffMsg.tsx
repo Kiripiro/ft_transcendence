@@ -12,7 +12,7 @@ interface msgToSend {
     sender: string;
     recipient: string;
     text: string;
-  }
+}
 
 function AffMsg() {
 
@@ -44,8 +44,8 @@ function AffMsg() {
         console.log('useEffect 1');
     }, [textInput])
 
-    function DisplayBubble(props: {msg: msg}) {
-        if (props.msg.sender ===  "Me")
+    function DisplayBubble(props: { msg: msg }) {
+        if (props.msg.sender === "Me")
             return (
                 <div className="msgFrame" id="myMsgFrame">
                     <div className="bubble" id="myBubbleMessage">
@@ -64,15 +64,23 @@ function AffMsg() {
     }
 
     function sendMessage() {
-        if (clientList.active.length > 0)
-        {
+        // console.log("sendMessage()");
+        // const messageToSend = {
+        //     id_sender: 0,
+        //     id_receiver: 1,
+        //     login_sender: "A",
+        //     login_receiver: "B",
+        //     text: text
+        // }
+        // utilsData.socket.emit('createMsg', messageToSend);
+        if (clientList.active.length > 0) {
             if (validateInput(clientList.active) && validateInput(text)) {
                 const message: msgToSend = {
                     sender: logData.username,
                     recipient: clientList.active,
                     text: text,
                 }
-                const msgToList: msg = { 
+                const msgToList: msg = {
                     sender: "Me",
                     recipient: clientList.active,
                     text: text
@@ -90,28 +98,25 @@ function AffMsg() {
 
     function DisplayConvers() {
         console.log('display convers 2');
-        if (clientList.active.length > 0)
-        {
+        if (clientList.active.length > 0) {
             console.log(`convers activ = ${clientList.active}, count ${clientList.count}`);
             const index = clientList.list.findIndex(item => item.username === clientList.active);
             console.log(index);
-            if (index >= 0)
-            {
+            if (index >= 0) {
                 const client = clientList.list[index];
                 setMessages(client.convers.msg);
                 return (
                     <div id="affichage">
                         {messages.map((msg, index) => (
                             <div id="affListMsg" key={index}>
-                                <DisplayBubble msg={msg}/>
+                                <DisplayBubble msg={msg} />
                             </div>
                         ))}
                         <div ref={messagesEndRef} />
                     </div>
                 );
             }
-            else
-            {
+            else {
                 setMessages([]);
                 return (
                     <div id="affichage">
@@ -119,8 +124,7 @@ function AffMsg() {
                 );
             }
         }
-        else
-        {
+        else {
             return (
                 <div id="affichage">
                 </div>
@@ -129,22 +133,22 @@ function AffMsg() {
     }
 
     return (
-    <>
-        <div className="main_container" id="main_AffMsg">
-            <DisplayConvers/>
-            <div id="sendZone">
-                <input
-                    value={text}
-                    onChange={e => setText(e.target.value)}
-                    placeholder="Enter message..."
-                />
-                <button type="button" onClick={() => sendMessage()}>
-                    Send
-                </button>
+        <>
+            <div className="main_container" id="main_AffMsg">
+                <DisplayConvers />
+                <div id="sendZone">
+                    <input
+                        value={text}
+                        onChange={e => setText(e.target.value)}
+                        placeholder="Enter message..."
+                    />
+                    <button type="button" onClick={() => sendMessage()}>
+                        Send
+                    </button>
+                </div>
             </div>
-        </div>
-    </>
-  );
+        </>
+    );
 }
 
 export default AffMsg;
