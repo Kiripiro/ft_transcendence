@@ -10,7 +10,7 @@ function ChatPage() {
   const logData = useSelector((state: RootState) => state.log)
   const utilsData = useSelector((state: RootState) => state.utils)
 
-  utilsData.socket.on('disconnect', function() {
+  utilsData.socket.on('disconnect', function () {
     console.log('Disconnected');
   });
 
@@ -18,13 +18,13 @@ function ChatPage() {
     if (validateInput(logData.username))
       return (
         <>
-        <Chat />
+          <Chat />
         </>
       )
     else
-        return (
-          <LoginPage />
-        )
+      return (
+        <LoginPage />
+      )
   }
 
   return (

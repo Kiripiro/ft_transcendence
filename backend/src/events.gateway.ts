@@ -64,7 +64,12 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
   @SubscribeMessage('storeClientInfo')
   async storeClientInfo(client: Socket, user: { login: string }) {
-    arrClient.forEach((item) => { if (item.id == client.id) item.username = user.login })
+    arrClient.forEach((item) => {
+      if (item.id == client.id) {
+        item.username = user.login;
+        this.server.to(client.id).emit('friendsList', arrClient);
+      }
+    })
     console.log(arrClient)
   };
 
@@ -79,6 +84,59 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     this.server.to(client.id).emit('msgToClient', newmessage);
     this.server.to(client.id).emit('ID', client.id);
   }
+
+  //INVITATION REQUESTS EVENTS
+
+  @SubscribeMessage('createInvitationRequest')
+  async createInvitationRequest(client: Socket, data: any) {
+    this.logger.log(`${client.id} said 2: create Invitation Request`);
+    const invitationRequest = {
+      id_user1: data.id_user1,
+      id_user2: data.id_user2,
+      user1_accept: data.user1_accept,
+      user2_accept: data.user2_accept
+    }
+    const invitationRequestReturn = this.http.post('http://localhost:5001/invitationRequest', invitationRequest);
+    console.log(invitationRequestReturn.forEach(item => (console.log(item))));
+  }
+
+  //NEW CHAT EVENTS
+
+  @SubscribeMessage('createMsg')
+  async createMsg(client: Socket, data: any) {
+    this.logger.log(`${client.id} said 2: ${data.text}`);
+    const msg = {
+      id_sender: data.id_sender,
+      login_sender: data.login_sender,
+      id_receiver: data.id_receiver,
+      login_receiver: data.login_receiver,
+      text: data.text
+    }
+    const returnMsg = this.http.post('http://localhost:5001/messages', msg);
+    console.log(returnMsg.forEach(item => (console.log(item))));
+    // const test = {
+    //   id_user1: 0,
+    //   score_u1: 2,
+    //   id_user2: 3,
+    //   score_u2: 3,
+    //   winner_id: 3,
+    //   text: "yoooooo"
+    // }
+    // const match = this.http.post('http://localhost:5001/mtest', test);
+    // console.log(match.forEach(item => (console.log(item))));
+
+    // const data = {
+    //   id_user1: 0,
+    //   score_u1: 2,
+    //   id_user2: 3,
+    //   score_u2: 3,
+    //   winner_id: 3
+    // }
+    // const match = this.http.post('http://localhost:5001/matchesHistory', data);
+    // console.log(match.forEach(item => (console.log(item))));
+  }
+
+  //OLD CHAT EVENTS
 
   @SubscribeMessage('msgToOtherClient')
   async msgToOtherClient(client: Socket, data: any) {
@@ -300,6 +358,15 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
         console.log(match.forEach(item => (console.log(item))));
         this.server.to(client.id).emit('finish', this.pongInfo[room[0]])
         this.pongInfo.splice(room[0], 1)
+        // const msg = {
+        //   id_sender: 1,
+        //   id_receiver: 2,
+        //   login_sender: 'A',
+        //   login_receiver: 'B',
+        //   text: "ddd"
+        // }
+        // const returnMsg = this.http.post('http://localhost:5001/messages', msg);
+        // console.log(returnMsg.forEach(item => (console.log(item))));
         return
       }
       this.server.to(client.id).emit('render', this.pongInfo[room[0]])
