@@ -1,4 +1,4 @@
-export { Canvas, Player, gameRoomClass, Obstacle, Ball }
+export { Canvas, Player, gameRoomClass, Obstacle }
 
 const STILL = 0
 const MOTION = 1
@@ -18,13 +18,13 @@ class Player {
 	id: string
 
 	user: {
-		id: number,
-		login: string,
-		nickname: string,
-		wins: number,
-		looses: number,
-		rank: number,
-		profile_pic: string
+        id: number,
+        login: string,
+        nickname: string,
+        wins: number,
+        looses: number,
+        rank: number,
+        profile_pic: string
 	} | null
 
 	connected: boolean
@@ -51,13 +51,13 @@ class Player {
 	ready: boolean
 
 	constructor(canvas: Canvas, id: string = "", user: {
-		id: number,
-		login: string,
-		nickname: string,
-		wins: number,
-		looses: number,
-		rank: number,
-		profile_pic: string
+        id: number,
+        login: string,
+        nickname: string,
+        wins: number,
+        looses: number,
+        rank: number,
+        profile_pic: string
 	} | null = null) {
 		this.id = id
 		this.user = user
@@ -109,35 +109,13 @@ function random(min: number, max: number): number {
 class Spectator {
 	id: string
 
-	user: {
-		id: number,
-		login: string,
-		nickname: string,
-		wins: number,
-		looses: number,
-		rank: number,
-		profile_pic: string
-	}
-
 	pannel: boolean
 
 	x: number
 	y: number
 
-	constructor(
-		id: string,
-		user: {
-			id: number,
-			login: string,
-			nickname: string,
-			wins: number,
-			looses: number,
-			rank: number,
-			profile_pic: string
-		}) {
+	constructor(id: string) {
 		this.id = id
-
-		this.user = user
 
 		this.pannel = false
 
@@ -161,9 +139,6 @@ class Ball {
 	particle_x: Array<number>
 	particle_y: Array<number>
 
-	initial_x: number
-	initial_y: number
-
 	constructor(canvas: Canvas) {
 		this.x = canvas.width / 2
 		this.y = canvas.height / 2
@@ -180,20 +155,11 @@ class Ball {
 
 		this.particle_x = new Array()
 		this.particle_y = new Array()
-
-		this.initial_x = -1;
-		this.initial_y = -1;
 	}
 
 	reset(canvas: Canvas) {
-		if (this.initial_x < 0) {
-			this.x = canvas.width / 2
-			this.y = canvas.height / 2
-		}
-		else {
-			this.x = this.initial_x
-			this.y = this.initial_y
-		}
+		this.x = canvas.width / 2
+		this.y = canvas.height / 2
 
 		this.dx = random(0, 1) ? -1 : 1
 		this.dy = 0
@@ -211,7 +177,7 @@ class Ball {
 	addParticles(x: number, y: number) {
 		if (this.particle_x.length && this.particle_x[0] - this.radius < x && this.particle_x[0] + this.radius >= x)
 			return
-
+		
 		this.particle_x.unshift(x)
 		this.particle_y.unshift(y)
 
@@ -232,7 +198,7 @@ class Obstacle {
 
 	x: number
 	y: number
-
+	
 	width: number
 	height: number
 
@@ -245,11 +211,11 @@ class Obstacle {
 
 	constructor(color: string, x: number, y: number, width: number, height: number, state: number, speed: number = 0) {
 		this.color = color
-
+		
 		this.width = width
 		this.height = height
 		this.initialHeight = height
-
+		
 		this.x = x
 		this.initialX = x
 		this.initialY = y
@@ -311,9 +277,7 @@ class Map {
 
 class gameRoomClass {
 	roomID: string
-
-	started: boolean
-
+	
 	map: Map
 
 	players: Array<Player>
@@ -325,22 +289,20 @@ class gameRoomClass {
 	ball: Ball
 
 	constructor(roomId: string, creatorID: string, creatorUser: {
-		id: number,
-		login: string,
-		nickname: string,
-		wins: number,
-		looses: number,
-		rank: number,
-		profile_pic: string
-	} | null, gameMap: string) {
+        id: number,
+        login: string,
+        nickname: string,
+        wins: number,
+        looses: number,
+        rank: number,
+        profile_pic: string
+	}, gameMap: string) {
 		this.roomID = roomId
-
-		this.started = false
-
+		
 		this.canvas = new Canvas()
-
+		
 		this.map = new Map(gameMap, this.canvas)
-
+		
 		this.players = new Array()
 
 		this.spectate = new Array()
@@ -352,32 +314,32 @@ class gameRoomClass {
 	}
 
 	setOponnent(id: string, user: {
-		id: number,
-		login: string,
-		nickname: string,
-		wins: number,
-		looses: number,
-		rank: number,
-		profile_pic: string
-	} | null) {
+        id: number,
+        login: string,
+        nickname: string,
+        wins: number,
+        looses: number,
+        rank: number,
+        profile_pic: string
+	}) {
 		this.players[1].id = id
 		this.players[1].user = user
 		this.players[1].connected = true
 		this.players[1].x = this.canvas.width / 8 * 7 - this.players[1].width / 2
 	}
 
-	checkCollisionSpectator(index: number, x: number, y: number): boolean {
-		var ptop = y - 40
-		var pbottom = y + 40
-		var pleft = x - 40
-		var pright = x + 40
+	checkCollisionSpectator(id: string, x: number, y: number): boolean {
+		var ptop = y - 20
+		var pbottom = y + 20
+		var pleft = x - 20
+		var pright = x + 20
 
 		for (let i = 0; i < this.spectate.length; i++) {
-			if (index != i) {
-				var btop = this.spectate[i].y - 40
-				var bbottom = this.spectate[i].y + 40
-				var bleft = this.spectate[i].x - 40
-				var bright = this.spectate[i].x + 40
+			if (id != this.spectate[i].id) {
+				var btop = this.spectate[i].y - 20
+				var bbottom = this.spectate[i].y + 20
+				var bleft = this.spectate[i].x - 20
+				var bright = this.spectate[i].x + 20
 
 				if (pleft < bright && ptop < bbottom && pright > bleft && pbottom > btop)
 					return true
@@ -387,46 +349,22 @@ class gameRoomClass {
 		return false
 	}
 
-	addSpectator(
-		id: string,
-		user: {
-			id: number,
-			login: string,
-			nickname: string,
-			wins: number,
-			looses: number,
-			rank: number,
-			profile_pic: string
-		}) {
-
-		this.spectate.push(new Spectator(id, user))
+	addSpectator(id: string) {
+		this.spectate.push(new Spectator(id))
 
 		for (let i = 0; i < this.spectate.length; i++) {
 			if (this.spectate[i].id == id) {
-				var nbPannel1 = 0
-				var nbPannel2 = 0
-				for (let j = 0; j < i; j++)
-					if (this.spectate[j].pannel)
-						nbPannel1++;
-					else
-						nbPannel2++;
-
-				if (nbPannel1 > nbPannel2)
-					this.spectate[i].pannel = false
-				else
+				if (random(0, 1))
 					this.spectate[i].pannel = true
+				else
+					this.spectate[i].pannel = false
 
-				this.spectate[i].x = random(90, 310)
-				this.spectate[i].y = random(90, 910)
+				this.spectate[i].x = random(50, 350)
+				this.spectate[i].y = random(50, 950)
 
-				var check = 0
-				while (this.checkCollisionSpectator(i, this.spectate[i].x, this.spectate[i].y)) {
-					if (check++ == 100) {
-						this.spectate.splice(this.spectate.length, 1)
-						break
-					}
-					this.spectate[i].x = random(90, 310)
-					this.spectate[i].y = random(90, 910)
+				while (this.checkCollisionSpectator(id, this.spectate[i].x, this.spectate[i].y)) {
+					this.spectate[i].x = random(50, 350)
+					this.spectate[i].y = random(50, 950)
 				}
 			}
 		}
@@ -484,11 +422,6 @@ class gameRoomClass {
 
 	moveBall() {
 
-		if (this.ball.y < this.ball.radius)
-			this.ball.y = this.ball.radius
-		else if (this.ball.y > this.canvas.height - this.ball.radius)
-			this.ball.y = this.canvas.height - this.ball.radius
-
 		this.ball.addParticles(this.ball.x, this.ball.y)
 
 		// si la balle touche le camps du joueur 1 : augmente le score du joueur 2 et redémare le jeu
@@ -545,17 +478,17 @@ class gameRoomClass {
 		for (let index = 0; index < this.map.obstacles.length; index++) {
 
 			if (this.checkCollisionObstacle(this.map.obstacles[index])) {
-
-				if (this.ball.x - this.ball.radius < this.map.obstacles[index].x ||
+				
+				if (this.ball.x - this.ball.radius < this.map.obstacles[index].x || 
 					this.ball.x + this.ball.radius > this.map.obstacles[index].x + this.map.obstacles[index].width)
 					this.ball.dx *= -1
-				if (this.ball.y - this.ball.radius < this.map.obstacles[index].y ||
+				if (this.ball.y - this.ball.radius < this.map.obstacles[index].y || 
 					this.ball.y + this.ball.radius > this.map.obstacles[index].y + this.map.obstacles[index].height)
 					this.ball.dy *= -1
 
 			}
 		}
-
+			
 		// bouge la balle
 		this.ball.x += this.ball.dx
 		this.ball.y += this.ball.dy
@@ -568,10 +501,10 @@ class gameRoomClass {
 					return
 				if (this.map.obstacles[index].y + this.map.obstacles[index].height / 2 < this.ball.y)
 					if (this.map.obstacles[index].y + this.map.obstacles[index].height < this.canvas.height - this.ball.radius * 2 - this.map.obstacles[index].speed)
-						this.map.obstacles[index].y += this.map.obstacles[index].speed
+					this.map.obstacles[index].y += this.map.obstacles[index].speed
 				if (this.map.obstacles[index].y + this.map.obstacles[index].height / 2 > this.ball.y)
 					if (this.map.obstacles[index].y > this.ball.radius * 2 + this.map.obstacles[index].speed)
-						this.map.obstacles[index].y -= this.map.obstacles[index].speed
+					this.map.obstacles[index].y -= this.map.obstacles[index].speed
 			}
 			else if (this.map.obstacles[index].state == EXPAND) {
 				this.map.obstacles[index].height += this.map.obstacles[index].speed
@@ -601,12 +534,12 @@ class gameRoomClass {
 			this.ball.dx = -1
 		else
 			this.ball.dx = random(0, 1) ? -1 : 1
-
-		// this.ball.x += this.ball.dx * 100
+		
+		this.ball.x += this.ball.dx * 100
 
 		for (let i = 0; i < 2; i++)
 			this.players[i].resetPos(this.canvas)
-
+		
 		this.players[1].x = this.canvas.width / 8 * 7 - this.players[1].width / 2
 
 		this.map.resetObstaclesPos()
