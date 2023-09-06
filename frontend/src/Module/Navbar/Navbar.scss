@@ -1,0 +1,210 @@
+@import url('https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@900&display=swap');
+
+nav {
+	background: #FDFEFE;
+	position: fixed;
+	top: 0;
+	z-index: 2;
+	height: 50px;
+	min-width: 100vw;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	color: #2e384e;
+	box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+
+	button {
+		all: unset;
+	}
+
+	a {
+		all: unset;
+		margin-left: 5px;
+		cursor: pointer;
+		font-family: 'Titillium Web', cursive;
+		font-size: 15px;
+	}
+
+	svg, div {
+		height: 24px;
+	}
+
+	svg {
+		cursor: pointer;
+	}
+
+	.right {
+		display: flex;
+		gap: 5px;
+		width: 152px;
+	}
+
+	.avatar {
+		--avatar-size: 31px;
+		height: var(--avatar-size);
+		width: var(--avatar-size);
+		border-radius: 50%;
+		position: relative;
+		object-fit: cover;
+	}
+
+	.profile {
+		display: flex;
+		align-items: center;
+		cursor: pointer;
+		margin-right: 5px;
+		text-transform: uppercase;
+		span {
+			display: none;
+			font-family: 'Roboto';
+			font-weight: 400;
+		}
+	}
+
+	.search-box {
+		display: flex;
+		border-radius: 22px;
+		transition: 0.4s;
+		margin-right: -4px;
+		&:hover {
+			color: #FFFF;
+			background: #2e384e;
+			margin-right: 20px;
+			input {
+				width: 122px;
+			}
+		}
+		input {
+		  border: unset;
+		  background: unset;
+		  font-family: 'Roboto';
+		  outline: unset;
+		  width: 0px;
+		  transition: 0.4s;
+		  color: #FFFF;
+		}
+	}
+	@media screen and (min-width: 425px) {
+		a {
+			font-size: 20px;
+			margin-right: 13px;
+		}
+		.right {
+			width: unset;
+		}
+		.search-box {
+			&:hover {
+				margin-right: 0;
+				input {
+					width: 65px;
+				}
+			}
+		}
+		.profile {
+			gap: 2px;
+			span {
+				white-space: nowrap;
+				max-width: 57px;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				font-size: 12px;
+				display: block;
+			}
+		}
+	}
+
+	@media screen and (min-width: 768px) {
+		height: 83px;
+		a {
+			margin-left: 10px;
+			font-size: 37px;
+		}
+		.right {
+			gap: 10px;
+		}
+		.search-box {
+			&:hover {
+				input {
+					width: 135px;
+				}
+			}
+		}
+		svg, div {
+			height: 43px;
+		}
+		.profile {
+			gap: 5px;
+			margin-right: 10px;
+			.avatar {
+				--avatar-size: 40px;
+				height: var(--avatar-size);
+				width: var(--avatar-size);
+			}
+			span {
+				font-size: 16px;
+				white-space: unset;
+				max-width: unset;
+				overflow: unset;
+				text-overflow: unset;
+			}
+		}
+	}
+
+	@media screen and (min-width: 1024px) {
+		height: 85px;
+		a {
+			font-size: 44px;
+			margin-right: unset;
+			letter-spacing: 2px;
+		}
+		.right {
+			gap: 12px;
+		}
+		.search-box {
+			&:hover {
+				input {
+					width: 140px;
+				}
+			}
+			input {
+				font-size: 18px;
+			}
+		}
+		svg, div {
+			height: 48px;
+		}
+		.profile {
+			.avatar {
+				--avatar-size: 43px;
+				height: var(--avatar-size);
+				width: var(--avatar-size);
+			}
+			span {
+				font-size: 18px;
+			}
+		}
+	}
+
+	@media screen and (min-width: 1440px) {
+		height: 95px;
+		a {
+			font-size: 47px;
+			letter-spacing: 2px;
+		}
+		.right {
+			gap: 20px;
+		}
+		svg, div {
+			height: 56px;
+		}
+		.profile {
+			.avatar {
+				--avatar-size: 56px;
+			}
+			span {
+				font-size: 20px;
+			}
+		}
+	}
+}

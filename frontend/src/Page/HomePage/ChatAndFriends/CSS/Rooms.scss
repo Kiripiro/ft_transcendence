@@ -1,0 +1,141 @@
+#roomsAff {
+    display: block;
+    height: 100%;
+    width: 100%;
+
+    .itemGroupList {
+        display: flex;
+        flex-direction: row;
+        height: 3.5rem;
+        width: 100%;
+        margin-top: 2vh;
+        padding-left: 1rem;
+        padding-right: 1rem;
+
+        .inGroupItem {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+
+            #groupIconGroupItem {
+                background-color: #2e384e;
+                border-radius: 50px;
+                font-size: 2.9rem;
+                color: white;
+                padding: 0.4rem;
+            }
+
+            p {
+                margin-left: 1rem;
+                font-size: 2rem;
+            }
+        }
+    }
+
+    #roomsHeader {
+        display: flex;
+    }
+
+    #roomsHeaderRight {
+        display: flex;
+        justify-content: flex-end;
+    }
+}
+
+#mainAffRoomsBig {
+    overflow: scroll;
+    height: 91%;
+}
+
+#mainAffRoomsSmall {
+    overflow: scroll;
+    height: 68%;
+}
+
+#CreateGroupContainer {
+    margin-left: 10px;
+    .createButtonDisabled {
+        background-color: hsla(240, 1%, 66%, 0.767);
+        color: white;
+        border-radius: 4px;
+    }
+
+    .createButton {
+        background-color: #2e384e;
+        color: white;
+        border-radius: 4px;
+    }
+}
+
+#PasswordOrNotContainerInput {
+    height: 2rem;
+    width: 15rem;
+    border-radius: 15px;
+    padding-left: 0.5rem;
+}
+
+#CreateGroupContainer button {
+    width: auto;
+    height: 2rem;
+    text-align: center;
+    border-radius: 15px;
+    background-color: white;
+    color: #34476b;
+    font-size: 1.3rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+#PasswordOrNotContainer {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 4vh;
+}
+
+#PrivateOrNotContainer {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 4vh;
+}
+
+#changePasswordContainer {
+    height: 11%;
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    padding-left: 1rem;
+    align-items: flex-start;
+    justify-content: flex-start;
+    background-color: #34476b;
+}
+
+#changePasswordContainerFirst {
+    display: flex;
+    align-items: center;
+}
+
+#passwordInput {
+    height: 2rem;
+    width: 12rem;
+    border-radius: 15px;
+    padding-left: 0.5rem;
+    margin-left: 1.5rem;
+}
+
+#changePasswordContainer button {
+    width: auto;
+    height: 2rem;
+    text-align: center;
+    border-radius: 15px;
+    background-color: white;
+    color: #34476b;
+    font-size: 1.3rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    margin-bottom: 1rem;
+}

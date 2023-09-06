@@ -1,16 +1,20 @@
-import Navbar from '../../Module/Navbar/Navbar';
-import './../assets/Font.css';
-import './NotFound.css';
+import Background from '../../Module/Background/Background';
+import NavBar from '../../Module/Navbar/Navbar';
+import './NotFound.scss';
 
 const NotFound = () => {
 
     return (
-        <div className='Font'>
-            <Navbar/>
-            <h1>Error 404</h1>
-            <h2>Page Not Found</h2>
+        <div className='not-found'>
+            <NavBar openFriendConversFromProfile={false} dataFriendConversFromProfile={{ id: 0, login: "", nickname: "", profile_pic: "" }} setOpenFriendConversFromProfile={() => { }} />
+            <Background />
+            <div className='content'>
+                <div title='404' className="text">
+                    404
+                </div>
+            </div>
         </div>
     );
-  };
+};
 
-  export default NotFound;
+export default NotFound;

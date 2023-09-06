@@ -1,0 +1,150 @@
+.chat {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+
+    .header {
+        display: flex;
+        border-bottom: 1px solid rgba($color: #2e384e, $alpha: .5);
+        margin-top: 10px;
+        padding-bottom: 10px;
+        align-items: flex-start;
+
+        svg {
+            margin-left: 5px;
+            cursor: pointer;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+
+            img {
+                cursor: pointer;
+                margin-left: 3px;
+                --avatar-size: 77px;
+                width: var(--avatar-size);
+                height: var(--avatar-size);
+                border-radius: 50%;
+                object-fit: cover;
+            }
+
+            .name {
+                display: flex;
+                align-items: flex-start;
+                flex-direction: column;
+
+                p {
+                    margin: 0;
+                    font-size: 19px;
+                    cursor: pointer;
+                }
+
+                .status {
+                    --status-size: 8px;
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    background: rgba(28, 177, 123);
+                }
+            }
+        }
+
+        .relation_blocked {
+            margin-left: 35px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+    }
+
+    .messages {
+        height: 100%;
+        overflow-y: auto;
+        overscroll-behavior: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin: 0 10px;
+        padding-top: 10px;
+
+        .message {
+            padding: 10px 10px;
+            max-width: 242px;
+        }
+        .sender {
+            border-radius: 1.125rem 1.125rem 0 1.125rem;
+            background: #2e384e;
+            color: white;
+            margin-left: 5px;
+        }
+        .receiver {
+            border-radius: 1.125rem 1.125rem 1.125rem 0;
+            border: 1px solid;
+            margin-right: 5px;
+        }
+        p {
+            margin: 0;
+        }
+        .content-sender,
+        .content-receiver {
+            word-break: break-word;
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .content-receiver {
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+        }
+
+        .content-sender {
+            justify-content: flex-end;
+        }
+
+        .dateDisplayNone {
+            display: none;
+        }
+
+        .date {
+            display: block;
+            font-weight: 300;
+            font-size: 12px;
+        }
+
+        .server_msg {
+            display: flex;
+            justify-content: center;
+        }
+
+        .server_msg p {
+            color: rgb(190, 190, 190);
+            font-size: 1rem;
+        }
+    }
+
+    .send-message {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 10px;
+        border: 1px solid;
+        border-radius: 22px;
+
+        .MuiFormControl-root {
+            width: -webkit-fill-available;
+
+            fieldset {
+                all: unset;
+            }
+        }
+
+        button {
+            margin-right: 10px;
+            font-size: 22px;
+        }
+    }
+}

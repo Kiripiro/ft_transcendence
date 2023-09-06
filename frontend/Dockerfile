@@ -12,4 +12,4 @@ COPY package-lock.json ./
 RUN npm install
 COPY . .
 # start app
-CMD ["npm", "run", "start"]
+CMD ["npm", "start"]

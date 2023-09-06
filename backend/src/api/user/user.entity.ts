@@ -1,5 +1,4 @@
-import { Index, Entity, PrimaryGeneratedColumn, Column, JoinColumn, OneToMany } from 'typeorm';
-import { FriendListEntity } from '../friend-list/friend-list.entity';
+import { Index, Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity('user')
 export class UserEntity {
@@ -13,24 +12,39 @@ export class UserEntity {
   @Column({ type: 'varchar', length: 30 })
   public nickname: string;
 
-  @Column({ default: 0})
+  @Column({ default: 0 })
   public wins: number;
 
-  @Column({ default: 0})
+  @Column({ default: 0 })
   public losses: number;
 
-  @Column({ type: 'int', default: 0})
+  @Column({ type: 'int', default: 800 })
   public rank: number;
 
-  @Column({ type: 'varchar', nullable: true})
+  @Column({ type: 'varchar' })
   public profile_pic: string;
 
-  @Column({ type: 'varchar', nullable: true})
+  @Column({ default: false })
+  public isTwoFactorAuthenticationEnabled: boolean;
+
+  @Column({ type: 'varchar', nullable: true })
   public totpsecret: string;
 
-  @Column({ type: 'int', nullable: true })
-  public uid: number;
-
-  @Column( {type: 'varchar', nullable: true } )
+  @Column({ type: 'varchar', nullable: true })
   public refreshToken: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  public signedRefreshToken: string;
+
+  @Column({ nullable: true })
+  public refreshTokenIAT: string;
+
+  @Column({ nullable: true })
+  public refreshTokenExp: string;
+
+  @Column({ default: true })
+  public isFirstConnection: boolean;
+
+  @Column({ default: false })
+  public errorNickname: boolean;
 }

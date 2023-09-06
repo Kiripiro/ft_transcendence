@@ -1,0 +1,380 @@
+:root {
+	--bottom: 97%;
+	--left: 6.7%;
+	--right: 92%;
+	--top: 0%;
+
+	--racket-bottom: 87%;
+}
+
+$pong-color: #2e384e;
+
+.button-reactour {
+	color: #2e384e;
+	border-color: #2e384e;
+	background: unset;
+	letter-spacing: 2.5px;
+	border-width: 3px;
+	font-family: 'Roboto', sans-serif;
+	font-size: 20px;
+	font-weight: 700;
+	cursor: pointer;
+	text-transform: uppercase;
+	transition: all .3s ease-out;
+
+	&:hover {
+		color: #FFFF;
+		background: #2e384e;
+	}
+
+	&:disabled {
+		opacity: 0.5;
+		pointer-events: none;
+	}
+}
+
+.homepage {
+	max-width: 736px;
+	padding: 60px 0 25px 0;
+	border: solid;
+	background: #FDFEFE;
+	box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+	border-width: 1px;
+	border-color: #2e384e;
+	margin: auto;
+	display: flex;
+	flex-direction: column;
+	margin-top: 20vh;
+	align-items: center;
+
+
+	button {
+		color: #2e384e;
+		border-color: #2e384e;
+		background: unset;
+		letter-spacing: 2.5px;
+		border-width: 3px;
+		margin-top: 49px;
+		font-family: 'Roboto', sans-serif;
+		font-size: 30px;
+		font-weight: 700;
+		cursor: pointer;
+		text-transform: uppercase;
+		transition: all .3s ease-out;
+
+		&:hover {
+			color: #FFFF;
+			background: #2e384e;
+		}
+	}
+
+	.field {
+		width: 623px;
+		height: 339px;
+		position: relative;
+
+		border-width: 3px;
+		border-style: solid;
+		border-color: $pong-color;
+
+		.net {
+			width: 0;
+			height: 100%;
+
+			position: absolute;
+			top: 0;
+			left: 50%;
+			transform: translateX(-50%);
+
+			border-width: 1px;
+			border-style: dashed;
+			border-color: $pong-color;
+		}
+
+		.ping-racket,
+		.pong-racket {
+			width: 5px;
+			height: 41px;
+			position: absolute;
+
+			background: $pong-color;
+		}
+
+		.ping-racket {
+			left: 6%;
+			top: 0%;
+			animation: ping 10s infinite linear;
+		}
+
+		.pong-racket {
+			top: 0%;
+			right: 6%;
+			animation: pong 10s infinite linear;
+		}
+
+		.ball {
+			left: 0%;
+			width: 8px;
+			border-radius: 50%;
+			height: 8px;
+			position: absolute;
+			background: $pong-color;
+
+			animation: ball 10s infinite linear;
+		}
+	}
+}
+
+@media screen and (max-width: 768px) {
+
+	.ping-racket,
+	.pong-racket {
+		--racket-bottom: 82%;
+	}
+
+	.ball {
+		--bottom: 97%;
+		--left: 7%;
+		--right: 91%;
+	}
+
+	.homepage {
+		max-width: 600px;
+		padding: 35px 0 16px 0;
+
+		.field {
+			width: 418px;
+			height: 242px;
+		}
+
+		button {
+			margin-top: 30px;
+		}
+	}
+}
+
+@media screen and (max-width: 457px) {
+
+	.ping-racket,
+	.pong-racket {
+		--racket-bottom: 80%;
+	}
+
+	.ball {
+		--bottom: 97%;
+		--left: 7%;
+		--right: 91%;
+	}
+
+	.homepage {
+		.field {
+			width: 404px;
+			height: 215px;
+		}
+	}
+}
+
+@media screen and (max-width: 433px) {
+
+	.ping-racket,
+	.pong-racket {
+		--racket-bottom: 76%;
+	}
+
+	.ball {
+		--bottom: 96%;
+		--left: 7%;
+		--right: 91%;
+	}
+
+	.homepage {
+		.field {
+			width: 345px;
+			height: 174px;
+		}
+	}
+}
+
+@media screen and (max-width: 374px) {
+
+	.ping-racket,
+	.pong-racket {
+		--racket-bottom: 74%;
+	}
+
+	.ball {
+		--bottom: 95%;
+		--left: 7%;
+		--right: 90%;
+	}
+
+	.homepage {
+		.field {
+			width: 283px;
+			height: 163px;
+		}
+	}
+}
+
+
+@keyframes ball {
+	0% {
+		top: 34%;
+		left: 52%;
+	}
+
+	8.3% {
+		top: 52%;
+		left: var(--right);
+	}
+
+	24.9% {
+		top: 85%;
+		left: var(--left);
+	}
+
+	30% {
+		top: var(--bottom);
+		left: 27%;
+	}
+
+	41.5% {
+		top: 70%;
+		left: var(--right);
+	}
+
+	58.1% {
+		top: 55%;
+		left: var(--left);
+	}
+
+	74.7% {
+		top: 13%;
+		left: var(--right);
+	}
+
+	79% {
+		top: var(--top);
+		left: 70%;
+	}
+
+	91.3% {
+		top: 22%;
+		left: var(--left);
+	}
+
+	100% {
+		top: 34%;
+		left: 52%;
+	}
+}
+
+@keyframes ping {
+
+	0% {
+		top: 10%;
+	}
+
+	5% {
+		top: 10%;
+	}
+
+	9% {
+		top: 24%;
+	}
+
+	13% {
+		top: 17%;
+	}
+
+	24.9% {
+		top: var(--racket-bottom);
+	}
+
+	47% {
+		top: 37%;
+	}
+
+	52% {
+		top: 41%;
+	}
+
+	56% {
+		top: 64%;
+	}
+
+	58.1% {
+		top: 54%;
+	}
+
+	70% {
+		top: var(--racket-bottom);
+	}
+
+	84% {
+		top: 12%;
+	}
+
+	91.3% {
+		top: 18%;
+	}
+
+	100% {
+		top: 10%;
+	}
+}
+
+@keyframes pong {
+
+	0% {
+		top: var(--racket-bottom);
+	}
+
+	8.3% {
+		top: 51%;
+	}
+
+	20% {
+		top: 60%;
+	}
+
+	25% {
+		top: 34%;
+	}
+
+	41.5% {
+		top: 68%;
+	}
+
+	46% {
+		top: 36%;
+	}
+
+	52% {
+		top: 18%;
+	}
+
+	58.1% {
+		top: 53%;
+	}
+
+	66% {
+		top: 14%;
+	}
+
+	70% {
+		top: 20%;
+	}
+
+	74.7% {
+		top: 10%;
+	}
+
+	91.3% {
+		top: 10%;
+	}
+
+	100% {
+		top: var(--racket-bottom);
+	}
+}

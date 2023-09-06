@@ -1,0 +1,148 @@
+.mainAffChatAndFriend,
+.mainAffGene {
+    height: 100%;
+
+    .mainAffGene {
+        height: 100%;
+        background-color: white;
+    }
+
+    .mainAffGeneNotif {
+        height: 100%;
+        transition: all 1s;
+        background-color: white;
+        overflow-y: scroll;
+    }
+
+    .bi-x-lg:hover {
+        color: red;
+    }
+
+    .bi-check-lg:hover {
+        color: green;
+    }
+
+    .itemListConversContainerMe {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+    .itemListConversContainerCorrespondant {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .conversInItemList {
+        width: 100%;
+        height: 100%;
+    }
+
+    .converItemListCorrespondant {
+        color: white;
+        background-color: #2E384E;
+    }
+
+    .mainHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        border-bottom: solid 1px rgba(46, 56, 78, 0.7);
+        background-color: white;
+        overflow: hidden;
+        padding: 13px 0.5rem;
+        .cross {
+            align-self: flex-start;
+            width: 33.3%;
+            display: flex;
+        }
+        h3 {
+            font-family: 'Roboto';
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0;
+            font-size: 26px;
+        }
+        .icons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            width: 33.3%;
+            svg {
+                transform: scale(1.1);
+            }
+        }
+        @media screen and (min-width: 425px) {
+            .icons {
+                gap: 16px;
+                svg {
+                    transform: scale(1.3);
+                }
+            }
+        }
+        @media screen and (min-width: 1024px) {
+            padding: 16px 0.5rem;
+            .icons {
+                gap: 19px;
+                svg {
+                    transform: scale(1.4);
+                }
+            }
+        }
+        @media screen and (min-width: 1440px) {
+            padding: 20px 0.5rem;
+            .icons {
+                gap: 22px;
+                svg {
+                    transform: scale(1.5);
+                }
+            }
+        }
+    }
+
+    .header-user-banned, .header-invitation-request, .header-group-list {
+        .cross, .icons {
+            width: unset;
+        }
+    }
+
+    .mainHeaderSide {
+        width: 50%;
+        display: flex;
+        align-items: center;
+    }
+
+    .mainHeaderLeft {
+        justify-content: flex-start;
+    }
+
+    .mainHeaderRight {
+        justify-content: flex-end;
+    }
+
+    .mainHeaderSideWithTitle {
+        width: 20%;
+        display: flex;
+        align-items: center;
+    }
+
+    .mainHeaderLeftWithTitle {
+        justify-content: flex-start;
+    }
+
+    .mainHeaderRightWithTitle {
+        justify-content: flex-end;
+    }
+
+    button {
+        background: none;
+        padding: 0;
+        border: 0;
+        color: #2E384E;
+    }
+
+    button:hover {
+        cursor: pointer;
+    }
+}

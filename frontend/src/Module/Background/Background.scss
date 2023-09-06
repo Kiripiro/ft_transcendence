@@ -1,0 +1,77 @@
+.background {
+    .ping-bg {
+        position: fixed;
+        filter: blur(11px);
+        z-index: -1;
+        transform: rotate(329deg);
+        height: 437px;
+        width: 58px;
+        left: 9vw;
+        top: 62vh;
+        background: rgb(46, 56, 78);
+        animation: float-ping 12s ease-in-out infinite;
+
+    }
+    
+    .ball-bg {
+        border-radius: 50%;
+        position: fixed;
+        filter: blur(11px);
+        z-index: -1;
+        height: 58px;
+        width: 58px;
+        left: 27vw;
+        top: 31vh;
+        background: rgb(46, 56, 78);
+        animation: float-ball 6s ease-in-out infinite;
+    }
+    
+    .pong-bg {
+        position: fixed;
+        filter: blur(11px);
+        z-index: -1;
+        transform: rotate(126deg);
+        height: 437px;
+        width: 58px;
+        left: 82vw;
+        top: 18vh;
+        background: rgb(46, 56, 78);
+        animation: float-pong 16s ease-in-out infinite;
+
+    }
+
+    @keyframes float-ball {
+        0% {
+            transform: translatey(0px);
+        }
+        50% {
+            transform: translatey(-20px);
+        }
+        100% {
+            transform: translatey(0px);
+        }
+    }
+    @keyframes float-ping {
+        0% {
+            transform: rotate(329deg);
+        }
+        50% {
+            transform: rotate(320deg);
+        }
+        100% {
+            transform: rotate(329deg);
+        }
+    }
+    
+    @keyframes float-pong {
+        0% {
+            transform: rotate(126deg);
+        }
+        50% {
+            transform: rotate(132deg);
+        }
+        100% {
+            transform: rotate(126deg);
+        }
+    }
+}

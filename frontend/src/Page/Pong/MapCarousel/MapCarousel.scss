@@ -1,0 +1,621 @@
+$pong-color: #2e384e;
+
+.map-carousel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    span {
+        position: absolute;
+        font-family: 'Roboto';
+        font-weight: 700;
+        font-size: 160px;
+    }
+    .blur-field {
+        filter: blur(11px);
+    }
+    .field {
+        width: 507px;
+        height: 291px;
+        position: relative;
+        
+        border-width: 3px;
+        border-style: solid;
+        border-color: $pong-color;
+        
+        .net {
+            width: 0;
+            height: 100%;
+            
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            
+            border-width: 1px;
+            border-style: dashed;
+            border-color: $pong-color;
+        }
+        
+        .basic-ping-racket, .basic-pong-racket, .ia-racket, .ia-ping-racket,
+        .ia-pong-racket, .test-racket, .expand-ping-racket, .expand-pong-racket,
+        .create-ping-racket, .create-pong-racket {
+            width: 5px;
+            height: 41px;
+            position: absolute;
+
+            background: $pong-color;
+        }
+
+        .expand-middle {
+            height: 34px;
+            width: 5px;
+            position: absolute;
+            left: 49.5%;
+            top: 44%;
+            justify-content: center;
+            background-color: $pong-color;
+            animation: expand 10s infinite linear;
+        }
+
+        .create-ping-racket {
+            left: 6%;
+            top: 25%;
+        }
+
+        .create-pong-racket {
+            right: 6%;
+            top: 35%;
+        }
+
+        .create-ball {
+            width: 8px;
+            left: 50%;
+            top: 50%;
+            border-radius: 50%;
+            height: 8px;
+            position: absolute;
+            background: $pong-color;
+
+        }
+        
+        .expand-ping-racket {
+            left: 6%;
+            animation: expand-ping 10s infinite linear;
+        }
+
+        .expand-pong-racket {
+            right: 6%;
+            animation: expand-pong 10s infinite linear;
+        }
+
+        .expand-ball {
+            width: 8px;
+            border-radius: 50%;
+            height: 8px;
+            position: absolute;
+            background: $pong-color;
+
+            animation: expand-ball 10s infinite linear;
+        }
+
+        .basic-ping-racket {
+            left: 6%;
+            top: 0%;
+            animation: ping 10s infinite linear;
+        }
+        
+        .basic-pong-racket {
+            top: 0%;
+            right: 6%;
+            animation: pong 10s infinite linear;
+        }
+        
+        .ia-ping-racket {
+            left: 6%;
+            animation: ia-ping 15s infinite linear;
+        }
+        
+        .ia-pong-racket {
+            right: 6%;
+            animation: ia-pong 15s infinite linear;
+        }
+        
+        .basic-ball {
+            width: 8px;
+            border-radius: 50%;
+            height: 8px;
+            position: absolute;
+            background: $pong-color;
+
+            animation: ball 10s infinite linear;
+        }
+        
+        .ia-ball {
+            width: 8px;
+            border-radius: 50%;
+            height: 8px;
+            position: absolute;
+            background: $pong-color;
+            animation: ia-ball 15s infinite linear;
+        }
+
+        .ia-racket {
+            right: 49.5%;
+            animation: ia-racket 15s infinite linear;
+        }
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .basic-ping-racket, .basic-pong-racket {
+        --racket-bottom: 79%;
+    }
+    .ia-ping-racket, .ia-pong-racket, .ia-racket, .ia-ball, .expand-ball, .expand-middle, .expand-ping-racket, .expand-pong-racket {
+        animation: none!important;
+    }
+    .ia-ping-racket, .expand-ping-racket {
+        top: 11%;
+    }
+    .ia-pong-racket, .expand-pong-racket {
+        top: 36%;
+    }
+    .ia-ball, .expand-ball {
+        left: 20%;
+        top: 50%;
+    }
+    .expand-middle {
+        transform: scaleY(3.5);
+        top: 43% !important;
+        left: 49.2% !important;
+    }
+    .ia-racket {
+        top: 50%;
+    }
+    .basic-ball {
+        --bottom: 97%;
+        --left: 7%;
+        --right: 91%;
+    }
+    .map-carousel {
+        max-width: 600px;
+        .field {
+            width: 340px;
+            height: 192px;
+        }
+        button {
+            margin-top: 30px;
+        }
+    }
+}
+
+@media screen and (max-width: 457px) {
+    .basic-ping-racket, .basic-pong-racket {
+        --racket-bottom: 75%;
+    }
+    .basic-ball {
+        --bottom: 97%;
+        --left: 7%;
+        --right: 91%;
+    }
+    .map-carousel {
+        .field {
+            width: 275px;
+            height: 162px;
+        }
+    }
+}
+
+@media screen and (max-width: 433px) {
+    .basic-ping-racket, .basic-pong-racket {
+        --racket-bottom: 70%;
+    }
+    .expand-middle {
+        transform: scaleY(2.5);
+        top: 38%!important;
+        left: 48.7%!important;
+    }
+    .basic-ball {
+        --bottom: 95%;
+        --left: 7%;
+        --right: 91%;
+    }
+    .map-carousel {
+        .field {
+            width: 244px;
+            height: 135px;
+        }
+    }
+}
+
+@media screen and (max-width: 374px) {
+    .basic-ping-racket, .basic-pong-racket {
+        --racket-bottom: 66%;
+    }
+    .basic-ball {
+        --bottom: 95%;
+        --left: 7%;
+        --right: 90%;
+    }
+    .map-carousel {
+        .field {
+            width: 210px;
+            height: 120px;
+        }
+    }
+}
+
+@keyframes expand {
+    0% {
+        transform: scaleY(1);
+    } 25% {
+        transform: scaleY(8.6);
+    } 50% {
+        transform: scaleY(1);
+    } 75% {
+        transform: scaleY(8.6);
+    } 100% {
+        transform: scaleY(1);
+    }
+}
+
+@keyframes expand-ball {
+	0% {
+		top: 34%;
+		left: 52%;
+	}
+	8.3% {
+		top: 52%;
+		left: var(--right);
+	}
+    17.75%{
+        top: 60%;
+        left: 49.5%;
+    }
+	24.9% {
+		top: 74%;
+		left: var(--right);
+	}
+    36.8% {
+		top: var(--bottom);
+		left: 27%;
+	}
+    40% {
+        top: 87%;
+        left: var(--left);
+    }
+	56.6% {
+		top: 70%;
+		left: var(--right);
+	}
+	64.9% {
+		top: 55%;
+		left: 49.5%;
+	}
+	74.7% {
+		top: 13%;
+		left: var(--right);
+	}
+	79% {
+		top: var(--top);
+		left: 70%;
+	}
+	91.3% {
+		top: 22%;
+		left: var(--left);
+	}
+	100% {
+		top: 34%;
+		left: 52%;
+	}
+}
+
+@keyframes expand-ping {
+	0% {
+		top: 10%;
+	}
+	5% {
+		top: 10%;
+	}
+	9% {
+		top: 24%;
+	}
+	13% {
+		top: 17%;
+	}
+	24.9% {
+		top: var(--racket-bottom);
+	}
+    40% {
+        top: 83%;
+    }
+	47% {
+		top: 37%;
+	}
+	52% {
+		top: 41%;
+	}
+	56% {
+		top: 64%;
+	}
+	58.1% {
+		top: 54%;
+	}
+	70% {
+		top: 74%;
+	}
+	84% {
+		top: 12%;
+	}
+	91.3% {
+		top: 18%;
+	}
+	100% {
+		top: 10%;
+	}
+}
+
+@keyframes expand-pong {
+	0% {
+		top: var(--racket-bottom);
+	}
+	8.3% {
+		top: 51%;
+	}
+	20% {
+		top: 60%;
+	}
+	24.9% {
+		top: 65%;
+	}
+	41.5% {
+		top: 68%;
+	}
+	46% {
+		top: 36%;
+	}
+	52% {
+		top: 18%;
+	}
+    56.6% {
+        top: 65%;
+    }
+	58.1% {
+		top: 53%;
+	}
+	66% {
+		top: 14%;
+	}
+	70% {
+		top: 20%;
+	}
+	74.7% {
+		top: 10%;
+	}
+	91.3% {
+		top: 10%;
+	}
+	100% {
+		top: var(--racket-bottom);
+	}
+}
+
+@keyframes ia-ping {
+	0% {
+		top: 25%;
+	}
+	5% {
+		top: 10%;
+	}
+	9% {
+		top: 24%;
+	}
+	13% {
+		top: 17%;
+	}
+	24.9% {
+		top: 50%;
+	}
+    30%{
+        top: 16%;
+    }
+	47% {
+		top: 37%;
+	}
+    50% {
+        top: 7%;
+    }
+	52% {
+		top: 10%;
+	}
+	56% {
+		top: 25%;
+	}
+	58.1% {
+		top: 20%;
+	}
+    60% {
+        top: 15%;
+    }
+	70% {
+		top: 83%;
+	}
+	84% {
+		top: 12%;
+	}
+	91.3% {
+		top: 18%;
+	}
+	100% {
+		top: 25%;
+	}
+}
+
+@keyframes ia-pong {
+	0% {
+		top: var(--racket-bottom);
+	}
+	8.3% {
+		top: 40%;
+	}
+	20% {
+		top: var(--racket-bottom);
+	}
+	25% {
+		top: 34%;
+	}
+	40% {
+		top: 79%;
+	}
+	46% {
+		top: 36%;
+	}
+	52% {
+		top: 18%;
+	}
+	58.1% {
+		top: 53%;
+	}
+	66% {
+		top: 14%;
+	}
+	70% {
+		top: 20%;
+	}
+	74.7% {
+		top: 10%;
+	}
+    80% {
+        top: 46%;
+    }
+	90% {
+		top: 29%;
+	}
+	100% {
+		top: var(--racket-bottom);
+	}
+}
+
+@keyframes ia-ball {
+	0% {
+		top: 34%;
+		left: var(--left);
+	}
+	10% {
+		top: 52%;
+		left: var(--right);
+	}
+    15% {
+        top: 70%;
+        left: 49.5%;
+    }
+	20% {
+		top: 85%;
+		left: var(--right);
+	}
+    27%{
+        top: 0%;
+        left: 28%;
+    }
+	30% {
+		top: 25%;
+		left: var(--left);
+	}
+	40% {
+		top: 82%;
+		left: var(--right);
+	}
+	50% {
+		top: 13%;
+		left: var(--left);
+	}
+	55% {
+		top: 15%;
+		left: 49.5%;
+	}
+	60% {
+		top: 22%;
+		left: var(--left);
+	}
+    65% {
+        top: 30%;
+        left: 49.5%;
+    }
+    70% {
+        top: 85%;
+        left: var(--left);
+    }
+    80% {
+        top: 52%;
+        left: var(--right);
+    }
+    85%{
+        top: 45%;
+        left: 49.5%;
+    }
+    90% {
+        top: 40%;
+        left: var(--right);
+    }
+    94% {
+        top: var(--bottom);
+        left: 57%;
+    }
+	100% {
+		top: 34%;
+		left: var(--left);
+	}
+}
+
+@keyframes ia-racket {
+	0% {
+		top: var(--racket-bottom);
+	}
+    5% {
+        top: 50%;
+    }
+	15% {
+		top: 64%;
+	}
+	20% {
+		top: 79%;
+	}
+	25% {
+		top: 41%;
+	}
+    27% {
+        top: 17%;
+    }
+	30% {
+		top: 19%;
+	}
+	35% {
+		top: 35%;
+	}
+	40% {
+		top: 81%;
+	}
+	45% {
+		top: 53%;
+	}
+	50% {
+		top: 31%;
+	}
+	55% {
+		top: 7%;
+	}
+    65% {
+        top: 19%;
+    }
+    75% {
+        top: 45%;
+    }
+    85% {
+        top: 38%;
+    }
+    92% {
+        top: 52%;
+    }
+    100% {
+        top: var(--racket-bottom);
+    }
+}

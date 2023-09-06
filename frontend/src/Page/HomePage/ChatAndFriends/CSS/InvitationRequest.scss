@@ -1,0 +1,25 @@
+.mainInvitationRequest {
+    .ListItemsInvitationsRequests {
+        display: flex;
+        flex-direction: column;
+        .inItem {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 0 10px;
+        }
+    }
+}
+
+/* .bi-x-lg {
+    font-size: 1.2rem;
+}
+
+.bi-x-lg:hover {
+    font-size: 1.2rem;
+    color: red;
+}
+
+.bi-x-lg::before {
+    font-size: 1.2rem;
+} */

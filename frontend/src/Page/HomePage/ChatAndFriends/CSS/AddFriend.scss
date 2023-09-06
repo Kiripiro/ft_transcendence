@@ -1,0 +1,36 @@
+.addFriendContainer {
+    height: auto;
+    width: auto;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-right: 1rem;
+    padding-left: 0.5rem;
+
+    .AutocompleteInput {
+        width: 65%;
+    }
+
+    #addFriendButton {
+        color: #2e384e;
+        border-color: #2e384e;
+        background: unset;
+        font-size: 2rem;
+        margin-left: 1.0rem;
+        font-family: 'Roboto', sans-serif;
+        font-weight: 700;
+        cursor: pointer;
+        text-transform: uppercase;
+        transition: all .3s ease-out;
+        border: solid 3px !important;
+    }
+
+    #addFriendButton:hover {
+        color: #FFFF;
+        background: #2e384e;
+        border: solid 3px #2e384e !important;
+    }
+
+}
