@@ -31,8 +31,8 @@ DATABASE_USER=backend
 DATABASE_PASSWORD=test_password
 DATABASE_PORT=5432
 
-API_UID=u-s4t2ud-df0f4dd2427878ccac15324ec302d9143641c88217994dd66796c42c8eba923b
-API_SECRET=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
+API_UID= /* UID 42 API KEY */
+API_SECRET= /* SECRET 42 API KEY */
 API_authorizationURI=https://api.intra.42.fr/oauth/token
 API_redirectURI=https://localhost:5001/auth/login
 API_endpoint=https://api.intra.42.fr/v2/
